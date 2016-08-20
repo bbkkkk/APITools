@@ -527,7 +527,7 @@ public class MainWindow {
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
 				} catch (Exception e2) {
-					logger.debug("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
+					logger.error("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
 				}
 			}
 		});
@@ -632,7 +632,7 @@ public class MainWindow {
 							statusBar.setText("返回码是:" + resultJson.get("code") + ":" + returnText);
 						}
 					} catch (Exception e2) {
-						logger.error("异常:" + e2);
+						logger.error("异常" , e2);
 						statusBar.setText("异常:解析API返回码错误");
 					}
 
@@ -650,9 +650,9 @@ public class MainWindow {
 						}
 					} catch (DocumentException e1) {
 						statusBar.setText("异常:解析API返回码错误");
-						logger.error("异常:" + e1);
+						logger.error("异常" , e1);
 					} catch (NullPointerException e2) {
-						logger.error("异常:" + e2);
+						logger.error("异常" , e2);
 						statusBar.setText("异常:解析API返回码错误");
 					}
 				} else if (!(isJson(text) && isXml(text))) {
@@ -680,7 +680,6 @@ public class MainWindow {
 					return false;
 				}
 			}
-
 		});
 
 		// 此为为提交按钮添加点击事件
@@ -913,7 +912,7 @@ public class MainWindow {
 			}
 		} catch (Exception e) {
 			statusBar.setText("加载返回码配置失败，请检查");
-			logger.warn("加载返回码配置失败，请检查");
+			logger.error("加载返回码配置失败，请检查");
 		}
 
 		// 配置文件加载完毕后开始加载API列表
@@ -971,12 +970,12 @@ public class MainWindow {
 		for (int i = 0; i < apiItems.size(); i++) {
 			interfaceCombo.add(apiItems.get(i).getName());
 		}
-		// default init frist interface
 		try {
 			interfaceCombo.select(0);
 			urlText.setText(apiServerAdress + apiItems.get(0).getAddress());
 			initParameters(apiItems.get(0).getParameters());
 		} catch (Exception e) {
+			logger.error("异常",e);
 			urlText.setText(apiServerAdress);
 		}
 	}

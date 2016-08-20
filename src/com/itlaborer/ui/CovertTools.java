@@ -335,6 +335,7 @@ public class CovertTools extends Dialog {
 								.replaceAll("\\(.*?\\)|\\{.*?}|\\[.*?]|（.*?）", "").trim());
 					} catch (StringIndexOutOfBoundsException e) {
 						apiItem.setAddress("地址未知");
+						logger.error("异常",e);
 					}
 					ArrayList<ApiPar> pars = new ArrayList<>();
 					try {
@@ -440,6 +441,7 @@ public class CovertTools extends Dialog {
 								.replaceAll("\\(.*?\\)|\\{.*?}|\\[.*?]|（.*?）", "").trim());
 					} catch (StringIndexOutOfBoundsException e) {
 						apiItem.setAddress("接口地址未知");
+						logger.error("异常", e);
 					}
 					ArrayList<ApiPar> pars = new ArrayList<>();
 					try {

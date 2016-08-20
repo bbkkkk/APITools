@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +52,7 @@ public class ApiUtils {
 	}
 
 	// API3.0签名算法，传入参数HashMap和商户密码,此参数中是否包含signmessage参数都无所谓，返回String类型签名值
-	public static String SignMessage(HashMap<String, String> parameter, String password) {
+	public static String SignMessage(Map<String, String> parameter, String password) {
 
 		if (parameter == null) {
 			logger.debug("参数为空,跳过签名");
@@ -192,7 +193,7 @@ public class ApiUtils {
 			try {
 				fwriter.flush();
 				fwriter.close();
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				logger.error("捕获异常", ex);
 			}
 		}
@@ -216,6 +217,7 @@ public class ApiUtils {
 				out.write(buffer, 0, ins);
 		}
 	}
+
 	// String编码转换方法
 	public static String GetUTF8StringFromGBKString(String gbkStr) {
 		try {
