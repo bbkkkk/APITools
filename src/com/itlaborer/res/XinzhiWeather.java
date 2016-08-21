@@ -47,7 +47,7 @@ public class XinzhiWeather {
 
 		// 加入接口文档
 		apidoc.setApilist(apiList);
-		apidoc.setApi_version("V3");
+		apidoc.setApi_version("心知天气-V3");
 		apidoc.setDecode_version("1.0");
 	}
 

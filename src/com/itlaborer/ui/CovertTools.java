@@ -57,7 +57,7 @@ public class CovertTools extends Dialog {
 		this.setText("API文档转换工具");
 		this.path = null;
 		this.apiDocJson = "";
-		versionSelectint = 3;
+		versionSelectint = 4;
 	}
 
 	public Object open() {
@@ -190,20 +190,7 @@ public class CovertTools extends Dialog {
 		apiDocVersionl.setBounds(10, 54, 90, 25);
 
 		versionSelect = new Combo(covertToolsShell, SWT.NONE | SWT.READ_ONLY);
-		versionSelect.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (versionSelect.getSelectionIndex() == 0) {
-					logger.info("选择了3.0模式");
-					versionSelectint = 3;
-				} else if (versionSelect.getSelectionIndex() == 1) {
-					logger.info("选择了4.0模式");
-					versionSelectint = 4;
-				}
-			}
-		});
 		versionSelect.setBounds(249, 12, 60, 25);
-		versionSelect.add("API3.0");
 		versionSelect.add("API4.0");
 		versionSelect.select(0);
 
@@ -291,10 +278,7 @@ public class CovertTools extends Dialog {
 						logger.info(path);
 						apiHTMLPath.add(path);
 					}
-					if (versionSelectint == 3) {
-						logger.info("API3.0方案解析");
-						thisTypeApiList.setApi(CovertApi3(apiHTMLPath));
-					} else if (versionSelectint == 4) {
+					if (versionSelectint == 4) {
 						logger.info("API4.0方案解析");
 						thisTypeApiList.setApi(CovertApi4(apiHTMLPath));
 					}
@@ -307,112 +291,6 @@ public class CovertTools extends Dialog {
 			logger.error("异常", e);
 		}
 		return apiList;
-	}
-
-	/**
-	 * API文档接口转换方法 针对API3.0的文档转换
-	 */
-	public ArrayList<ApiItem> CovertApi3(ArrayList<String> apiHTMLPath) {
-		// 创建这个分类下的接口列表信息
-		ArrayList<ApiItem> apiItems = new ArrayList<ApiItem>();
-		// 循环读取每一个接口的定义文件
-		for (int i = 0; i < apiHTMLPath.size(); i++) {
-			logger.info("解析到" + apiHTMLPath.get(i));
-			// 开始解析这个接口
-			ApiItem apiItem = new ApiItem();
-			try {
-				// 具体的此接口的HTML文档地址生成
-				Document document = Jsoup.parse(new File(apiHTMLPath.get(i)), "UTF-8");
-				Elements tables = document.getElementsByTag("table");
-				// 接口元素列表有6个TABLE,解析到的话，就认为这个页面是API接口定义，否则认为是其余类型的页面
-				if (tables.size() == 6) {
-					// 名字
-					apiItem.setName(tables.get(1).child(0).child(0).child(1).text());
-					// 地址
-					try {
-						// 需要去除空格和空格里的内容
-						apiItem.setAddress(tables.get(1).child(0).child(1).child(1).text().substring(24)
-								.replaceAll("\\(.*?\\)|\\{.*?}|\\[.*?]|（.*?）", "").trim());
-					} catch (StringIndexOutOfBoundsException e) {
-						apiItem.setAddress("地址未知");
-						logger.error("异常",e);
-					}
-					ArrayList<ApiPar> pars = new ArrayList<>();
-					try {
-						// 开始处理参数，获取所有的信息
-						Elements parsrow = tables.get(2).getElementsByTag("tr");
-						if (parsrow != null) {
-							// 公共参数的个数,根据rowspan计算得到
-							int n1 = Integer.parseInt(parsrow.get(1).child(1).attr("rowspan"));
-							// 获取公共参数
-							for (int i1 = 0; i1 < n1; i1++) {
-								ApiPar par = new ApiPar();
-								if (i1 == 0) {
-									// 获取第一行,merid
-									par.setName(parsrow.get(i1 + 1).child(2).text());
-									par.setTip(parsrow.get(i1 + 1).child(3).text());
-									par.setValue(parsrow.get(i1 + 1).child(8).text() + "");
-								} else {
-									// 获取之后的行
-									// 如果是function参数，特殊处理(受到rowspan的影响)
-									if (parsrow.get(i1 + 1).child(1).text().equals("function")) {
-										par.setName(parsrow.get(i1 + 1).child(1).text());
-										par.setTip(parsrow.get(i1 + 1).child(2).text());
-										par.setValue(parsrow.get(i1 + 1).child(8).text().substring(3) + "");
-									}
-									// 如果是channel参数，特殊处理
-									else if (parsrow.get(i1 + 1).child(1).text().equals("channel")) {
-										par.setName("channel");
-										par.setTip(parsrow.get(i1 + 1).child(2).text());
-										par.setValue("2");
-									} else {
-										par.setName(parsrow.get(i1 + 1).child(1).text());
-										par.setTip(parsrow.get(i1 + 1).child(2).text());
-										par.setValue(parsrow.get(i1 + 1).child(7).text() + "");
-									}
-								}
-								pars.add(par);
-							}
-							// 获取私有参数的个数
-							int n2 = Integer.parseInt(parsrow.get(n1 + 1).child(1).attr("rowspan"));
-							for (int i2 = n1 + 1; i2 < n2 + n1 + 1; i2++) {
-								ApiPar par = new ApiPar();
-								if (i2 == n1 + 1) {
-									par.setName(parsrow.get(i2).child(2).text());
-									// 如果参数的默认值是"空"，也转换为""
-									par.setTip(parsrow.get(i2).child(3).text());
-									par.setValue(parsrow.get(i2).child(8).text().toString().equals("空") ? ""
-											: parsrow.get(i2).child(8).text() + "");
-								} else {
-									// 如果参数的默认值是"空"，也转换为""
-									par.setName(parsrow.get(i2).child(1).text());
-									par.setTip(parsrow.get(i2).child(2).text());
-									par.setValue(parsrow.get(i2).child(7).text().toString().equals("空") ? ""
-											: parsrow.get(i2).child(7).text() + "");
-								}
-								pars.add(par);
-							}
-						}
-						apiItem.setParameters(pars);
-					} catch (Exception e) {
-						logger.info("解析参数信息出错");
-						logger.error("异常", e);
-					}
-				} else {
-					// 解析不到就continue解析下一个
-					continue;
-				}
-			}
-			// 暴力执法，如果捕获异常就跳过此页面
-			catch (Exception e) {
-				logger.info("解析接口信息出错");
-				logger.error("异常", e);
-				continue;
-			}
-			// 加入列表
-			apiItems.add(apiItem);
-		}
-		return apiItems;
 	}
 
 	/**

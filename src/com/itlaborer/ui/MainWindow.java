@@ -72,12 +72,6 @@ public class MainWindow {
 	private ApiList history;
 	private Properties returnCode;
 	private int httpCode, method, parsSum, hsitorysum;
-	// BEGIN FOR HUNDSUN API3.0
-	private boolean sissonKeyLock;
-	private String sessionkey;
-	private String merID;
-	private String merPassWord;
-	// END/////////////////////
 	private String httpMethod;
 	private String apiVersion;
 	private String apiServerAdress;
@@ -274,11 +268,6 @@ public class MainWindow {
 		button.setBounds(700, 38, 65, 27);
 		formToolkit.adapt(button, true, true);
 
-		// 锁定sessionkey
-		sessionKeyHoldButton = new Button(mainWindowShell, SWT.NONE);
-		sessionKeyHoldButton.setText("锁定sessionkey");
-		sessionKeyHoldButton.setBounds(771, 38, 107, 27);
-		formToolkit.adapt(sessionKeyHoldButton, true, true);
 		// api状态码
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
 		apiStatusButton.setText("API返回码解读");
@@ -362,6 +351,12 @@ public class MainWindow {
 		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
 		dropTarget.setTransfer(transfer);
 
+		Button button_1 = new Button(mainWindowShell, SWT.NONE);
+		button_1.setToolTipText("清空参数里可能存在的空格");
+		button_1.setText("功能待定");
+		button_1.setBounds(771, 39, 107, 27);
+		formToolkit.adapt(button_1, true, true);
+
 		// 拖拽监听
 		dropTarget.addDropListener(new DropTargetListener() {
 			@Override
@@ -412,10 +407,6 @@ public class MainWindow {
 				logger.debug("调用了保存参数");
 				if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
 					statusBar.setText("保存失败：只允许在现有接口上保存已填写的参数");
-					return;
-				}
-				if (apiVersion == "3.0") {
-					statusBar.setText("保存参数功能不支持API3.0");
 					return;
 				}
 				ArrayList<ApiPar> pars = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -579,22 +570,11 @@ public class MainWindow {
 		toBrower.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				HashMap<String, String> pars = getParameters();
-				if (apiVersion.equals("3.0")) {
-					// 待修正
-					// text[5].setText(ApiUtils.SignMessage(pars, merPassWord));
-					HashMap<String, String> hashMap2 = getParameters();
-					parsText.setText(ParamUtils.mapToQuery(hashMap2));
-					String url = urlText.getText();
-					Program.launch(url + "?" + ParamUtils.mapToQuery(hashMap2));
-					logger.info("浏览器中请求:" + url + "?" + ParamUtils.mapToQuery(hashMap2));
-				} else {
-					HashMap<String, String> pars1 = getParameters();
-					parsText.setText(ParamUtils.mapToQuery(pars1));
-					String url = urlText.getText();
-					Program.launch(url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
-					logger.info("浏览器中请求:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
-				}
+				HashMap<String, String> pars1 = getParameters();
+				parsText.setText(ParamUtils.mapToQuery(pars1));
+				String url = urlText.getText();
+				Program.launch(url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
+				logger.info("浏览器中请求:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
 				statusBar.setText("已在浏览器中发起请求");
 			}
 		});
@@ -632,7 +612,7 @@ public class MainWindow {
 							statusBar.setText("返回码是:" + resultJson.get("code") + ":" + returnText);
 						}
 					} catch (Exception e2) {
-						logger.error("异常" , e2);
+						logger.error("异常", e2);
 						statusBar.setText("异常:解析API返回码错误");
 					}
 
@@ -650,9 +630,9 @@ public class MainWindow {
 						}
 					} catch (DocumentException e1) {
 						statusBar.setText("异常:解析API返回码错误");
-						logger.error("异常" , e1);
+						logger.error("异常", e1);
 					} catch (NullPointerException e2) {
-						logger.error("异常" , e2);
+						logger.error("异常", e2);
 						statusBar.setText("异常:解析API返回码错误");
 					}
 				} else if (!(isJson(text) && isXml(text))) {
@@ -688,13 +668,6 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("请求中······");
 				HashMap<String, String> pars = getParameters();
-				if (apiVersion.equals("3.0") && pars.size() > 0) {
-					// 待修正
-					// text[11].setText(ApiUtils.SignMessage(pars,
-					// merPassWord));
-					// logger.info("签名结束，签名值为:" + text[11].getText());
-					// pars.put("signmsg", text[11].getText());
-				}
 				parsText.setText(ParamUtils.mapToQuery(pars));
 				String url = urlText.getText();
 				method = methodSelectCombo.getSelectionIndex();
@@ -768,13 +741,10 @@ public class MainWindow {
 				}
 				HashMap<String, String> queryMap = new HashMap<String, String>();
 				queryMap = ParamUtils.queryToMap(queryString);
-				if (apiVersion.equals("3.0")) {
-					initParameters3(covertHashMaptoApiPar(queryMap));
-					parsText.setText(queryString);
-				} else {
-					initParameters4(covertHashMaptoApiPar(queryMap));
-					parsText.setText(queryString);
-				}
+
+				initParameters(covertHashMaptoApiPar(queryMap));
+				parsText.setText(queryString);
+
 			}
 		});
 
@@ -792,30 +762,6 @@ public class MainWindow {
 		methodSelectCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				httpMethod = methodSelectCombo.getText();
-			}
-		});
-
-		// sessionkey锁定按钮
-		sessionKeyHoldButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				if (sissonKeyLock) {
-					sessionKeyHoldButton.setText("锁定sessionkey");
-					sissonKeyLock = false;
-					// 待修正
-					// text[12].setEnabled(true);
-					// text[13].setEnabled(true);
-					sessionkey = "";
-					logger.debug("sessionkey已解锁");
-				} else {
-					sissonKeyLock = true;
-					// text[12].setEnabled(false);
-					// text[13].setEnabled(false);
-					sessionKeyHoldButton.setText("解锁sessionkey");
-					// sessionkey = text[13].getText();
-					logger.debug("sessionkey已锁定");
-				}
 			}
 		});
 	}
@@ -872,38 +818,24 @@ public class MainWindow {
 		try {
 			// 加载配置
 			Properties properties = PropertiesUtils.ReadProperties(configFile);
-			if (properties.getProperty("apiversion") == null) {
-				logger.debug("直接以通用接口方式启动");
-			} else {
-				// 配置历史记录条数
-				if ((null != properties.getProperty("hsitorysum"))
-						&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
-					this.hsitorysum = Integer.parseInt(properties.getProperty("hsitorysum"));
-				}
-				if (properties.getProperty("apiversion").equals("3.0")) {
-					logger.debug("选择启动API3.0模式");
-					this.apiVersion = "3.0";
-					this.merID = properties.getProperty("merid");
-					this.merPassWord = properties.getProperty("merpassword");
-					this.apiReturnCodeFile = properties.getProperty("returncodefile");
-					this.apiServerAdress = properties.getProperty("apiaddress");
-					this.apiLoadJsonFile = properties.getProperty("apilist");
-				} else {
-					logger.debug("选择启动通用模式");
-					this.apiVersion = "4.0";
-					this.apiReturnCodeFile = properties.getProperty("returncodefile");
-					this.apiServerAdress = properties.getProperty("apiaddress");
-					this.apiLoadJsonFile = properties.getProperty("apilist");
-					sessionKeyHoldButton.setEnabled(false);
-				}
+
+			// 配置历史记录条数
+			if ((null != properties.getProperty("hsitorysum"))
+					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
+				this.hsitorysum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
+			this.apiVersion = "4.0";
+			this.apiReturnCodeFile = properties.getProperty("returncodefile");
+			this.apiServerAdress = properties.getProperty("apiaddress");
+			this.apiLoadJsonFile = properties.getProperty("apilist");
+
 		} catch (Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
 		}
 		// 此处开始加载返回码列表文件
 		try {
-			if (apiReturnCodeFile == null) {
+			if (null == apiReturnCodeFile) {
 				logger.debug("没有读到返回码配置,跳过加载");
 			} else {
 				File reader = new File("./config/" + apiReturnCodeFile);
@@ -916,7 +848,7 @@ public class MainWindow {
 		}
 
 		// 配置文件加载完毕后开始加载API列表
-		if (apiLoadJsonFile == null) {
+		if (null == apiLoadJsonFile) {
 			logger.debug("API列表为空，跳过加载");
 		} else {
 			InitApiList();
@@ -975,7 +907,7 @@ public class MainWindow {
 			urlText.setText(apiServerAdress + apiItems.get(0).getAddress());
 			initParameters(apiItems.get(0).getParameters());
 		} catch (Exception e) {
-			logger.error("异常",e);
+			logger.error("异常", e);
 			urlText.setText(apiServerAdress);
 		}
 	}
@@ -992,23 +924,8 @@ public class MainWindow {
 		return apiPars;
 	}
 
-	// 初始化参数
+	// 参数初始化
 	private void initParameters(ArrayList<ApiPar> pars) {
-		if (apiVersion.equals("3.0")) {
-			initParameters3(pars);
-		} else {
-			initParameters4(pars);
-		}
-	}
-
-	// 参数初始化--针对API3.0特殊处理
-	private void initParameters3(ArrayList<ApiPar> pars) {
-		clearParameters();
-		// 此处需要补全
-	}
-
-	// 参数初始化--通用方法
-	private void initParameters4(ArrayList<ApiPar> pars) {
 		clearParameters();
 		if (null != pars) {
 			for (int i = 0; i < pars.size(); i++) {
