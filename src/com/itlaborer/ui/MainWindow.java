@@ -88,7 +88,6 @@ public class MainWindow {
 	private Button parsCovertButton;
 	private Button parsClearButton;
 	private Button toBrower;
-	private Button sessionKeyHoldButton;
 	private Button apiStatusButton;
 	private Combo methodSelectCombo;
 	private Combo modSelectCombo;
@@ -233,7 +232,7 @@ public class MainWindow {
 		urlText.setBounds(487, 8, 487, 25);
 		// HTTP请求的方法是get还是post-下拉选择框
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
-		methodSelectCombo.setBounds(980, 7, 57, 25);
+		methodSelectCombo.setBounds(980, 7, 58, 25);
 		formToolkit.adapt(methodSelectCombo);
 		formToolkit.paintBordersFor(methodSelectCombo);
 		methodSelectCombo.add("GET", 0);
@@ -245,38 +244,38 @@ public class MainWindow {
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
 		parsCovertButton.setText("导入参数");
-		parsCovertButton.setBounds(487, 38, 65, 27);
+		parsCovertButton.setBounds(487, 38, 74, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
 		// 清空参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
 		parsClearButton.setText("清空参数");
-		parsClearButton.setBounds(558, 38, 65, 27);
+		parsClearButton.setBounds(567, 38, 67, 27);
 		formToolkit.adapt(parsClearButton, true, true);
 
 		// 排除空格
 		clearSpaceButton = new Button(mainWindowShell, SWT.NONE);
 		clearSpaceButton.setToolTipText("清空参数里可能存在的空格");
 		clearSpaceButton.setText("排除空格");
-		clearSpaceButton.setBounds(629, 38, 65, 27);
+		clearSpaceButton.setBounds(640, 38, 67, 27);
 		formToolkit.adapt(clearSpaceButton, true, true);
 
 		// 重排参数
 		Button button = new Button(mainWindowShell, SWT.NONE);
 		button.setToolTipText("清空参数里可能存在的空格");
 		button.setText("参数重排");
-		button.setBounds(700, 38, 65, 27);
+		button.setBounds(713, 38, 76, 27);
 		formToolkit.adapt(button, true, true);
 
 		// api状态码
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
 		apiStatusButton.setText("API返回码解读");
-		apiStatusButton.setBounds(884, 38, 90, 27);
+		apiStatusButton.setBounds(877, 38, 97, 27);
 		formToolkit.adapt(apiStatusButton, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setText("清空结果");
-		textClearButton.setBounds(979, 38, 59, 27);
+		textClearButton.setBounds(979, 38, 60, 27);
 		formToolkit.adapt(textClearButton, true, true);
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
@@ -353,8 +352,8 @@ public class MainWindow {
 
 		Button button_1 = new Button(mainWindowShell, SWT.NONE);
 		button_1.setToolTipText("清空参数里可能存在的空格");
-		button_1.setText("功能待定");
-		button_1.setBounds(771, 39, 107, 27);
+		button_1.setText("接口测试");
+		button_1.setBounds(795, 38, 76, 27);
 		formToolkit.adapt(button_1, true, true);
 
 		// 拖拽监听
@@ -895,8 +894,8 @@ public class MainWindow {
 	private void initInterfaceCombo(ArrayList<ApiItem> apiItems) {
 		clearParameters();
 		interfaceCombo.removeAll();
-		if (null == apiItems) {
-			logger.debug("此分类下无接口，跳过加载");
+		if (null == apiItems || apiItems.size() == 0) {
+			logger.debug("当前分类下无接口信息，跳过加载");
 			return;
 		}
 		for (int i = 0; i < apiItems.size(); i++) {

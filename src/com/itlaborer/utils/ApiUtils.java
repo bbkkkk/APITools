@@ -12,11 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,27 +48,7 @@ public class ApiUtils {
 
 	public ApiUtils() {
 	}
-
-	// API3.0签名算法，传入参数HashMap和商户密码,此参数中是否包含signmessage参数都无所谓，返回String类型签名值
-	public static String SignMessage(Map<String, String> parameter, String password) {
-
-		if (parameter == null) {
-			logger.debug("参数为空,跳过签名");
-			return null;
-		}
-		Object[] keyArray = parameter.keySet().toArray();
-		Arrays.sort(keyArray);
-		StringBuffer signString = new StringBuffer();
-		for (Object key : keyArray) {
-			if ((!parameter.get(key).isEmpty()) && (!key.toString().equals("signmsg"))) {
-				signString.append(key).append(parameter.get(key));
-			}
-		}
-		signString.insert(0, password).append(password);
-		logger.debug("签名拼接字符串为:" + signString);
-		return MD5(signString.toString()).toLowerCase();
-	}
-
+	
 	// MD5字符串算法
 	public final static String MD5(String s) {
 
@@ -367,7 +345,6 @@ public class ApiUtils {
 					styledText.selectAll();
 				}
 			}
-
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
