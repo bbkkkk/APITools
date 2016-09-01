@@ -1,0 +1,25 @@
+[2016-09-01 11:15:07][com.itlaborer.ui.MainWindow][INFO ][程序启动, 程序版本为:V1.7]
+[2016-09-01 11:15:09][com.itlaborer.utils.ApiUtils][ERROR][异常]
+java.io.FileNotFoundException: .\config\xxx.properties (系统找不到指定的文件。)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at com.itlaborer.utils.PropertiesUtils.ReadProperties(PropertiesUtils.java:23)
+	at com.itlaborer.ui.MainWindow.InitSystem(MainWindow.java:965)
+	at com.itlaborer.ui.MainWindow.open(MainWindow.java:132)
+	at com.itlaborer.ui.MainWindow.main(MainWindow.java:122)
+[2016-09-01 11:15:22][com.itlaborer.ui.MainWindow][INFO ][再见~~~~~]
+[2016-09-01 11:21:16][com.itlaborer.ui.MainWindow][INFO ][程序启动, 程序版本为:V1.7]
+[2016-09-01 11:21:18][com.itlaborer.utils.ApiUtils][ERROR][异常]
+java.io.FileNotFoundException: .\config\xxx.properties (系统找不到指定的文件。)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at com.itlaborer.utils.PropertiesUtils.ReadProperties(PropertiesUtils.java:23)
+	at com.itlaborer.ui.MainWindow.InitSystem(MainWindow.java:965)
+	at com.itlaborer.ui.MainWindow.open(MainWindow.java:132)
+	at com.itlaborer.ui.MainWindow.main(MainWindow.java:122)
+[2016-09-01 11:21:23][com.itlaborer.ui.MainWindow][INFO ][再见~~~~~]
+[2016-09-01 11:35:08][com.itlaborer.ui.MainWindow][INFO ][程序启动, 程序版本为:V1.7]
+[2016-09-01 11:35:18][com.itlaborer.ui.MainWindow][INFO ][响应头部:[Date=Thu, 01 Sep 2016 03:35:18 GMT, Content-Type=application/json; charset=utf-8, Transfer-Encoding=chunked, Connection=keep-alive, Cache-Control=no-cache, Pragma=no-cache, Expires=-1, Content-Encoding=gzip]]
+[2016-09-01 11:43:25][com.itlaborer.ui.MainWindow][INFO ][再见~~~~~]
