@@ -956,18 +956,13 @@ public class MainWindow {
 			logger.warn("读取配置失败，请检查", e);
 		}
 		// 此处开始加载返回码列表文件
-		try {
-			if (null == apiReturnCodeFile) {
-				logger.debug("没有读到返回码配置,跳过加载");
-			} else {
-				File reader = new File("./config/" + apiReturnCodeFile);
-				logger.debug("加载返回码配置文件" + "./config/" + apiReturnCodeFile);
-				returnCode = PropertiesUtils.ReadProperties(reader);
-			}
-		} catch (Exception e) {
-			// 加载返回码失败后直接不做处理，返回码文件为非必须
+		File reader = new File("./config/" + apiReturnCodeFile);
+		if (reader.exists()) {
+			returnCode = PropertiesUtils.ReadProperties(reader);
+			logger.debug("加载返回码配置文件" + "./config/" + apiReturnCodeFile);
+		} else {
+			logger.debug("没有读到返回码配置,跳过加载");
 		}
-
 		// 配置文件加载完毕后开始加载API列表
 		if (null == apiLoadJsonFile) {
 			logger.debug("API列表为空，跳过加载");
