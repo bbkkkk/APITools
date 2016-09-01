@@ -72,9 +72,17 @@ public class Base64Tools extends Dialog {
 		decodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+<<<<<<< HEAD
 				//Base64解码
 				byte[] bytes = Base64Utils.decode(styledText.getText());
 				styledText.setText((null == bytes) ? styledText.getText() : new String(bytes));
+=======
+				if (StringUtils.isNotEmpty(styledText.getText())) {
+					byte[] bytes = Base64Utils.decode(styledText.getText());
+					logger.debug("解码串:" + styledText.getText());
+					styledText.setText((null == bytes) ? styledText.getText(): new String(bytes));
+				}
+>>>>>>> aacfe6024c1ccb6c8cb0e79c0face249204d0639
 			}
 		});
 	}
