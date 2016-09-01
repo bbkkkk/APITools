@@ -72,11 +72,8 @@ public class Base64Tools extends Dialog {
 		decodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (StringUtils.isNotEmpty(styledText.getText())) {
-					byte[] bytes = Base64Utils.decode(styledText.getText());
-					logger.debug("解码串:" + styledText.getText());
-					styledText.setText(styledText.getText().length() == 0 ? "" : new String(bytes));
-				}
+				byte[] bytes = Base64Utils.decode(styledText.getText());
+				styledText.setText((null == bytes) ? styledText.getText() : new String(bytes));
 			}
 		});
 	}
