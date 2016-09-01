@@ -1,5 +1,6 @@
 package com.itlaborer.ui;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
@@ -43,24 +44,29 @@ public class UrlEncodeTools extends Dialog {
 	private void createContents() {
 		urlEncodeToolsShell = new Shell(getParent(), getStyle());
 		urlEncodeToolsShell.setImage(SWTResourceManager.getImage(UrlEncodeTools.class, "/com/itlaborer/res/icon.ico"));
-		urlEncodeToolsShell.setSize(600, 287);
+		urlEncodeToolsShell.setSize(680, 420);
 		urlEncodeToolsShell.setText("URL编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);
 
-		StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.WRAP);
-		styledText.setBounds(10, 10, 574, 202);
+		StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.setWordWrap(true);
+		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		// URL编码
 		Button btnNewButton = new Button(urlEncodeToolsShell, SWT.NONE);
-		btnNewButton.setBounds(10, 222, 285, 27);
+		btnNewButton.setBounds(5, 360, 342, 27);
 		btnNewButton.setText("URL编码");
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				@SuppressWarnings("deprecation")
-				String encode = URLEncoder.encode(styledText.getText());
-				if (encode == null) {
+				String encode = null;
+				try {
+					encode = URLEncoder.encode(styledText.getText(), "UTF-8");
+				} catch (UnsupportedEncodingException e1) {
+					logger.error("异常", e1);
+				}
+				if (null == encode) {
 					//
 				} else {
 					logger.debug("编码串:" + styledText.getText());
@@ -72,12 +78,16 @@ public class UrlEncodeTools extends Dialog {
 		// URL解码
 		Button btnmd = new Button(urlEncodeToolsShell, SWT.NONE);
 		btnmd.setText("URL解码");
-		btnmd.setBounds(301, 222, 285, 27);
+		btnmd.setBounds(353, 360, 317, 27);
 		btnmd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				@SuppressWarnings("deprecation")
-				String encode = URLDecoder.decode(styledText.getText());
+				String encode = null;
+				try {
+					encode = URLDecoder.decode(styledText.getText(), "UTF-8");
+				} catch (UnsupportedEncodingException e1) {
+					logger.error("异常", e1);
+				}
 				if (encode == null) {
 					//
 				} else {

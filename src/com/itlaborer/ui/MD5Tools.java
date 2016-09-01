@@ -22,7 +22,6 @@ public class MD5Tools extends Dialog {
 	public MD5Tools(Shell parent, int style) {
 		super(parent, style);
 		logger.info("进入MD5工具");
-		setText("SWT Dialog");
 	}
 
 	public Object open() {
@@ -41,17 +40,18 @@ public class MD5Tools extends Dialog {
 	private void createContents() {
 		md5ToolsShell = new Shell(getParent(), getStyle());
 		md5ToolsShell.setImage(SWTResourceManager.getImage(MD5Tools.class, "/com/itlaborer/res/icon.ico"));
-		md5ToolsShell.setSize(600, 287);
+		md5ToolsShell.setSize(680, 420);
 		md5ToolsShell.setText("MD5加密工具");
 		ApiUtils.SetCenterinParent(getParent(), md5ToolsShell);
 
-		StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.WRAP);
-		styledText.setBounds(10, 10, 574, 202);
+		StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.setWordWrap(true);
+		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		// 小写加密
 		Button btnNewButton = new Button(md5ToolsShell, SWT.NONE);
-		btnNewButton.setBounds(10, 222, 285, 27);
+		btnNewButton.setBounds(5, 360, 342, 27);
 		btnNewButton.setText("32位小写MD5");
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -65,7 +65,7 @@ public class MD5Tools extends Dialog {
 		// 大写加密
 		Button btnmd = new Button(md5ToolsShell, SWT.NONE);
 		btnmd.setText("32位大写MD5");
-		btnmd.setBounds(301, 222, 285, 27);
+		btnmd.setBounds(353, 360, 317, 27);
 		btnmd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

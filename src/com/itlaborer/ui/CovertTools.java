@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -92,7 +93,7 @@ public class CovertTools extends Dialog {
 				fd.setFilterExtensions(new String[] { "*.html;*.chm", "*.*" });
 				fd.setFilterNames(new String[] { "HTML(*.html)/CHM(*.chm)", "All Files(*.*)" });
 				String file = fd.open();
-				if (file != null) {
+				if (StringUtils.isNotEmpty(file)) {
 					path = new File(file);
 					filePath.setText(path.getPath());
 				}
@@ -101,15 +102,15 @@ public class CovertTools extends Dialog {
 		fileSelect.setBounds(311, 11, 73, 27);
 		fileSelect.setText("选择文件");
 
-		Button beginCovert = new Button(covertToolsShell, SWT.NONE);
+		final Button beginCovert = new Button(covertToolsShell, SWT.NONE);
 		beginCovert.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (path == null) {
+				if (null == path) {
 					logger.info("请选择API文档");
 					statusText.setText("请选择API文档");
 					return;
-				} else if (apiDocVersion.getText() == "") {
+				} else if (StringUtils.isEmpty(apiDocVersion.getText())) {
 					logger.info("请填写API文档版本");
 					statusText.setText("请填写API文档版本");
 					return;
@@ -122,7 +123,7 @@ public class CovertTools extends Dialog {
 				saveButton.setEnabled(false);
 				statusText.setText("开始解析文件" + path.getPath());
 				setNameText.setText("api-fundapi" + apiDocVersion.getText() + ".json");
-				String version = apiDocVersion.getText();
+				final String version = apiDocVersion.getText();
 				// 新线程中读取
 				new Thread() {
 					public void run() {
@@ -174,8 +175,11 @@ public class CovertTools extends Dialog {
 					statusText.setText("没有什么可以保存，请先进行转换");
 					return;
 				}
-				ApiUtils.SaveToFile(new File("./config/" + setNameText.getText()), apiDocJson);
-				statusText.setText("保存完毕，请关闭工具后在config.properties配置读取新的接口文档");
+				if (ApiUtils.SaveToFile(new File("./config/" + setNameText.getText()), apiDocJson)) {
+					statusText.setText("保存完毕，请关闭工具后在config.properties配置读取新的接口文档");
+				} else {
+					statusText.setText("保存失败，请尝试重新保存");
+				}
 			}
 		});
 		saveButton.setBounds(249, 91, 135, 27);
@@ -269,7 +273,7 @@ public class CovertTools extends Dialog {
 				// 获取分类
 				if (div_ul.get(i).tagName().equals("div")) {
 					ApiList thisTypeApiList = new ApiList();
-					ArrayList<String> apiHTMLPath = new ArrayList<>();
+					ArrayList<String> apiHTMLPath = new ArrayList<String>();
 					thisTypeApiList.setName(div_ul.get(i).text());
 					// 获取此分类下的接口列表
 					for (int r = 0; r < div_ul.get(i + 1).children().size(); r++) {
@@ -321,7 +325,7 @@ public class CovertTools extends Dialog {
 						apiItem.setAddress("接口地址未知");
 						logger.error("异常", e);
 					}
-					ArrayList<ApiPar> pars = new ArrayList<>();
+					ArrayList<ApiPar> pars = new ArrayList<ApiPar>();
 					try {
 						// 开始处理参数，获取所有的信息
 						Elements parsrow = tables.get(2).getElementsByTag("tr");

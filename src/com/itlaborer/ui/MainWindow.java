@@ -1,14 +1,18 @@
 package com.itlaborer.ui;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.dom4j.Document;
@@ -18,12 +22,8 @@ import org.dom4j.Element;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -66,14 +66,12 @@ import net.dongliu.requests.RawResponse;
  */
 public class MainWindow {
 
-	private static Logger logger = Logger.getLogger(MainWindow.class.getName());;
+	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 参数
 	private ApiDoc apiDoc;
 	private ApiList history;
 	private Properties returnCode;
-	private int httpCode, method, parsSum, hsitorysum;
-	private String httpMethod;
-	private String apiVersion;
+	private int httpCode, parsSum, hsitorysum;
 	private String apiServerAdress;
 	private String apiReturnStr;
 	private String headerReturnStr;
@@ -97,17 +95,18 @@ public class MainWindow {
 	private Text parsText;
 	private Text urlText;
 	private Button submitButton;
+	private Button button;
 	private Button textClearButton;
 	private Button clearSpaceButton;
 	private Table formTable;
 	private Text[][] form;
+	private Label[] label;
 
 	// 主窗口
 	public MainWindow() {
 		PropertyConfigurator.configure("config/log4j.properties ");
 		logger.info("程序启动, 程序版本为:" + Resource.getVersion());
 		this.formToolkit = new FormToolkit(Display.getDefault());
-		this.apiVersion = "4.0";
 		this.parsSum = 128;
 		this.hsitorysum = 30;
 		this.cookies = new LinkedHashMap<>();
@@ -115,7 +114,6 @@ public class MainWindow {
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
 		this.header.put("SocksTimeout", "20000");
 		this.header.put("ConnectTimeout", "20000");
-
 	}
 
 	public static void main(String[] args) {
@@ -123,7 +121,7 @@ public class MainWindow {
 			MainWindow window = new MainWindow();
 			window.open();
 		} catch (Exception e) {
-			logger.error("异常:", e);
+			logger.error("异常", e);
 		}
 	}
 
@@ -149,20 +147,25 @@ public class MainWindow {
 		mainWindowShell.setSize(1148, 650);
 		mainWindowShell.setText("APITools" + "-" + Resource.getVersion());
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/icon.ico"));
-
+		ApiUtils.DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
 		mainWindowShell.setMenuBar(rootMenu);
 
+		// 工具菜单///////////////////////////////////////////////////
 		/////////////////// 编辑////////////////////////////////////////
-		MenuItem menuFile = new MenuItem(rootMenu, SWT.CASCADE);
-		menuFile.setText("编辑");
+		MenuItem menuEdit = new MenuItem(rootMenu, SWT.CASCADE);
+		menuEdit.setText("编辑");
 
-		Menu menu_1 = new Menu(menuFile);
-		menuFile.setMenu(menu_1);
+		Menu menu_1 = new Menu(menuEdit);
+		menuEdit.setMenu(menu_1);
 
 		MenuItem menuItemSave = new MenuItem(menu_1, SWT.NONE);
-		menuItemSave.setText("保存参数（关闭前有效）");
+		menuItemSave.setText("保存当前接口参数（关闭前有效）");
+
+		MenuItem menuItemSaveToFile = new MenuItem(menu_1, SWT.NONE);
+		menuItemSaveToFile.setText("保存当前接口参数（保存到接口列表文件）");
+
 		// 工具菜单///////////////////////////////////////////////////
 		MenuItem menuToolKit = new MenuItem(rootMenu, SWT.CASCADE);
 		menuToolKit.setText("工具箱");
@@ -173,8 +176,14 @@ public class MainWindow {
 		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
 		menuItemConvertDoc.setText("恒生API文档转换");
 		// 工具-接口列表编辑
-		// MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
-		// menuItemApiListEdit.setText("接口列表编辑");
+		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
+		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("此功能暂未实现");
+			}
+		});
+		menuItemApiListEdit.setText("接口列表编辑");
 
 		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
 		menuItemUrl.setText("URL编码/解码");
@@ -188,16 +197,16 @@ public class MainWindow {
 		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
 		menuItemMd5.setText("MD5加密");
 
-		// MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
-		// menuPar.setText("特殊参数");
-		// Menu menu_2 = new Menu(menuPar);
-		// menuPar.setMenu(menu_2);
-		//
-		// MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
-		// menuItemHeader.setText("Header");
-		//
-		// MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
-		// menuItemCookie.setText("Cookie");
+		MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
+		menuPar.setText("Header参数");
+		Menu menu_2 = new Menu(menuPar);
+		menuPar.setMenu(menu_2);
+
+		MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
+		menuItemHeader.setText("Header");
+
+		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
+		menuItemCookie.setText("Cookie");
 
 		/////////////////// 帮助////////////////////////////////////////
 		MenuItem menuHelp = new MenuItem(rootMenu, SWT.CASCADE);
@@ -229,58 +238,80 @@ public class MainWindow {
 		parsText.setBounds(7, 39, 476, 25);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
-		urlText.setBounds(487, 8, 487, 25);
+		urlText.setBounds(487, 8, 478, 25);
 		// HTTP请求的方法是get还是post-下拉选择框
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
-		methodSelectCombo.setBounds(980, 7, 58, 25);
+		methodSelectCombo.setBounds(971, 7, 67, 25);
 		formToolkit.adapt(methodSelectCombo);
 		formToolkit.paintBordersFor(methodSelectCombo);
 		methodSelectCombo.add("GET", 0);
 		methodSelectCombo.add("POST", 1);
+		methodSelectCombo.add("HEAD", 2);
+		methodSelectCombo.add("PUT", 3);
+		methodSelectCombo.add("PATCH", 4);
+		methodSelectCombo.add("DELETE", 5);
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
-		submitButton.setBounds(1042, 6, 92, 27);
+		submitButton.setBounds(1044, 6, 90, 27);
 		submitButton.setText("提      交");
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
+		parsCovertButton.setToolTipText("导入形如a=1&b=2的参数串到表单");
 		parsCovertButton.setText("导入参数");
-		parsCovertButton.setBounds(487, 38, 74, 27);
+		parsCovertButton.setBounds(487, 38, 70, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
-		// 清空参数
+		// 重置参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
-		parsClearButton.setText("清空参数");
-		parsClearButton.setBounds(567, 38, 67, 27);
+		parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
+		parsClearButton.setText("重置参数");
+		parsClearButton.setBounds(563, 38, 70, 27);
 		formToolkit.adapt(parsClearButton, true, true);
 
 		// 排除空格
 		clearSpaceButton = new Button(mainWindowShell, SWT.NONE);
-		clearSpaceButton.setToolTipText("清空参数里可能存在的空格");
-		clearSpaceButton.setText("排除空格");
-		clearSpaceButton.setBounds(640, 38, 67, 27);
+		clearSpaceButton.setToolTipText("清除参数两头可能存在的空格");
+		clearSpaceButton.setText("TRIM参数");
+		clearSpaceButton.setBounds(639, 38, 70, 27);
 		formToolkit.adapt(clearSpaceButton, true, true);
 
 		// 重排参数
-		Button button = new Button(mainWindowShell, SWT.NONE);
-		button.setToolTipText("清空参数里可能存在的空格");
-		button.setText("参数重排");
-		button.setBounds(713, 38, 76, 27);
+		button = new Button(mainWindowShell, SWT.NONE);
+		button.setToolTipText("将参数重新从第一个表格重排列");
+		button.setText("重排参数");
+		button.setBounds(714, 38, 70, 27);
 		formToolkit.adapt(button, true, true);
+		
+		//auth
+		Button btnAuthorization = new Button(mainWindowShell, SWT.NONE);
+		btnAuthorization.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("此功能暂未实现");
+			}
+		});
+		btnAuthorization.setToolTipText("授权管理");
+		btnAuthorization.setText("Authorization");
+		btnAuthorization.setBounds(790, 38, 86, 27);
+		formToolkit.adapt(btnAuthorization, true, true);
 
 		// api状态码
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
-		apiStatusButton.setText("API返回码解读");
-		apiStatusButton.setBounds(877, 38, 97, 27);
+		apiStatusButton.setToolTipText("解析Response里的code值");
+		apiStatusButton.setText("返回码解读");
+		apiStatusButton.setBounds(882, 38, 83, 27);
 		formToolkit.adapt(apiStatusButton, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
+		textClearButton.setToolTipText("清空结果内容");
 		textClearButton.setText("清空结果");
-		textClearButton.setBounds(979, 38, 60, 27);
+		textClearButton.setBounds(970, 38, 69, 27);
 		formToolkit.adapt(textClearButton, true, true);
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
+		toBrower.setToolTipText("用HTTP GET方式在浏览器中请求接口");
 		toBrower.setText("浏览器中打开");
-		toBrower.setBounds(1042, 38, 92, 27);
+		toBrower.setBounds(1044, 38, 90, 27);
 		formToolkit.adapt(toBrower, true, true);
 
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.V_SCROLL);
@@ -292,32 +323,34 @@ public class MainWindow {
 		formTable.setLinesVisible(true);
 
 		// 表列
-		TableColumn tblclmnNewColumn = new TableColumn(formTable, SWT.NONE);
+		TableColumn tblclmnNewColumn = new TableColumn(formTable, SWT.BORDER);
 		tblclmnNewColumn.setWidth(38);
 		tblclmnNewColumn.setResizable(false);
 		tblclmnNewColumn.setText("编号");
 
-		TableColumn nameColumn = new TableColumn(formTable, SWT.NONE);
-		nameColumn.setWidth(188);
+		TableColumn nameColumn = new TableColumn(formTable, SWT.BORDER);
+		nameColumn.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+				- formTable.getVerticalBar().getSize().x - 4) * 0.45));
 		nameColumn.setText("参数名");
 		nameColumn.setResizable(false);
 
-		TableColumn valueColumn_1 = new TableColumn(formTable, SWT.NONE);
-		valueColumn_1.setWidth(227);
+		TableColumn valueColumn_1 = new TableColumn(formTable, SWT.BORDER);
+		valueColumn_1.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+				- formTable.getVerticalBar().getSize().x - 4) * 0.55));
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
 
 		form = new Text[parsSum][2];
+		label = new Label[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
-
 			// 第一列
 			TableEditor editor0 = new TableEditor(formTable);
-			Label text = new Label(formTable, SWT.BORDER_SOLID | SWT.CENTER);
-			text.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-			text.setText(new DecimalFormat("000").format(i + 1));
+			label[i] = new Label(formTable, SWT.NONE | SWT.CENTER);
+			label[i].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+			label[i].setText(new DecimalFormat("000").format(i + 1));
 			editor0.grabHorizontal = true;
-			editor0.setEditor(text, items[i], 0);
+			editor0.setEditor(label[i], items[i], 0);
 			// 第二列
 			TableEditor editor1 = new TableEditor(formTable);
 			form[i][0] = new Text(formTable, SWT.NONE);
@@ -330,6 +363,38 @@ public class MainWindow {
 			form[i][1].setText(items[i].getText(2));
 			editor2.grabHorizontal = true;
 			editor2.setEditor(form[i][1], items[i], 2);
+			// 设置焦点变色
+			int b = i;
+			form[i][0].addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void focusGained(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
+			form[i][1].addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void focusGained(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
 		}
 		// 接口返回内容显示区域
 		resultStyledText = new StyledText(mainWindowShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -344,74 +409,27 @@ public class MainWindow {
 		statusBar.setBounds(7, 575, 1127, 23);
 		formToolkit.adapt(statusBar, true, true);
 
-		////////////////////////////////////////////////////////////////////
-		// 拖拽源
-		DropTarget dropTarget = new DropTarget(mainWindowShell, DND.DROP_NONE);
-		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
-		dropTarget.setTransfer(transfer);
-
-		Button button_1 = new Button(mainWindowShell, SWT.NONE);
-		button_1.setToolTipText("清空参数里可能存在的空格");
-		button_1.setText("接口测试");
-		button_1.setBounds(795, 38, 76, 27);
-		formToolkit.adapt(button_1, true, true);
-
-		// 拖拽监听
-		dropTarget.addDropListener(new DropTargetListener() {
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void dragLeave(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void dragOver(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
-
-			// 获取拖放进来的文件，暂无用途
-			@Override
-			public void drop(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-				String[] files = (String[]) event.data;
-				formTable.getItem(0).setText(0, "text");
-				for (int i = 0; i < files.length; i++) {
-					@SuppressWarnings("unused")
-					File file = new File(files[i]);
-				}
-			}
-
-			@Override
-			public void dropAccept(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-			}
-		});
-
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
 		// 保存事件
 		menuItemSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				logger.debug("调用了保存参数");
-				if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
-					statusBar.setText("保存失败：只允许在现有接口上保存已填写的参数");
-					return;
-				}
-				ArrayList<ApiPar> pars = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getParameters();
-				// 此处添加参数保存代码
+				savePars();
 				statusBar.setText("保存成功，程序关闭前有效");
+			}
+		});
+
+		menuItemSaveToFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				savePars();
+				// 保存到文件--潜在的风险，保存时间过长程序界面卡死
+				if (ApiUtils.SaveToFile(new File("./config/" + apiLoadJsonFile),
+						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
+					statusBar.setText("保存成功");
+				} else {
+					statusBar.setText("保存失败，请重试");
+				}
 			}
 		});
 		// 参数重排
@@ -482,31 +500,26 @@ public class MainWindow {
 				Program.launch("http://www.itlaborer.com/2016/08/07/apitools_feedback.html");
 			}
 		});
+		// Header编辑器
+		menuItemHeader.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				HeaderEdit headerEdit = new HeaderEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				header = headerEdit.open(header);
+				logger.info("读取到Header:" + header);
+			}
+		});
+		// Cookie编辑器
+		menuItemCookie.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				HeaderEdit headerEdit = new HeaderEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				cookies = headerEdit.open(cookies);
+				logger.info("读取到Cookie:" + cookies);
+			}
+		});
 
-		// menuItemHeader.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// HeaderEdit headerEdit = new HeaderEdit(mainWindowShell, SWT.CLOSE |
-		// SWT.SYSTEM_MODAL);
-		// headerEdit.open();
-		// // LinkedHashMap<String, String> HeaderTemp = headerEdit.open();
-		// // if (null != HeaderTemp) {
-		// // header = HeaderTemp;
-		// // }
-		// logger.info("读取到Header:" + header);
-		// }
-		// });
-		//
-		// menuItemCookie.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// CookieEdit cookieEdit = new CookieEdit(mainWindowShell, SWT.CLOSE |
-		// SWT.SYSTEM_MODAL);
-		// cookieEdit.open();
-		// }
-		// });
-
-		// 清空参数事件
+		// 重置参数事件
 		parsClearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -561,7 +574,7 @@ public class MainWindow {
 		methodSelectCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				logger.debug("切换表单发送方式为:" + (methodSelectCombo.getSelectionIndex() == 0 ? "GET" : "POST"));
+				logger.debug("切换表单发送方式为:" + methodSelectCombo.getText());
 			}
 		});
 
@@ -569,11 +582,15 @@ public class MainWindow {
 		toBrower.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(urlText.getText())) {
+					statusBar.setText("空地址无法发起请求");
+					return;
+				}
 				HashMap<String, String> pars1 = getParameters();
 				parsText.setText(ParamUtils.mapToQuery(pars1));
 				String url = urlText.getText();
 				Program.launch(url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
-				logger.info("浏览器中请求:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
+				logger.info("浏览器中打开:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
 				statusBar.setText("已在浏览器中发起请求");
 			}
 		});
@@ -596,12 +613,7 @@ public class MainWindow {
 					logger.debug("返回的信息为JSON格式，开始尝试解析返回码");
 					try {
 						JSONObject jsonObject = (JSONObject) JSONObject.parse(text);
-						JSONObject resultJson = null;
-						if (apiVersion.equals("3.0")) {
-							resultJson = (JSONObject) (jsonObject.get("results"));
-						} else {
-							resultJson = jsonObject;
-						}
+						JSONObject resultJson = jsonObject;
 						String returnText = returnCode.getProperty(resultJson.get("code") + "");
 						if (returnText == null) {
 							logger.warn("返回码是:" + resultJson.get("code") + ",未找到该返回码的描述信息");
@@ -669,50 +681,145 @@ public class MainWindow {
 				HashMap<String, String> pars = getParameters();
 				parsText.setText(ParamUtils.mapToQuery(pars));
 				String url = urlText.getText();
-				method = methodSelectCombo.getSelectionIndex();
-				// 避免阻塞UI线程,你懂得
+				String method = methodSelectCombo.getText();
+				// 通知更新历史
+				notifyHistory();
 				new Thread() {
 					public void run() {
 						logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
-						// 标记请求开始时间
 						long sumbegintime = System.currentTimeMillis();
 						long httpend = System.currentTimeMillis();
-						if (method == 0) {
+						RawResponse result = null;
+						switch (method) {
+						case "GET":
 							logger.debug("使用GET方式发起请求");
-							RawResponse result;
 							try {
 								result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
 								httpend = System.currentTimeMillis();
 								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
 								apiReturnStr = JsonFormatUtils.Format(result.readToText());
 								headerReturnStr = result.getHeaders().toString();
 								httpCode = result.getStatusCode();
 								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
 								apiReturnStr = "";
+								headerReturnStr = "";
 								logger.error("异常", e);
 								httpend = System.currentTimeMillis();
 								httpTime = httpend - sumbegintime;
 							}
-						}
-						if (method == 1) {
+							break;
+						case "POST":
 							logger.debug("使用POST方式发起请求");
-							RawResponse result;
 							try {
 								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
 								httpend = System.currentTimeMillis();
 								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
 								apiReturnStr = JsonFormatUtils.Format(result.readToText());
 								headerReturnStr = result.getHeaders().toString();
 								httpCode = result.getStatusCode();
 								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
 								apiReturnStr = "";
+								headerReturnStr = "";
 								headerReturnStr = null;
 								logger.error("异常", e);
 								httpend = System.currentTimeMillis();
 								httpTime = httpend - sumbegintime;
 							}
+							break;
+						case "HEAD":
+							logger.debug("使用HEAD方式发起请求");
+							try {
+								result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
+								headerReturnStr = result.getHeaders().toString();
+								List<Entry<String, String>> header = result.getHeaders();
+								for (int i = 0; i < header.size(); i++) {
+									apiReturnStr += header.get(i).toString() + "\n";
+								}
+								httpCode = result.getStatusCode();
+								logger.info("响应头部:" + result.getHeaders().toString());
+							} catch (Exception e) {
+								apiReturnStr = "";
+								headerReturnStr = "";
+								logger.error("异常", e);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+							}
+							break;
+						case "PUT":
+							logger.debug("使用PUT方式发起请求");
+							try {
+								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
+								apiReturnStr = JsonFormatUtils.Format(result.readToText());
+								headerReturnStr = result.getHeaders().toString();
+								httpCode = result.getStatusCode();
+								logger.info("响应头部:" + result.getHeaders().toString());
+							} catch (Exception e) {
+								apiReturnStr = "";
+								headerReturnStr = "";
+								logger.error("异常", e);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+							}
+							break;
+						case "PATCH":
+							logger.debug("使用PATCH方式发起请求");
+							try {
+								result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
+								apiReturnStr = JsonFormatUtils.Format(result.readToText());
+								headerReturnStr = result.getHeaders().toString();
+								httpCode = result.getStatusCode();
+								logger.info("响应头部:" + result.getHeaders().toString());
+							} catch (Exception e) {
+								apiReturnStr = "";
+								headerReturnStr = "";
+								logger.error("异常", e);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+							}
+							break;
+						case "DELETE":
+							logger.debug("使用DELETE方式发起请求");
+							try {
+								result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+								apiReturnStr = "";
+								headerReturnStr = "";
+								apiReturnStr = JsonFormatUtils.Format(result.readToText());
+								headerReturnStr = result.getHeaders().toString();
+								httpCode = result.getStatusCode();
+								logger.info("响应头部:" + result.getHeaders().toString());
+							} catch (Exception e) {
+								apiReturnStr = "";
+								headerReturnStr = "";
+								logger.error("异常", e);
+								httpend = System.currentTimeMillis();
+								httpTime = httpend - sumbegintime;
+							}
+							break;
+						default:
+							logger.debug("HTTP请求时未找到可用的方法");
+							apiReturnStr = "";
+							headerReturnStr = "你选择的方法本工具暂未实现";
+							break;
 						}
 						// 标记请求结束时间
 						long sumendtime = System.currentTimeMillis();
@@ -732,18 +839,22 @@ public class MainWindow {
 		parsCovertButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String queryString = parsText.getText();
-				if (queryString.equals("")) {
-					logger.info("参数串为空,停止转换");
-					statusBar.setText("参数串为空,停止转换");
-					return;
+				// 需要尝试url解码
+				String queryString;
+				try {
+					queryString = URLDecoder.decode(parsText.getText(), "UTF-8");
+					if (queryString.equals("")) {
+						logger.info("参数串为空,停止转换");
+						statusBar.setText("参数串为空,停止转换");
+						return;
+					}
+					HashMap<String, String> queryMap = new HashMap<String, String>();
+					queryMap = ParamUtils.queryToMap(queryString);
+					initParameters(covertHashMaptoApiPar(queryMap));
+					parsText.setText(queryString);
+				} catch (UnsupportedEncodingException e1) {
+					logger.error("异常", e1);
 				}
-				HashMap<String, String> queryMap = new HashMap<String, String>();
-				queryMap = ParamUtils.queryToMap(queryString);
-
-				initParameters(covertHashMaptoApiPar(queryMap));
-				parsText.setText(queryString);
-
 			}
 		});
 
@@ -756,22 +867,35 @@ public class MainWindow {
 				logger.debug("清理结束");
 			}
 		});
+	}
 
-		// 状态改变的监听方法
-		methodSelectCombo.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				httpMethod = methodSelectCombo.getText();
+	// 保存参数
+	private void savePars() {
+		logger.debug("调用了保存参数");
+		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
+			statusBar.setText("保存失败：只允许在现有接口上保存已填写的参数");
+			return;
+		}
+		// 获取当前文档节点
+		ApiItem item = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				.get(interfaceCombo.getSelectionIndex());
+		ArrayList<ApiPar> pars = item.getParameters();
+		// 移除现有的参数
+		pars.removeAll(pars);
+		// 重新从form框初始化
+		for (int i = 0; i < form.length; i++) {
+			if (StringUtils.isNotEmpty(form[i][0].getText()) || StringUtils.isNotEmpty(form[i][1].getText())) {
+				pars.add(new ApiPar(form[i][0].getText(), form[i][0].getToolTipText(), form[i][1].getText()));
 			}
-		});
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
 	// 初始化程序
 	private void InitSystem() {
 		// 加载并初始化参数信息
-		this.httpMethod = "GET";
-		logger.debug("初始化配置信息-默认表单发送方式为:" + this.httpMethod);
-		methodSelectCombo.select((httpMethod.equals("GET") ? 0 : 1));
+		methodSelectCombo.select(0);
+		logger.debug("初始化配置信息-默认表单发送方式为:" + this.methodSelectCombo.getText());
 		File file = new File("./config");
 		if (!file.exists()) {
 			file.mkdir();
@@ -823,7 +947,6 @@ public class MainWindow {
 					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
 				this.hsitorysum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
-			this.apiVersion = "4.0";
 			this.apiReturnCodeFile = properties.getProperty("returncodefile");
 			this.apiServerAdress = properties.getProperty("apiaddress");
 			this.apiLoadJsonFile = properties.getProperty("apilist");
@@ -965,7 +1088,7 @@ public class MainWindow {
 		}
 	}
 
-	// 参数重排算法
+	// 参数重排
 	private void compressParameters() {
 		for (int i = 0; i < parsSum; i++) {
 			if (form[i][0].getText().trim().isEmpty() && form[i][1].getText().trim().isEmpty()) {
@@ -980,6 +1103,10 @@ public class MainWindow {
 							form[j][0].setText("");
 							form[j][0].setToolTipText("");
 							form[j][1].setText("");
+							break;
+						} else {
+							// 落花流水忽西东
+							continue;
 						}
 					}
 				}
@@ -988,21 +1115,21 @@ public class MainWindow {
 	}
 
 	// 初始化历史记录
+	// 后期会支持保存历史记录
 	private void initHistory() {
 		history = new ApiList();
 		history.setName("历史记录");
 		history.setApi(new ArrayList<ApiItem>());
-		apiDoc.getApilist().add(history);
 	}
 
 	// 触发更新历史记录，只有在点击请求的时候才触发
 	private void notifyHistory() {
 		ArrayList<ApiItem> historyList = history.getApi();
 		if (historyList.size() < this.hsitorysum) {
+			@SuppressWarnings("unused")
 			ApiItem item = new ApiItem();
 			historyList.add(null);
 		} else {
-
 		}
 	}
 }

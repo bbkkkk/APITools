@@ -40,17 +40,17 @@ public class UnicodeTools extends Dialog {
 	private void createContents() {
 		unicodeToolsShell = new Shell(getParent(), getStyle());
 		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, "/com/itlaborer/res/icon.ico"));
-		unicodeToolsShell.setSize(600, 287);
+		unicodeToolsShell.setSize(680, 420);
 		unicodeToolsShell.setText("Unicode编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);
 
-		StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		styledText.setBounds(10, 10, 574, 202);
+		StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		//全Unicode编码
 		Button allUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);
-		allUnicodeButton.setBounds(10, 222, 185, 27);
+		allUnicodeButton.setBounds(5,360, 215, 27);
 		allUnicodeButton.setText("全Unicode编码");
 		allUnicodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -69,7 +69,7 @@ public class UnicodeTools extends Dialog {
 		//中文Unicode编码
 		Button zhUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);
 		zhUnicodeButton.setText("中文Unicode编码");
-		zhUnicodeButton.setBounds(204, 222, 185, 27);
+		zhUnicodeButton.setBounds(226, 360,221, 27);
 		zhUnicodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -87,7 +87,7 @@ public class UnicodeTools extends Dialog {
 		//Unicode解码
 		Button unicodeDecodeButton = new Button(unicodeToolsShell, SWT.NONE);
 		unicodeDecodeButton.setText("Unicode解码");
-		unicodeDecodeButton.setBounds(399, 222, 185, 27);
+		unicodeDecodeButton.setBounds(453,360, 216, 27);
 		unicodeDecodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

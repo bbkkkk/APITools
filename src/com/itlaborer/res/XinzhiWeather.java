@@ -12,13 +12,13 @@ public class XinzhiWeather {
 	private ApiDoc apidoc;
 
 	public XinzhiWeather() {
-
+		// 模板里的接口列表是取自心知天气的接口，感谢感谢
 		this.apidoc = new ApiDoc();
 		// 第一个接口
 		ApiItem nowWeather = new ApiItem();
 		nowWeather.setAddress("now.json");
 		nowWeather.setName("天气实况");
-		ArrayList<ApiPar> nowWeatherPars = new ArrayList<>();
+		ArrayList<ApiPar> nowWeatherPars = new ArrayList<ApiPar>();
 		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
 		nowWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "北京"));
 		nowWeather.setParameters(nowWeatherPars);
@@ -26,7 +26,7 @@ public class XinzhiWeather {
 		ApiItem daily = new ApiItem();
 		daily.setAddress("daily.json");
 		daily.setName("逐日预报和历史");
-		ArrayList<ApiPar> hourly_historyPars = new ArrayList<>();
+		ArrayList<ApiPar> hourly_historyPars = new ArrayList<ApiPar>();
 		hourly_historyPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
 		hourly_historyPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
 		daily.setParameters(hourly_historyPars);

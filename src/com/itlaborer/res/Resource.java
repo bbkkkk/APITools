@@ -23,7 +23,6 @@ public class Resource {
 			+ "j.appender.FILE=org.apache.log4j.DailyRollingFileAppender \nlog4j.appender.FILE.file=log/APITools.log\nlog4j.appender.FILE.DatePattern='.'yyyy-MM-dd\nlog"
 			+ "4j.appender.FILE.layout=org.apache.log4j.PatternLayout\nlog4j.appender.FILE.layout.ConversionPattern=%d{[yyyy-MM-dd HH:mm:ss]}[%c][%-5p][%m]%n";
 
-	// 模板里的接口列表是取自心知天气的接口，感谢感谢
 	public static String getVersion() {
 		return (VERSION);
 	}

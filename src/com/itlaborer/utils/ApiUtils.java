@@ -22,6 +22,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,7 +53,7 @@ public class ApiUtils {
 
 	public ApiUtils() {
 	}
-	
+
 	// MD5字符串算法
 	public final static String MD5(String s) {
 
@@ -87,6 +92,42 @@ public class ApiUtils {
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.post(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+				.requestCharset(requestCharset).send();
+		return resp;
+	}
+
+	// HTTP HEAD 忽略证书安全
+	public static RawResponse HttpHead(String url, HashMap<String, String> parameter,
+			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
+			throws Exception {
+		RawResponse resp = Requests.head(url).verify(false).headers(header).cookies(cookies).params(parameter)
+				.requestCharset(requestCharset).send();
+		return resp;
+	}
+
+	// HTTP PUT 忽略证书安全
+	public static RawResponse HttpPut(String url, HashMap<String, String> parameter,
+			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
+			throws Exception {
+		RawResponse resp = Requests.put(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+				.requestCharset(requestCharset).send();
+		return resp;
+	}
+
+	// HTTP PATCH 忽略证书安全
+	public static RawResponse HttpPatch(String url, HashMap<String, String> parameter,
+			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
+			throws Exception {
+		RawResponse resp = Requests.patch(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+				.requestCharset(requestCharset).send();
+		return resp;
+	}
+
+	// HTTP DELETE 忽略证书安全
+	public static RawResponse HttpDelete(String url, HashMap<String, String> parameter,
+			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
+			throws Exception {
+		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).forms(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
 	}
@@ -160,20 +201,17 @@ public class ApiUtils {
 	}
 
 	// String保存到文件方法
-	public static void SaveToFile(File file, String content) {
+	public static boolean SaveToFile(File file, String content) {
 		FileWriter fwriter = null;
 		try {
 			fwriter = new FileWriter(file);
 			fwriter.write(content);
-		} catch (IOException ex) {
+			fwriter.flush();
+			fwriter.close();
+			return true;
+		} catch (Exception ex) {
 			logger.error("捕获异常", ex);
-		} finally {
-			try {
-				fwriter.flush();
-				fwriter.close();
-			} catch (Exception ex) {
-				logger.error("捕获异常", ex);
-			}
+			return false;
 		}
 	}
 
@@ -336,8 +374,16 @@ public class ApiUtils {
 		allSelect.setText("全选");
 		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
 		clear.setText("清空");
+		MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
+		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
 
+		// 判断初始自动换行状态
+		if (styledText.getWordWrap()) {
+			warp.setText("关闭自动换行");
+		} else {
+			warp.setText("打开自动换行");
+		}
 		styledText.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -345,6 +391,7 @@ public class ApiUtils {
 					styledText.selectAll();
 				}
 			}
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
@@ -415,6 +462,61 @@ public class ApiUtils {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				styledText.setText("");
+			}
+		});
+
+		// 更改是否自动换行
+		warp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getWordWrap()) {
+					styledText.setWordWrap(false);
+					warp.setText("打开自动换行");
+				} else {
+					styledText.setWordWrap(true);
+					warp.setText("关闭自动换行");
+				}
+			}
+		});
+	}
+
+	public static void DropTargetSupport(Shell shell) {
+
+		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
+		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
+		dropTarget.setTransfer(transfer);
+		// 拖拽监听
+		dropTarget.addDropListener(new DropTargetListener() {
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+				// 预留
+				// shell.forceActive();
+			}
+
+			@Override
+			public void dragLeave(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOperationChanged(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOver(DropTargetEvent event) {
+			}
+
+			// 获取拖放进来的文件，暂无用途
+			@Override
+			public void drop(DropTargetEvent event) {
+				String[] files = (String[]) event.data;
+				for (int i = 0; i < files.length; i++) {
+					@SuppressWarnings("unused")
+					File file = new File(files[i]);
+				}
+			}
+
+			@Override
+			public void dropAccept(DropTargetEvent event) {
 			}
 		});
 	}

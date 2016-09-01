@@ -13,6 +13,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.itlaborer.utils.ApiUtils;
 import com.itlaborer.utils.Base64Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class Base64Tools extends Dialog {
@@ -42,37 +43,37 @@ public class Base64Tools extends Dialog {
 	private void createContents() {
 		base64ToolsShell = new Shell(getParent(), getStyle());
 		base64ToolsShell.setImage(SWTResourceManager.getImage(Base64Tools.class, "/com/itlaborer/res/icon.ico"));
-		base64ToolsShell.setSize(665, 287);
+		base64ToolsShell.setSize(680, 420);
 		base64ToolsShell.setText("Base64编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), base64ToolsShell);
 
-		StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.WRAP);
+		StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.setWordWrap(true);
 		styledText.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
-		styledText.setBounds(10, 10, 636, 202);
+		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 		// 编码
 		Button encodeButton = new Button(base64ToolsShell, SWT.NONE);
-		encodeButton.setBounds(10, 222, 315, 27);
+		encodeButton.setBounds(5, 360, 342, 27);
 		encodeButton.setText("Base64编码");
 		encodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				logger.debug("编码串:" + styledText.getText());
-				styledText.setText(
-						styledText.getText().length() == 0 ? "" : Base64Utils.encode(styledText.getText().getBytes()));
+				if (StringUtils.isNotEmpty(styledText.getText())) {
+					logger.debug("编码串:" + styledText.getText());
+					styledText.setText(Base64Utils.encode(styledText.getText().getBytes()));
+				}
 			}
 		});
-
 		// 解码
 		Button decodeButton = new Button(base64ToolsShell, SWT.NONE);
 		decodeButton.setText("Base64解码");
-		decodeButton.setBounds(331, 222, 315, 27);
+		decodeButton.setBounds(353, 360, 317, 27);
 		decodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				byte[] bytes = Base64Utils.decode(styledText.getText());
-				if (bytes == null) {
-				} else {
+				if (StringUtils.isNotEmpty(styledText.getText())) {
+					byte[] bytes = Base64Utils.decode(styledText.getText());
 					logger.debug("解码串:" + styledText.getText());
 					styledText.setText(styledText.getText().length() == 0 ? "" : new String(bytes));
 				}
