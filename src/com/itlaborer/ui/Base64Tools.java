@@ -75,7 +75,7 @@ public class Base64Tools extends Dialog {
 				if (StringUtils.isNotEmpty(styledText.getText())) {
 					byte[] bytes = Base64Utils.decode(styledText.getText());
 					logger.debug("解码串:" + styledText.getText());
-					styledText.setText(styledText.getText().length() == 0 ? "" : new String(bytes));
+					styledText.setText((null == bytes) ? styledText.getText(): new String(bytes));
 				}
 			}
 		});
