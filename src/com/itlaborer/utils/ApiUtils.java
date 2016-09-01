@@ -512,7 +512,6 @@ public class ApiUtils {
 					File file = new File(files[i]);
 				}
 			}
-
 			@Override
 			public void dropAccept(DropTargetEvent event) {
 			}
