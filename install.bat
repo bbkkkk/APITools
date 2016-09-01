@@ -1,5 +1,5 @@
 @echo off
-title APITools鏋勫缓宸ュ叿
+title APITools构建工具
 
-@rem 鏋勫缓鏂规硶
+@rem 构建方法
 mvn assembly:assembly
