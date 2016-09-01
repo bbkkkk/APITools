@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
@@ -39,10 +41,10 @@ public class HeaderEdit extends Dialog {
 	private Map<String, String> pars;
 	private LinkedHashMap<String, String> headerNew;
 
-	public HeaderEdit(Shell parent, String windowname,int style) {
+	public HeaderEdit(Shell parent, String windowname, int style) {
 		super(parent, style);
-		this.windowname=windowname;
-		logger.info("进入"+windowname+"参数工具");
+		this.windowname = windowname;
+		logger.info("进入" + windowname + "参数工具");
 	}
 
 	public LinkedHashMap<String, String> open(LinkedHashMap<String, String> header) {
@@ -69,7 +71,7 @@ public class HeaderEdit extends Dialog {
 		headerEditShell = new Shell(getParent(), getStyle());
 		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, "/com/itlaborer/res/icon.ico"));
 		headerEditShell.setSize(680, 420);
-		headerEditShell.setText(windowname+"参数工具");
+		headerEditShell.setText(windowname + "参数工具");
 		ApiUtils.SetCenterinParent(getParent(), headerEditShell);
 
 		formTable = new Table(headerEditShell, SWT.BORDER | SWT.HIDE_SELECTION);
@@ -105,7 +107,7 @@ public class HeaderEdit extends Dialog {
 				saveFlag = true;
 				headerNew = new LinkedHashMap<>();
 				for (int i = 0; i < form.length; i++) {
-					if (notEmpty(form[i][0].getText(), form[i][1].getText())) {
+					if (StringUtils.isNotEmpty(form[i][0].getText())) {
 						headerNew.put(form[i][0].getText(), form[i][1].getText());
 					}
 				}
@@ -139,7 +141,7 @@ public class HeaderEdit extends Dialog {
 			editor0.setEditor(label[i], items[i], 0);
 			// 第二列
 			TableEditor editor1 = new TableEditor(formTable);
-			form[i][0] = new Text(formTable,SWT.NONE);
+			form[i][0] = new Text(formTable, SWT.NONE);
 			form[i][0].setText(items[i].getText(1));
 			editor1.grabHorizontal = true;
 			editor1.setEditor(form[i][0], items[i], 1);
@@ -158,6 +160,7 @@ public class HeaderEdit extends Dialog {
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
@@ -199,24 +202,11 @@ public class HeaderEdit extends Dialog {
 			Entry<String, String> nameVal = queryIterator.next();
 			String name = nameVal.getKey();
 			String value = nameVal.getValue();
-			if (notEmpty(name, value)) {
+			if (StringUtils.isNotEmpty(name) || StringUtils.isNotEmpty(value)) {
 				form[i][0].setText(name);
 				form[i][1].setText(value);
 				i++;
 			}
 		}
-	}
-
-	// 判断空
-	public static boolean notEmpty(String... values) {
-		boolean result = true;
-		if (values == null || values.length == 0) {
-			result = false;
-		} else {
-			for (String value : values) {
-				result &= !((null == value) || ("".equals(value)) ? true : false);
-			}
-		}
-		return result;
 	}
 }
