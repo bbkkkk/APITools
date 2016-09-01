@@ -239,7 +239,7 @@ public class MainWindow {
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
 		urlText.setBounds(487, 8, 478, 25);
-		// HTTP请求的方法是get还是post-下拉选择框
+		// HTTP请求的方法下拉选择框
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		methodSelectCombo.setBounds(971, 7, 67, 25);
 		formToolkit.adapt(methodSelectCombo);
