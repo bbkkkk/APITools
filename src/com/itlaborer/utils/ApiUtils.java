@@ -489,8 +489,6 @@ public class ApiUtils {
 		dropTarget.addDropListener(new DropTargetListener() {
 			@Override
 			public void dragEnter(DropTargetEvent event) {
-				// 预留
-				// shell.forceActive();
 			}
 
 			@Override
