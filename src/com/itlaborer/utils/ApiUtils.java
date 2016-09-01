@@ -503,7 +503,7 @@ public class ApiUtils {
 			public void dragOver(DropTargetEvent event) {
 			}
 
-			// 获取拖放进来的文件，暂无用途
+			// 获取拖放进来的文件
 			@Override
 			public void drop(DropTargetEvent event) {
 				String[] files = (String[]) event.data;
