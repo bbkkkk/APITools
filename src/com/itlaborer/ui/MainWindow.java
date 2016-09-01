@@ -281,8 +281,8 @@ public class MainWindow {
 		button.setText("重排参数");
 		button.setBounds(714, 38, 70, 27);
 		formToolkit.adapt(button, true, true);
-		
-		//auth
+
+		// auth
 		Button btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -965,8 +965,7 @@ public class MainWindow {
 				returnCode = PropertiesUtils.ReadProperties(reader);
 			}
 		} catch (Exception e) {
-			statusBar.setText("加载返回码配置失败，请检查");
-			logger.error("加载返回码配置失败，请检查");
+			// 加载返回码失败后直接不做处理，返回码文件为非必须
 		}
 
 		// 配置文件加载完毕后开始加载API列表
