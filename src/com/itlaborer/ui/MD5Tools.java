@@ -44,7 +44,7 @@ public class MD5Tools extends Dialog {
 		md5ToolsShell.setText("MD5加密工具");
 		ApiUtils.SetCenterinParent(getParent(), md5ToolsShell);
 
-		StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		final StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);

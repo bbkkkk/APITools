@@ -47,7 +47,7 @@ public class Base64Tools extends Dialog {
 		base64ToolsShell.setText("Base64编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), base64ToolsShell);
 
-		StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		final StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		styledText.setBounds(6, 8, 662, 346);

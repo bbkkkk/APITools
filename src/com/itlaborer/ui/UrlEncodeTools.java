@@ -48,7 +48,7 @@ public class UrlEncodeTools extends Dialog {
 		urlEncodeToolsShell.setText("URL编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);
 
-		StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		final StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);

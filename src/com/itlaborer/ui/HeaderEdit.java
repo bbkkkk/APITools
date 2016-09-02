@@ -105,7 +105,7 @@ public class HeaderEdit extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				saveFlag = true;
-				headerNew = new LinkedHashMap<>();
+				headerNew = new LinkedHashMap<String, String>();
 				for (int i = 0; i < form.length; i++) {
 					if (StringUtils.isNotEmpty(form[i][0].getText())) {
 						headerNew.put(form[i][0].getText(), form[i][1].getText());
@@ -152,7 +152,7 @@ public class HeaderEdit extends Dialog {
 			editor2.grabHorizontal = true;
 			editor2.setEditor(form[i][1], items[i], 2);
 			// 设置焦点变色
-			int b = i;
+			final int b = i;
 			form[i][0].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {

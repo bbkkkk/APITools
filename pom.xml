@@ -13,8 +13,9 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+                <source>1.8</source>  
+                <target>1.8</target>  
+                <compilerId>eclipse</compilerId>  
 					<archive>
 						<manifest>
 							<mainClass>com.itlaborer.ui.MainWindow</mainClass>
@@ -62,7 +63,6 @@
 			<groupId>org.eclipse.scout.sdk.deps</groupId>
 			<artifactId>org.eclipse.ui.forms</artifactId>
 			<version>3.6.200.v20150506-2029</version>
-			<!-- 不用此处依赖的swt包，独立配置 -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.scout.sdk.deps</groupId>

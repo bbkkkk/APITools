@@ -44,7 +44,7 @@ public class UnicodeTools extends Dialog {
 		unicodeToolsShell.setText("Unicode编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);
 
-		StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
+		final StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setBounds(6, 8, 662, 346);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 

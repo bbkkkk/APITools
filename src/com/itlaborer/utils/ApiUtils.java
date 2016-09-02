@@ -362,7 +362,7 @@ public class ApiUtils {
 	}
 
 	// 给不支持右键菜单的StyledText添加右键菜单
-	public static void StyledTextAddContextMenu(StyledText styledText) {
+	public static void StyledTextAddContextMenu(final StyledText styledText) {
 		Menu popupMenu = new Menu(styledText);
 		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
 		cut.setText("剪切");
@@ -374,7 +374,7 @@ public class ApiUtils {
 		allSelect.setText("全选");
 		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
 		clear.setText("清空");
-		MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
+		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
 		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
 

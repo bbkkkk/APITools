@@ -109,8 +109,8 @@ public class MainWindow {
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 128;
 		this.hsitorysum = 30;
-		this.cookies = new LinkedHashMap<>();
-		this.header = new LinkedHashMap<>();
+		this.cookies = new LinkedHashMap<String, String>();
+		this.header = new LinkedHashMap<String, String>();
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
 		this.header.put("SocksTimeout", "20000");
 		this.header.put("ConnectTimeout", "20000");
@@ -141,7 +141,7 @@ public class MainWindow {
 		System.exit(0);
 	}
 
-	protected void createContents(Display display) {
+	protected void createContents(final Display display) {
 		mainWindowShell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 		ApiUtils.SetCenter(mainWindowShell);
 		mainWindowShell.setSize(1148, 650);
@@ -364,7 +364,7 @@ public class MainWindow {
 			editor2.grabHorizontal = true;
 			editor2.setEditor(form[i][1], items[i], 2);
 			// 设置焦点变色
-			int b = i;
+			final int b = i;
 			form[i][0].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
@@ -678,16 +678,16 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("请求中······");
-				HashMap<String, String> pars = getParameters();
+				final HashMap<String, String> pars = getParameters();
 				parsText.setText(ParamUtils.mapToQuery(pars));
-				String url = urlText.getText();
-				String method = methodSelectCombo.getText();
+				final String url = urlText.getText();
+				final String method = methodSelectCombo.getText();
 				// 通知更新历史
 				notifyHistory();
 				new Thread() {
 					public void run() {
 						logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
-						long sumbegintime = System.currentTimeMillis();
+						final long sumbegintime = System.currentTimeMillis();
 						long httpend = System.currentTimeMillis();
 						RawResponse result = null;
 						switch (method) {
@@ -822,7 +822,7 @@ public class MainWindow {
 							break;
 						}
 						// 标记请求结束时间
-						long sumendtime = System.currentTimeMillis();
+						final long sumendtime = System.currentTimeMillis();
 						display.syncExec(new Thread() {
 							public void run() {
 								resultStyledText.setText(apiReturnStr);
