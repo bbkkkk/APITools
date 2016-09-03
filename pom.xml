@@ -4,18 +4,22 @@
 	<groupId>com.itlaborer</groupId>
 	<artifactId>APITools</artifactId>
 	<version>1.7</version>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-                <source>1.8</source>  
-                <target>1.8</target>  
-                <compilerId>eclipse</compilerId>  
+					<compilerId>eclipse</compilerId>
 					<archive>
 						<manifest>
 							<mainClass>com.itlaborer.ui.MainWindow</mainClass>

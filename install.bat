@@ -4,5 +4,4 @@ title APITools构建工具
 @call mvn clean
 @call mvn compile
 @call mvn assembly:single
-
 cmd
