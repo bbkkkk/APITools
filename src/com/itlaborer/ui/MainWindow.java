@@ -67,16 +67,18 @@ import net.dongliu.requests.RawResponse;
 public class MainWindow {
 
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
-	// 参数
+	// 加载的配置文件项
+	private String loadApiJson;
+	private String loadApiAdress;
+	private String loadCodeFile;
+	private int loadHistorySum;
+	// 使用的成员变量
 	private ApiDoc apiDoc;
-	private ApiList history;
-	private Properties returnCode;
-	private int httpCode, parsSum, hsitorysum;
-	private String apiServerAdress;
+	private Properties apiReturnCode;
 	private String apiReturnStr;
+	private ApiList history;
+	private int httpCode, parsSum;
 	private String headerReturnStr;
-	private String apiLoadJsonFile;
-	private String apiReturnCodeFile;
 	private long httpTime;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
@@ -108,7 +110,7 @@ public class MainWindow {
 		logger.info("程序启动, 程序版本为:" + Resource.getVersion());
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 128;
-		this.hsitorysum = 30;
+		this.loadHistorySum = 30;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
@@ -424,7 +426,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				savePars();
 				// 保存到文件--潜在的风险，保存时间过长程序界面卡死
-				if (ApiUtils.SaveToFile(new File("./config/" + apiLoadJsonFile),
+				if (ApiUtils.SaveToFile(new File("./config/" + loadApiJson),
 						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
 					statusBar.setText("保存成功");
 				} else {
@@ -525,7 +527,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				clearParameters();
 				try {
-					urlText.setText(apiServerAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
+					urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
 							.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
@@ -561,7 +563,7 @@ public class MainWindow {
 		// 接口选择事件
 		interfaceCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				urlText.setText(apiServerAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getParameters());
@@ -614,7 +616,7 @@ public class MainWindow {
 					try {
 						JSONObject jsonObject = (JSONObject) JSONObject.parse(text);
 						JSONObject resultJson = jsonObject;
-						String returnText = returnCode.getProperty(resultJson.get("code") + "");
+						String returnText = apiReturnCode.getProperty(resultJson.get("code") + "");
 						if (returnText == null) {
 							logger.warn("返回码是:" + resultJson.get("code") + ",未找到该返回码的描述信息");
 							statusBar.setText("返回码是:" + resultJson.get("code") + ",未找到该返回码的描述信息");
@@ -632,7 +634,7 @@ public class MainWindow {
 					try {
 						Document document = DocumentHelper.parseText(text);
 						Element root = document.getRootElement();
-						String returnText = returnCode.getProperty(root.element("code").getText());
+						String returnText = apiReturnCode.getProperty(root.element("code").getText());
 						if (returnText == null) {
 							logger.warn("返回码是:" + root.element("code").getText() + ",未找到该返回码的描述信息");
 							statusBar.setText("返回码是:" + root.element("code").getText() + ",未找到该返回码的描述信息");
@@ -945,26 +947,26 @@ public class MainWindow {
 			// 配置历史记录条数
 			if ((null != properties.getProperty("hsitorysum"))
 					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
-				this.hsitorysum = Integer.parseInt(properties.getProperty("hsitorysum"));
+				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
-			this.apiReturnCodeFile = properties.getProperty("returncodefile");
-			this.apiServerAdress = properties.getProperty("apiaddress");
-			this.apiLoadJsonFile = properties.getProperty("apilist");
+			this.loadCodeFile = properties.getProperty("returncodefile");
+			this.loadApiAdress = properties.getProperty("apiaddress");
+			this.loadApiJson = properties.getProperty("apilist");
 
 		} catch (Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
 		}
 		// 此处开始加载返回码列表文件
-		File reader = new File("./config/" + apiReturnCodeFile);
+		File reader = new File("./config/" + loadCodeFile);
 		if (reader.exists()) {
-			returnCode = PropertiesUtils.ReadProperties(reader);
-			logger.debug("加载返回码配置文件" + "./config/" + apiReturnCodeFile);
+			apiReturnCode = PropertiesUtils.ReadProperties(reader);
+			logger.debug("加载返回码配置文件" + "./config/" + loadCodeFile);
 		} else {
 			logger.debug("没有读到返回码配置,跳过加载");
 		}
 		// 配置文件加载完毕后开始加载API列表
-		if (null == apiLoadJsonFile) {
+		if (null == loadApiJson) {
 			logger.debug("API列表为空，跳过加载");
 		} else {
 			InitApiList();
@@ -973,7 +975,7 @@ public class MainWindow {
 
 	// 初始化API列表信息
 	private void InitApiList() {
-		File apilistfile = new File("./config/" + apiLoadJsonFile);
+		File apilistfile = new File("./config/" + loadApiJson);
 		if (!apilistfile.exists()) {
 			logger.warn("警告:您加载的API文档不存在，程序将跳过加载API列表，请检查配置");
 			return;
@@ -1020,11 +1022,11 @@ public class MainWindow {
 		}
 		try {
 			interfaceCombo.select(0);
-			urlText.setText(apiServerAdress + apiItems.get(0).getAddress());
+			urlText.setText(loadApiAdress + apiItems.get(0).getAddress());
 			initParameters(apiItems.get(0).getParameters());
 		} catch (Exception e) {
 			logger.error("异常", e);
-			urlText.setText(apiServerAdress);
+			urlText.setText(loadApiAdress);
 		}
 	}
 
@@ -1119,7 +1121,7 @@ public class MainWindow {
 	// 触发更新历史记录，只有在点击请求的时候才触发
 	private void notifyHistory() {
 		ArrayList<ApiItem> historyList = history.getApi();
-		if (historyList.size() < this.hsitorysum) {
+		if (historyList.size() < this.loadHistorySum) {
 			@SuppressWarnings("unused")
 			ApiItem item = new ApiItem();
 			historyList.add(null);

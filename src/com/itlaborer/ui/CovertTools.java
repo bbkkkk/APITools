@@ -200,7 +200,6 @@ public class CovertTools extends Dialog {
 
 		statusText = new Text(covertToolsShell, SWT.BORDER);
 		statusText.setBounds(10, 121, 374, 23);
-
 	}
 
 	/**
