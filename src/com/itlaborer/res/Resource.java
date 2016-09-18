@@ -8,10 +8,10 @@ package com.itlaborer.res;
 
 public class Resource {
 
-	public static String VERSION = "V1.7";
+	public static String VERSION = "V1.8";
 	public static String AUTHOR = "作者:恒生电子/刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
-	public static String CONFIG = "#主配置文件\n#请按照参数名进行相关配置\n#服务器地址"
+	public static String CONFIG = "#主配置文件\n#请按照参数名进行相关配置\n#服务器地址,如果有多台服务器，请用,（英文逗号）分开"
 			+ "\napiaddress=https://api.thinkpage.cn/v3/weather/\n#自动装载的API列表文件\napilist=api-xinzhiweather.json\n#自动装载的错误码列表文件-仅支持恒生FUNDAPI\nreturncodefile"
 			+ "=xxx.properties\n#历史记录条数\nhsitorysum=30";
 	public static String EXPLAIN = "这是一个适合HTTP接口的测试工具，可以快速的填充参数，拉取接口返回的结果,如果你"

@@ -3,6 +3,7 @@ package com.itlaborer.ui;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ public class MainWindow {
 
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 加载的配置文件项
+	private String[] address;
 	private String loadApiJson;
 	private String loadApiAdress;
 	private String loadCodeFile;
@@ -103,6 +105,8 @@ public class MainWindow {
 	private Table formTable;
 	private Text[][] form;
 	private Label[] label;
+	private MenuItem serverSelect;
+	private Menu servers;
 
 	// 主窗口
 	public MainWindow() {
@@ -209,6 +213,13 @@ public class MainWindow {
 
 		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
 		menuItemCookie.setText("Cookie");
+
+		// 服务器列表
+		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
+		serverSelect.setText("服务器列表");
+
+		servers = new Menu(serverSelect);
+		serverSelect.setMenu(servers);
 
 		/////////////////// 帮助////////////////////////////////////////
 		MenuItem menuHelp = new MenuItem(rootMenu, SWT.CASCADE);
@@ -420,7 +431,7 @@ public class MainWindow {
 				statusBar.setText("保存成功，程序关闭前有效");
 			}
 		});
-
+		// 保存事件
 		menuItemSaveToFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -527,8 +538,8 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				clearParameters();
 				try {
-					urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
-							.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
+					urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+							.get(interfaceCombo.getSelectionIndex()).getAddress());
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
 				} catch (Exception e2) {
@@ -949,8 +960,28 @@ public class MainWindow {
 					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
 				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
+			// 加载地址列表
+			address = properties.getProperty("apiaddress").split(",");
+			if (null != address && address.length > 0) {
+				if (StringUtils.isNotEmpty(address[0])) {
+					this.loadApiAdress = address[0];
+					// 初始化服务器下拉选择框
+					for (int i = 0; i < address.length; i++) {
+						final MenuItem mntmNewItem = new MenuItem(servers, SWT.NONE);
+						mntmNewItem.setText(address[i]);
+						mntmNewItem.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								urlText.setText(urlText.getText().replace(loadApiAdress, mntmNewItem.getText()));
+								loadApiAdress = mntmNewItem.getText();
+							}
+						});
+					}
+				} else {
+					this.loadApiAdress = "http://127.0.0.1/";
+				}
+			}
 			this.loadCodeFile = properties.getProperty("returncodefile");
-			this.loadApiAdress = properties.getProperty("apiaddress");
 			this.loadApiJson = properties.getProperty("apilist");
 
 		} catch (Exception e) {
