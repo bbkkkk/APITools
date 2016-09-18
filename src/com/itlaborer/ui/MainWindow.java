@@ -3,7 +3,6 @@ package com.itlaborer.ui;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -69,13 +68,13 @@ public class MainWindow {
 
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 加载的配置文件项
-	private String[] address;
+	private String[] loadAddressArray;
 	private String loadApiJson;
-	private String loadApiAdress;
 	private String loadCodeFile;
 	private int loadHistorySum;
 	// 使用的成员变量
 	private ApiDoc apiDoc;
+	private String serverAdress;
 	private Properties apiReturnCode;
 	private String apiReturnStr;
 	private ApiList history;
@@ -538,7 +537,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				clearParameters();
 				try {
-					urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+					urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getAddress());
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
@@ -574,7 +573,7 @@ public class MainWindow {
 		// 接口选择事件
 		interfaceCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				urlText.setText(loadApiAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getParameters());
@@ -961,24 +960,24 @@ public class MainWindow {
 				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
 			// 加载地址列表
-			address = properties.getProperty("apiaddress").split(",");
-			if (null != address && address.length > 0) {
-				if (StringUtils.isNotEmpty(address[0])) {
-					this.loadApiAdress = address[0];
+			loadAddressArray = properties.getProperty("apiaddress").split(",");
+			if (null != loadAddressArray && loadAddressArray.length > 0) {
+				if (StringUtils.isNotEmpty(loadAddressArray[0])) {
+					this.serverAdress = loadAddressArray[0];
 					// 初始化服务器下拉选择框
-					for (int i = 0; i < address.length; i++) {
+					for (int i = 0; i < loadAddressArray.length; i++) {
 						final MenuItem mntmNewItem = new MenuItem(servers, SWT.NONE);
-						mntmNewItem.setText(address[i]);
+						mntmNewItem.setText(loadAddressArray[i]);
 						mntmNewItem.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetSelected(SelectionEvent e) {
-								urlText.setText(urlText.getText().replace(loadApiAdress, mntmNewItem.getText()));
-								loadApiAdress = mntmNewItem.getText();
+								urlText.setText(urlText.getText().replace(serverAdress, mntmNewItem.getText()));
+								serverAdress = mntmNewItem.getText();
 							}
 						});
 					}
 				} else {
-					this.loadApiAdress = "http://127.0.0.1/";
+					this.serverAdress = "http://127.0.0.1/";
 				}
 			}
 			this.loadCodeFile = properties.getProperty("returncodefile");
@@ -1053,11 +1052,11 @@ public class MainWindow {
 		}
 		try {
 			interfaceCombo.select(0);
-			urlText.setText(loadApiAdress + apiItems.get(0).getAddress());
+			urlText.setText(serverAdress + apiItems.get(0).getAddress());
 			initParameters(apiItems.get(0).getParameters());
 		} catch (Exception e) {
 			logger.error("异常", e);
-			urlText.setText(loadApiAdress);
+			urlText.setText(serverAdress);
 		}
 	}
 
