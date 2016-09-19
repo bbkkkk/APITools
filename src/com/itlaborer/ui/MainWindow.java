@@ -117,10 +117,11 @@ public class MainWindow {
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
-		this.header.put("SocksTimeout", "20000");
-		this.header.put("ConnectTimeout", "20000");
+		this.header.put("SocksTimeout", "30000");
+		this.header.put("ConnectTimeout", "30000");
 	}
-
+	
+	//从这里开始，不是么？小桥流水人家~
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
@@ -262,10 +263,12 @@ public class MainWindow {
 		methodSelectCombo.add("PUT", 3);
 		methodSelectCombo.add("PATCH", 4);
 		methodSelectCombo.add("DELETE", 5);
+		
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
 		submitButton.setBounds(1044, 6, 90, 27);
 		submitButton.setText("提      交");
+		
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
 		parsCovertButton.setToolTipText("导入形如a=1&b=2的参数串到表单");
