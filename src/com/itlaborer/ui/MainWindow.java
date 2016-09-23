@@ -240,12 +240,10 @@ public class MainWindow {
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		modSelectCombo.setBounds(8, 8, 224, 25);
 		formToolkit.adapt(modSelectCombo);
-		formToolkit.paintBordersFor(modSelectCombo);
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		interfaceCombo.setBounds(237, 8, 245, 25);
 		formToolkit.adapt(interfaceCombo);
-		formToolkit.paintBordersFor(interfaceCombo);
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
 		parsText.setBounds(7, 39, 476, 25);
@@ -256,7 +254,6 @@ public class MainWindow {
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		methodSelectCombo.setBounds(971, 7, 67, 25);
 		formToolkit.adapt(methodSelectCombo);
-		formToolkit.paintBordersFor(methodSelectCombo);
 		methodSelectCombo.add("GET", 0);
 		methodSelectCombo.add("POST", 1);
 		methodSelectCombo.add("HEAD", 2);
@@ -414,7 +411,6 @@ public class MainWindow {
 		resultStyledText.setAlwaysShowScrollBars(true);
 		resultStyledText.setBounds(487, 70, 647, 500);
 		formToolkit.adapt(resultStyledText);
-		formToolkit.paintBordersFor(resultStyledText);
 		ApiUtils.StyledTextAddContextMenu(resultStyledText);
 
 		// 状态栏
