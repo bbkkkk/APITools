@@ -329,11 +329,9 @@ public class MainWindow {
 		toBrower.setBounds(1044, 38, 90, 27);
 		formToolkit.adapt(toBrower, true, true);
 
-		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.V_SCROLL);
+		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
 		formTable.setBounds(7, 70, 476, 500);
 		formTable.setItemCount(parsSum);
-		formToolkit.adapt(formTable);
-		formToolkit.paintBordersFor(formTable);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
 
