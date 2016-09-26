@@ -120,8 +120,8 @@ public class MainWindow {
 		this.header.put("SocksTimeout", "30000");
 		this.header.put("ConnectTimeout", "30000");
 	}
-	
-	//从这里开始，不是么？小桥流水人家~
+
+	// 从这里开始，不是么？小桥流水人家~
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
@@ -260,15 +260,15 @@ public class MainWindow {
 		methodSelectCombo.add("PUT", 3);
 		methodSelectCombo.add("PATCH", 4);
 		methodSelectCombo.add("DELETE", 5);
-		
+
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
 		submitButton.setBounds(1044, 6, 90, 27);
 		submitButton.setText("提      交");
-		
+
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
-		parsCovertButton.setToolTipText("导入形如a=1&b=2的参数串到表单");
+		parsCovertButton.setToolTipText("导入形如a=1&&b=2的参数串到表单");
 		parsCovertButton.setText("导入参数");
 		parsCovertButton.setBounds(487, 38, 70, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
@@ -326,6 +326,7 @@ public class MainWindow {
 		toBrower.setBounds(1044, 38, 90, 27);
 		formToolkit.adapt(toBrower, true, true);
 
+		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
 		formTable.setBounds(7, 70, 476, 500);
 		formTable.setItemCount(parsSum);
@@ -350,8 +351,9 @@ public class MainWindow {
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
 
-		form = new Text[parsSum][2];
+		// 将Label和Text绑定到table
 		label = new Label[parsSum];
+		form = new Text[parsSum][2];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
 			// 第一列
@@ -361,6 +363,7 @@ public class MainWindow {
 			label[i].setText(new DecimalFormat("000").format(i + 1));
 			editor0.grabHorizontal = true;
 			editor0.setEditor(label[i], items[i], 0);
+
 			// 第二列
 			TableEditor editor1 = new TableEditor(formTable);
 			form[i][0] = new Text(formTable, SWT.NONE);
