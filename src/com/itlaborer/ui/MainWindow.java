@@ -72,7 +72,7 @@ public class MainWindow {
 	private String loadApiJson;
 	private String loadCodeFile;
 	private int loadHistorySum;
-	// 使用的成员变量
+
 	private ApiDoc apiDoc;
 	private String serverAdress;
 	private Properties apiReturnCode;
@@ -106,6 +106,7 @@ public class MainWindow {
 	private Label[] label;
 	private MenuItem serverSelect;
 	private Menu servers;
+	private Button btnAuthorization;
 
 	// 主窗口
 	public MainWindow() {
@@ -148,7 +149,7 @@ public class MainWindow {
 	}
 
 	protected void createContents(final Display display) {
-		mainWindowShell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
+		mainWindowShell = new Shell(display, SWT.MIN);
 		ApiUtils.SetCenter(mainWindowShell);
 		mainWindowShell.setSize(1148, 650);
 		mainWindowShell.setText("APITools" + "-" + Resource.getVersion());
@@ -295,7 +296,7 @@ public class MainWindow {
 		formToolkit.adapt(button, true, true);
 
 		// auth
-		Button btnAuthorization = new Button(mainWindowShell, SWT.NONE);
+		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
