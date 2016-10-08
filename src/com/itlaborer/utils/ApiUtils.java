@@ -480,6 +480,7 @@ public class ApiUtils {
 		});
 	}
 
+	//拖拽支持
 	public static void DropTargetSupport(Shell shell) {
 
 		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);

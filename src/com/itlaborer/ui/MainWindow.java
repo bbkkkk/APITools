@@ -967,13 +967,23 @@ public class MainWindow {
 					this.serverAdress = loadAddressArray[0];
 					// 初始化服务器下拉选择框
 					for (int i = 0; i < loadAddressArray.length; i++) {
-						final MenuItem mntmNewItem = new MenuItem(servers, SWT.NONE);
-						mntmNewItem.setText(loadAddressArray[i]);
-						mntmNewItem.addSelectionListener(new SelectionAdapter() {
+						final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
+						serverItem.setText(loadAddressArray[i]);
+						if (i == 0) {
+							serverItem.setImage(
+									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/checked.png"));
+						}
+						serverItem.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetSelected(SelectionEvent e) {
-								urlText.setText(urlText.getText().replace(serverAdress, mntmNewItem.getText()));
-								serverAdress = mntmNewItem.getText();
+								// 设置焦点
+								for (int i = 0; i < servers.getItemCount(); i++) {
+									servers.getItem(i).setImage(null);
+								}
+								serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
+										"/com/itlaborer/res/checked.png"));
+								urlText.setText(urlText.getText().replace(serverAdress, serverItem.getText()));
+								serverAdress = serverItem.getText();
 							}
 						});
 					}
