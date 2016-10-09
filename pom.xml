@@ -11,6 +11,7 @@
 				<directory>${project.basedir}/src</directory>
 				<includes>
 					<include>**/*.ico</include>
+					<include>**/*.png</include>
 				</includes>
 				<filtering>false</filtering>
 			</resource>
