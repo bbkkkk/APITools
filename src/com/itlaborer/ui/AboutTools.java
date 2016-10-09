@@ -57,7 +57,7 @@ public class AboutTools extends Dialog {
 
 		Label copyRightlabel = new Label(aboutToolsShell, SWT.CENTER);
 		copyRightlabel.setBounds(10, 132, 375, 17);
-		copyRightlabel.setText(Resource.getAUTHOR());
+		copyRightlabel.setText(Resource.AUTHOR);
 
 		Link link = new Link(aboutToolsShell, SWT.NONE);
 		link.setBounds(143, 157, 108, 17);
@@ -66,19 +66,19 @@ public class AboutTools extends Dialog {
 
 		Label versionLabel = new Label(aboutToolsShell, SWT.NONE);
 		versionLabel.setBounds(184, 109, 25, 17);
-		versionLabel.setText(Resource.getVersion());
+		versionLabel.setText(Resource.VERSION);
 
 		Label readMeTextLabel = new Label(aboutToolsShell, SWT.WRAP);
 		readMeTextLabel.setBounds(10, 20, 375, 82);
 		readMeTextLabel
-				.setText(Resource.getEXPLAIN());
+				.setText(Resource.EXPLAIN);
 	}
 
 	// 打开网站
 	private final class LinkSelection extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			logger.info("访问作者的博客");
-			Program.launch(Resource.getBLOG());
+			Program.launch(Resource.BLOG);
 		}
 	}
 }

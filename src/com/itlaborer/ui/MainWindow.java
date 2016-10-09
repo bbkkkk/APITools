@@ -111,7 +111,7 @@ public class MainWindow {
 	// 主窗口
 	public MainWindow() {
 		PropertyConfigurator.configure("config/log4j.properties ");
-		logger.info("程序启动, 程序版本为:" + Resource.getVersion());
+		logger.info("程序启动, 程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 128;
 		this.loadHistorySum = 30;
@@ -150,7 +150,7 @@ public class MainWindow {
 		mainWindowShell = new Shell(display, SWT.MIN);
 		ApiUtils.SetCenter(mainWindowShell);
 		mainWindowShell.setSize(1148, 650);
-		mainWindowShell.setText("APITools" + "-" + Resource.getVersion());
+		mainWindowShell.setText("APITools" + "-" + Resource.VERSION);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/icon.ico"));
 		ApiUtils.DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
@@ -186,48 +186,48 @@ public class MainWindow {
 			}
 		});
 		menuItemApiListEdit.setText("接口设计器");
-		
-				MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
-				menuItemMd5.setText("MD5加密");
-				
-						// MD5工具
-						menuItemMd5.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent e) {
-								MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-								md5Tools.open();
-							}
-						});
+
+		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
+		menuItemMd5.setText("MD5加密");
+
+		// MD5工具
+		menuItemMd5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				md5Tools.open();
+			}
+		});
 
 		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
 		menuItemUrl.setText("URL编码/解码");
-		
-				MenuItem menuItemBase64 = new MenuItem(menu, SWT.NONE);
-				menuItemBase64.setText("Base64编码/解码");
-				
-						// Base64工具
-						menuItemBase64.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent e) {
-								Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-								base64Tools.open();
-							}
-						});
+
+		MenuItem menuItemBase64 = new MenuItem(menu, SWT.NONE);
+		menuItemBase64.setText("Base64编码/解码");
+
+		// Base64工具
+		menuItemBase64.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				base64Tools.open();
+			}
+		});
 
 		MenuItem menuItemUnicode = new MenuItem(menu, SWT.NONE);
 		menuItemUnicode.setText("Unicode编码/解码");
 		// 工具-文件转换
 		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
 		menuItemConvertDoc.setText("恒生FUNDAPI转换工具");
-		
-				// 菜单，转换工具的点击事件
-				menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						CovertTools tools = new CovertTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-						tools.open();
-					}
-				});
+
+		// 菜单，转换工具的点击事件
+		menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CovertTools tools = new CovertTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				tools.open();
+			}
+		});
 
 		MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
 		menuPar.setText("Header参数");
@@ -509,7 +509,7 @@ public class MainWindow {
 		menuItemManual.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Program.launch("http://www.itlaborer.com/apitools_manual");
+				Program.launch(Resource.MANUAL);
 			}
 		});
 
@@ -517,7 +517,7 @@ public class MainWindow {
 		menuItemFeedBack.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Program.launch("http://www.itlaborer.com/2016/08/07/apitools_feedback.html");
+				Program.launch(Resource.FEEDBACK);
 			}
 		});
 		// Header编辑器
@@ -930,7 +930,7 @@ public class MainWindow {
 		File log4jFile = new File("./config/log4j.properties");
 		if (!configFile.exists()) {
 			try {
-				ApiUtils.SaveToFile(configFile, Resource.getCONFIG());
+				ApiUtils.SaveToFile(configFile, Resource.CONFIG);
 				logger.warn("警告:参数配置文件丢失，已创建默认配置");
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
@@ -942,7 +942,7 @@ public class MainWindow {
 		}
 		if (!log4jFile.exists()) {
 			try {
-				ApiUtils.SaveToFile(log4jFile, Resource.getLOG4J());
+				ApiUtils.SaveToFile(log4jFile, Resource.LOG4J);
 				logger.warn("警告:日志配置文件丢失，已创建默认配置");
 			} catch (Exception e) {
 				logger.warn("异常", e);
