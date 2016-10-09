@@ -143,8 +143,6 @@ public class MainWindow {
 			}
 		}
 		logger.info("再见~~~~~");
-		// 执行下面这一句，否则存在一定的几率程序退出后，
-		// 进程还在,这种情况发生在将程序通过exe4j打包为exe的时候
 		System.exit(0);
 	}
 
@@ -179,9 +177,6 @@ public class MainWindow {
 		// 工具菜单子菜单
 		Menu menu = new Menu(menuToolKit);
 		menuToolKit.setMenu(menu);
-		// 工具-文件转换
-		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
-		menuItemConvertDoc.setText("恒生API文档转换");
 		// 工具-接口列表编辑
 		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
 		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
@@ -190,19 +185,49 @@ public class MainWindow {
 				statusBar.setText("此功能暂未实现");
 			}
 		});
-		menuItemApiListEdit.setText("接口列表编辑");
+		menuItemApiListEdit.setText("接口设计器");
+		
+				MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
+				menuItemMd5.setText("MD5加密");
+				
+						// MD5工具
+						menuItemMd5.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+								md5Tools.open();
+							}
+						});
 
 		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
 		menuItemUrl.setText("URL编码/解码");
-
-		MenuItem menuItemBase64 = new MenuItem(menu, SWT.NONE);
-		menuItemBase64.setText("Base64编码/解码");
+		
+				MenuItem menuItemBase64 = new MenuItem(menu, SWT.NONE);
+				menuItemBase64.setText("Base64编码/解码");
+				
+						// Base64工具
+						menuItemBase64.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+								base64Tools.open();
+							}
+						});
 
 		MenuItem menuItemUnicode = new MenuItem(menu, SWT.NONE);
 		menuItemUnicode.setText("Unicode编码/解码");
-
-		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
-		menuItemMd5.setText("MD5加密");
+		// 工具-文件转换
+		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
+		menuItemConvertDoc.setText("恒生FUNDAPI转换工具");
+		
+				// 菜单，转换工具的点击事件
+				menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						CovertTools tools = new CovertTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+						tools.open();
+					}
+				});
 
 		MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
 		menuPar.setText("Header参数");
@@ -471,30 +496,12 @@ public class MainWindow {
 			}
 		});
 
-		// Base64工具
-		menuItemBase64.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				base64Tools.open();
-			}
-		});
-
 		// Unicode工具
 		menuItemUnicode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UnicodeTools unicodeTools = new UnicodeTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				unicodeTools.open();
-			}
-		});
-
-		// MD5工具
-		menuItemMd5.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				md5Tools.open();
 			}
 		});
 
@@ -605,15 +612,6 @@ public class MainWindow {
 				Program.launch(url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
 				logger.info("浏览器中打开:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
 				statusBar.setText("已在浏览器中发起请求");
-			}
-		});
-
-		// 菜单，转换工具的点击事件
-		menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				CovertTools tools = new CovertTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				tools.open();
 			}
 		});
 
