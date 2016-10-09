@@ -32,11 +32,13 @@ import com.itlaborer.utils.JsonFormatUtils;
 
 /**
  * 
- * 转换工具
+ * @author liudewei[793554262@qq.com]
+ * @see API文档转换工具界面
+ * @version 1.0
+ * @since 1.0
  * 
- * @author liu
- *
  */
+
 public class CovertTools extends Dialog {
 
 	private static Logger logger = Logger.getLogger(CovertTools.class.getName());

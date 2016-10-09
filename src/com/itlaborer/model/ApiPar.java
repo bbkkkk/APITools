@@ -4,11 +4,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * 
- * 接口参数类
+ * @author liudewei[793554262@qq.com]
+ * @see API参数类
+ * @version 1.0
+ * @since 1.0
  * 
- * @author liu
- *
  */
+
 public class ApiPar {
 	@JSONField(ordinal = 1)
 	private String name;

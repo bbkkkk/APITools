@@ -7,6 +7,15 @@ import com.itlaborer.model.ApiItem;
 import com.itlaborer.model.ApiList;
 import com.itlaborer.model.ApiPar;
 
+/**
+ * 
+ * @author liudewei
+ * @see 心知天气API，作为示例接口文档
+ * @version 1.0
+ * @since 1.6
+ *
+ */
+
 public class XinzhiWeather {
 
 	private ApiDoc apidoc;
@@ -30,7 +39,7 @@ public class XinzhiWeather {
 		hourly_historyPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
 		hourly_historyPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
 		daily.setParameters(hourly_historyPars);
-		
+
 		// 加入接口列表
 		ArrayList<ApiItem> apiItems = new ArrayList<ApiItem>();
 		apiItems.add(nowWeather);

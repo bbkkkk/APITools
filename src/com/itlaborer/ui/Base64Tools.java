@@ -16,6 +16,15 @@ import com.itlaborer.utils.Base64Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author liudewei[793554262@qq.com]
+ * @see Base64工具界面
+ * @version 1.0
+ * @since 1.0
+ * 
+ */
+
 public class Base64Tools extends Dialog {
 
 	private static Logger logger = Logger.getLogger(Base64Tools.class.getName());

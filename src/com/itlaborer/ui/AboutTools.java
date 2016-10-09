@@ -17,11 +17,13 @@ import com.itlaborer.utils.ApiUtils;
 
 /**
  * 
- * 关于界面
+ * @author liudewei[793554262@qq.com]
+ * @see 关于界面
+ * @version 1.0
+ * @since 1.0
  * 
- * @author liu
- *
  */
+
 public class AboutTools extends Dialog {
 
 	private static Logger logger = Logger.getLogger(AboutTools.class.getName());

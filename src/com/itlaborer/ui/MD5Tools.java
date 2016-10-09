@@ -13,6 +13,15 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.utils.ApiUtils;
 
+/**
+ * 
+ * @author liudewei[793554262@qq.com]
+ * @see MD5工具界面
+ * @version 1.0
+ * @since 1.0
+ * 
+ */
+
 public class MD5Tools extends Dialog {
 
 	private static Logger logger = Logger.getLogger(MD5Tools.class.getName());

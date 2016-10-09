@@ -6,11 +6,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * 
- * API列表类
+ * @author liudewei[793554262@qq.com]
+ * @see API列表类
+ * @version 1.0
+ * @since 1.0
  * 
- * @author liu
- *
  */
+
 public class ApiList {
 
 	/*

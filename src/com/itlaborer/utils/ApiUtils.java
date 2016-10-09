@@ -42,11 +42,13 @@ import net.dongliu.requests.Requests;
 
 /**
  * 
- * 工具类
+ * @author liudewei[793554262@qq.com]
+ * @see APITOols工具类
+ * @version 1.0
+ * @since 1.0
  * 
- * @author liu
- *
  */
+
 public class ApiUtils {
 
 	private static Logger logger = Logger.getLogger(ApiUtils.class.getName());

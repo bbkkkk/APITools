@@ -3,7 +3,10 @@ package com.itlaborer.res;
 /**
  * 
  * @author liudewei
- *
+ * @see 程序中使用到的一些静态字符串资源，放在此处方便统一管理
+ * @version 1.0
+ * @since 1.0
+ * 
  */
 
 public class Resource {
