@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,8 +24,13 @@ import org.dom4j.Element;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -442,7 +449,7 @@ public class MainWindow {
 		resultStyledText.setAlwaysShowScrollBars(true);
 		resultStyledText.setBounds(487, 70, 647, 500);
 		formToolkit.adapt(resultStyledText);
-		ApiUtils.StyledTextAddContextMenu(resultStyledText);
+		StyledTextAddContextMenu(resultStyledText);
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
@@ -1149,6 +1156,137 @@ public class MainWindow {
 				}
 			}
 		}
+	}
+
+	// 给主页面的返回区域添加右键菜单
+	public void StyledTextAddContextMenu(final StyledText styledText) {
+		Menu popupMenu = new Menu(styledText);
+		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
+		cut.setText("剪切");
+		MenuItem copy = new MenuItem(popupMenu, SWT.NONE);
+		copy.setText("复制");
+		MenuItem paste = new MenuItem(popupMenu, SWT.NONE);
+		paste.setText("粘贴");
+		MenuItem allSelect = new MenuItem(popupMenu, SWT.NONE);
+		allSelect.setText("全选");
+		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
+		clear.setText("清空");
+		MenuItem formatJson = new MenuItem(popupMenu, SWT.NONE);
+		formatJson.setText("格式化JSON");
+		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
+		warp.setText("自动换行");
+		styledText.setMenu(popupMenu);
+
+		// 判断初始自动换行状态
+		if (styledText.getWordWrap()) {
+			warp.setText("关闭自动换行");
+		} else {
+			warp.setText("打开自动换行");
+		}
+		styledText.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+					styledText.selectAll();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+		// 剪切菜单的点击事件
+		cut.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getSelectionCount() == 0) {
+					return;
+				}
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				String plainText = styledText.getSelectionText();
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				// 将已经剪切走的部分删除,并将插入符移动到剪切位置
+				int caretOffset = styledText.getSelection().x;
+				styledText.setText(new StringBuffer(styledText.getText())
+						.replace(styledText.getSelection().x, styledText.getSelection().y, "").toString());
+				styledText.setCaretOffset(caretOffset);
+			}
+		});
+
+		// 粘贴菜单的点击事件
+		paste.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				// 获取剪切板上的文本
+				String cliptext = (clipboard.getContents(textTransfer) != null
+						? clipboard.getContents(textTransfer).toString() : "");
+				clipboard.dispose();
+				int caretOffset = styledText.getSelection().x;
+				styledText.setText(new StringBuffer(styledText.getText())
+						.replace(styledText.getSelection().x, styledText.getSelection().y, cliptext).toString());
+				styledText.setCaretOffset(caretOffset + cliptext.length());
+			}
+		});
+
+		// 复制上下文菜单的点击事件
+		copy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getSelectionCount() == 0) {
+					return;
+				}
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				String plainText = styledText.getSelectionText();
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+			}
+		});
+
+		// 全选上下文菜单的点击事件
+		allSelect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				styledText.selectAll();
+			}
+		});
+
+		// 清空上下文菜单的点击事件
+		clear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				styledText.setText("");
+			}
+		});
+
+		// 格式化JSON点击事件
+		formatJson.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+				Matcher m = p.matcher(styledText.getText());
+				styledText.setText(JsonFormatUtils.Format(m.replaceAll("")));
+			}
+		});
+
+		// 更改是否自动换行
+		warp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getWordWrap()) {
+					styledText.setWordWrap(false);
+					warp.setText("打开自动换行");
+				} else {
+					styledText.setWordWrap(true);
+					warp.setText("关闭自动换行");
+				}
+			}
+		});
 	}
 
 	// 初始化历史记录
