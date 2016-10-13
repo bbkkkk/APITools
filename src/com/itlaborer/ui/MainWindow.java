@@ -78,6 +78,7 @@ public class MainWindow {
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 加载的配置文件项
 	private String[] loadAddressArray;
+	private String[] loadApiArray;
 	private String loadApiJson;
 	private String loadCodeFile;
 	private int loadHistorySum;
@@ -115,6 +116,8 @@ public class MainWindow {
 	private Label[] label;
 	private MenuItem serverSelect;
 	private Menu servers;
+	private MenuItem apiSelect;
+	private Menu apis;
 	private Button btnAuthorization;
 
 	// 主窗口
@@ -248,13 +251,18 @@ public class MainWindow {
 
 		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
 		menuItemCookie.setText("Cookie");
-
+		
 		// 服务器列表
 		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		serverSelect.setText("服务器列表");
-
 		servers = new Menu(serverSelect);
 		serverSelect.setMenu(servers);
+		
+		// API列表
+		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
+		apiSelect.setText("API文档列表");
+		apis = new Menu(apiSelect);
+		apiSelect.setMenu(apis);
 
 		/////////////////// 帮助////////////////////////////////////////
 		MenuItem menuHelp = new MenuItem(rootMenu, SWT.CASCADE);
@@ -967,6 +975,37 @@ public class MainWindow {
 					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
 				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
+			//加载API列表
+			loadApiArray = properties.getProperty("apilist").split(",");
+			if (null != loadApiArray && loadApiArray.length > 0) {
+				if (StringUtils.isNotEmpty(loadApiArray[0])) {
+					this.loadApiJson = loadApiArray[0];
+					// 初始化API下拉选择框
+					for (int i = 0; i < loadApiArray.length; i++) {
+						final MenuItem apiItem = new MenuItem(apis, SWT.NONE);
+						apiItem.setText(loadApiArray[i]);
+						if (i == 0) {
+							apiItem.setImage(
+									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/checked.png"));
+						}
+						apiItem.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								// 设置焦点
+								for (int i = 0; i < apis.getItemCount(); i++) {
+									apis.getItem(i).setImage(null);
+								}
+								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
+										"/com/itlaborer/res/checked.png"));
+								loadApiJson = apiItem.getText();
+								InitApiList();
+							}
+						});
+					}
+				} else {
+					this.loadApiJson  =null;
+				}
+			}
 			// 加载地址列表
 			loadAddressArray = properties.getProperty("apiaddress").split(",");
 			if (null != loadAddressArray && loadAddressArray.length > 0) {
@@ -999,8 +1038,6 @@ public class MainWindow {
 				}
 			}
 			this.loadCodeFile = properties.getProperty("returncodefile");
-			this.loadApiJson = properties.getProperty("apilist");
-
 		} catch (Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
@@ -1171,6 +1208,8 @@ public class MainWindow {
 		allSelect.setText("全选");
 		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
 		clear.setText("清空");
+		MenuItem compressJson = new MenuItem(popupMenu, SWT.NONE);
+		compressJson.setText("压缩JSON");
 		MenuItem formatJson = new MenuItem(popupMenu, SWT.NONE);
 		formatJson.setText("格式化JSON");
 		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
@@ -1261,6 +1300,16 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				styledText.setText("");
+			}
+		});
+
+		// 压缩JSON点击事件
+		compressJson.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+				Matcher m = p.matcher(styledText.getText());
+				styledText.setText(m.replaceAll(""));
 			}
 		});
 
