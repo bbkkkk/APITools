@@ -260,7 +260,7 @@ public class MainWindow {
 		
 		// API列表
 		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
-		apiSelect.setText("API文档列表");
+		apiSelect.setText("接口列表");
 		apis = new Menu(apiSelect);
 		apiSelect.setMenu(apis);
 
