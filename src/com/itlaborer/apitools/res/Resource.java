@@ -1,4 +1,4 @@
-package com.itlaborer.res;
+package com.itlaborer.apitools.res;
 
 /**
  * 

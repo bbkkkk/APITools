@@ -1,11 +1,11 @@
-package com.itlaborer.res;
+package com.itlaborer.apitools.res;
 
 import java.util.ArrayList;
 
-import com.itlaborer.model.ApiDoc;
-import com.itlaborer.model.ApiItem;
-import com.itlaborer.model.ApiList;
-import com.itlaborer.model.ApiPar;
+import com.itlaborer.apitools.model.ApiDoc;
+import com.itlaborer.apitools.model.ApiItem;
+import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiPar;
 
 /**
  * 

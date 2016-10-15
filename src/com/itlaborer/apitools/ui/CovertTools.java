@@ -1,4 +1,4 @@
-package com.itlaborer.ui;
+package com.itlaborer.apitools.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +23,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.alibaba.fastjson.JSON;
-import com.itlaborer.model.ApiDoc;
-import com.itlaborer.model.ApiItem;
-import com.itlaborer.model.ApiList;
-import com.itlaborer.model.ApiPar;
-import com.itlaborer.utils.ApiUtils;
-import com.itlaborer.utils.JsonFormatUtils;
+import com.itlaborer.apitools.model.ApiDoc;
+import com.itlaborer.apitools.model.ApiItem;
+import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.JsonFormatUtils;
 
 /**
  * 

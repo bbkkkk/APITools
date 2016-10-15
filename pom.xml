@@ -32,7 +32,7 @@
 					<compilerId>eclipse</compilerId>
 					<archive>
 						<manifest>
-							<mainClass>com.itlaborer.ui.MainWindow</mainClass>
+							<mainClass>com.itlaborer.apitools.ui.MainWindow</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

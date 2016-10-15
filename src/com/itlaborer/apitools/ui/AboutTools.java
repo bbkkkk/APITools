@@ -1,4 +1,4 @@
-package com.itlaborer.ui;
+package com.itlaborer.apitools.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.itlaborer.res.Resource;
-import com.itlaborer.utils.ApiUtils;
+import com.itlaborer.apitools.res.Resource;
+import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.itlaborer.ui;
+package com.itlaborer.apitools.ui;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.itlaborer.utils.ApiUtils;
+import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.itlaborer.utils;
+package com.itlaborer.apitools.utils;
 
 public final class Base64Utils {
 

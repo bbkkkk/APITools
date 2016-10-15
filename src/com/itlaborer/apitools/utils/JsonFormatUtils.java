@@ -1,4 +1,4 @@
-package com.itlaborer.utils;
+package com.itlaborer.apitools.utils;
 
 public class JsonFormatUtils {
 

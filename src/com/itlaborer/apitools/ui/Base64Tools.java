@@ -1,4 +1,4 @@
-package com.itlaborer.ui;
+package com.itlaborer.apitools.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.itlaborer.utils.ApiUtils;
-import com.itlaborer.utils.Base64Utils;
+import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.Base64Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

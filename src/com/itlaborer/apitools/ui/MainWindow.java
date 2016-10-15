@@ -1,4 +1,4 @@
-package com.itlaborer.ui;
+package com.itlaborer.apitools.ui;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -51,16 +51,16 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.itlaborer.model.ApiDoc;
-import com.itlaborer.model.ApiItem;
-import com.itlaborer.model.ApiList;
-import com.itlaborer.model.ApiPar;
-import com.itlaborer.res.Resource;
-import com.itlaborer.res.XinzhiWeather;
-import com.itlaborer.utils.ApiUtils;
-import com.itlaborer.utils.JsonFormatUtils;
-import com.itlaborer.utils.ParamUtils;
-import com.itlaborer.utils.PropertiesUtils;
+import com.itlaborer.apitools.model.ApiDoc;
+import com.itlaborer.apitools.model.ApiItem;
+import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.res.Resource;
+import com.itlaborer.apitools.res.XinzhiWeather;
+import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.JsonFormatUtils;
+import com.itlaborer.apitools.utils.ParamUtils;
+import com.itlaborer.apitools.utils.PropertiesUtils;
 
 import net.dongliu.requests.RawResponse;
 

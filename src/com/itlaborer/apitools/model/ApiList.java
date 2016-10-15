@@ -1,4 +1,4 @@
-package com.itlaborer.model;
+package com.itlaborer.apitools.model;
 
 import java.util.ArrayList;
 

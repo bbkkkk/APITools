@@ -1,10 +1,10 @@
-package com.itlaborer.model;
+package com.itlaborer.apitools.model;
 
 import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.itlaborer.utils.JsonFormatUtils;
+import com.itlaborer.apitools.utils.JsonFormatUtils;
 
 /**
  * 
