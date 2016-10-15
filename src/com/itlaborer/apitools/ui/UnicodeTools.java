@@ -48,7 +48,7 @@ public class UnicodeTools extends Dialog {
 
 	private void createContents() {
 		unicodeToolsShell = new Shell(getParent(), getStyle());
-		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, "/com/itlaborer/res/icon.ico"));
+		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		unicodeToolsShell.setSize(680, 420);
 		unicodeToolsShell.setText("Unicode编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);

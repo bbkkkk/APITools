@@ -51,7 +51,7 @@ public class Base64Tools extends Dialog {
 
 	private void createContents() {
 		base64ToolsShell = new Shell(getParent(), getStyle());
-		base64ToolsShell.setImage(SWTResourceManager.getImage(Base64Tools.class, "/com/itlaborer/res/icon.ico"));
+		base64ToolsShell.setImage(SWTResourceManager.getImage(Base64Tools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		base64ToolsShell.setSize(680, 420);
 		base64ToolsShell.setText("Base64编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), base64ToolsShell);

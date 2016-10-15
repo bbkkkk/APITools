@@ -48,7 +48,7 @@ public class MD5Tools extends Dialog {
 
 	private void createContents() {
 		md5ToolsShell = new Shell(getParent(), getStyle());
-		md5ToolsShell.setImage(SWTResourceManager.getImage(MD5Tools.class, "/com/itlaborer/res/icon.ico"));
+		md5ToolsShell.setImage(SWTResourceManager.getImage(MD5Tools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		md5ToolsShell.setSize(680, 420);
 		md5ToolsShell.setText("MD5加密工具");
 		ApiUtils.SetCenterinParent(getParent(), md5ToolsShell);

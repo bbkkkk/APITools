@@ -52,7 +52,7 @@ public class UrlEncodeTools extends Dialog {
 
 	private void createContents() {
 		urlEncodeToolsShell = new Shell(getParent(), getStyle());
-		urlEncodeToolsShell.setImage(SWTResourceManager.getImage(UrlEncodeTools.class, "/com/itlaborer/res/icon.ico"));
+		urlEncodeToolsShell.setImage(SWTResourceManager.getImage(UrlEncodeTools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		urlEncodeToolsShell.setSize(680, 420);
 		urlEncodeToolsShell.setText("URL编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);

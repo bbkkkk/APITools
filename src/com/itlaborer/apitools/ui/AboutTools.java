@@ -52,7 +52,7 @@ public class AboutTools extends Dialog {
 
 	private void createContents() {
 		aboutToolsShell = new Shell(getParent(), getStyle());
-		aboutToolsShell.setImage(SWTResourceManager.getImage(AboutTools.class, "/com/itlaborer/res/icon.ico"));
+		aboutToolsShell.setImage(SWTResourceManager.getImage(AboutTools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		aboutToolsShell.setSize(400, 218);
 		aboutToolsShell.setText(getText());
 		ApiUtils.SetCenterinParent(getParent(), aboutToolsShell);

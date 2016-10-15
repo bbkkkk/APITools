@@ -79,7 +79,7 @@ public class HeaderEdit extends Dialog {
 
 	private void createContents() {
 		headerEditShell = new Shell(getParent(), getStyle());
-		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, "/com/itlaborer/res/icon.ico"));
+		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, "/com/itlaborer/apitools/res/icon.ico"));
 		headerEditShell.setSize(680, 420);
 		headerEditShell.setText(windowname + "参数工具");
 		ApiUtils.SetCenterinParent(getParent(), headerEditShell);

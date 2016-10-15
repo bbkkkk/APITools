@@ -163,7 +163,7 @@ public class MainWindow {
 		ApiUtils.SetCenter(mainWindowShell);
 		mainWindowShell.setSize(1148, 650);
 		mainWindowShell.setText("APITools" + "-" + Resource.VERSION);
-		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/icon.ico"));
+		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/icon.ico"));
 		ApiUtils.DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);

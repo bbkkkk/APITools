@@ -79,7 +79,7 @@ public class CovertTools extends Dialog {
 
 	private void createContents() {
 		covertToolsShell = new Shell(getParent(), getStyle());
-		covertToolsShell.setImage(SWTResourceManager.getImage(CovertTools.class, "/com/itlaborer/res/icon.ico"));
+		covertToolsShell.setImage(SWTResourceManager.getImage(CovertTools.class, "/com/itlaborer/apitools/res/icon.ico"));
 		covertToolsShell.setSize(400, 180);
 		covertToolsShell.setText(getText());
 		ApiUtils.SetCenterinParent(getParent(), covertToolsShell);
