@@ -986,7 +986,7 @@ public class MainWindow {
 						apiItem.setText(loadApiArray[i]);
 						if (i == 0) {
 							apiItem.setImage(
-									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/checked.png"));
+									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/checked.png"));
 						}
 						apiItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -996,7 +996,7 @@ public class MainWindow {
 									apis.getItem(i).setImage(null);
 								}
 								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										"/com/itlaborer/res/checked.png"));
+										"/com/itlaborer/apitools/res/checked.png"));
 								loadApiJson = apiItem.getText();
 								InitApiList();
 							}
@@ -1017,7 +1017,7 @@ public class MainWindow {
 						serverItem.setText(loadAddressArray[i]);
 						if (i == 0) {
 							serverItem.setImage(
-									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/res/checked.png"));
+									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/checked.png"));
 						}
 						serverItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1027,7 +1027,7 @@ public class MainWindow {
 									servers.getItem(i).setImage(null);
 								}
 								serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										"/com/itlaborer/res/checked.png"));
+										"/com/itlaborer/apitools/res/checked.png"));
 								urlText.setText(urlText.getText().replace(serverAdress, serverItem.getText()));
 								serverAdress = serverItem.getText();
 							}
