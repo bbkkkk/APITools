@@ -41,12 +41,10 @@ import net.dongliu.requests.RawResponse;
 import net.dongliu.requests.Requests;
 
 /**
- * 
+ * APITools工具类
  * @author liudewei[793554262@qq.com]
- * @see APITOols工具类
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class ApiUtils {

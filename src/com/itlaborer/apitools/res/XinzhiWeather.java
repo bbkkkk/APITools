@@ -8,12 +8,10 @@ import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
 
 /**
- * 
- * @author liudewei
- * @see 心知天气API，作为示例接口文档
+ * 心知天气API，作为示例接口文档
+ * @author liudewei 
  * @version 1.0
  * @since 1.6
- *
  */
 
 public class XinzhiWeather {

@@ -65,12 +65,10 @@ import com.itlaborer.apitools.utils.PropertiesUtils;
 import net.dongliu.requests.RawResponse;
 
 /**
- * 
+ * 程序主界面
  * @author liudewei[793554262@qq.com]
- * @see 程序主界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class MainWindow {

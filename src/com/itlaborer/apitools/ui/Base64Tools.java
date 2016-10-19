@@ -17,12 +17,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ * Base64工具界面
  * @author liudewei[793554262@qq.com]
- * @see Base64工具界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class Base64Tools extends Dialog {

@@ -18,12 +18,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
- * 
+ * Url工具界面
  * @author liudewei[793554262@qq.com]
- * @see Url工具界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class UrlEncodeTools extends Dialog {

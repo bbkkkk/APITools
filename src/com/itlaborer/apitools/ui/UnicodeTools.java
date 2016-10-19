@@ -14,12 +14,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
- * 
+ * Unicode工具界面
  * @author liudewei[793554262@qq.com]
- * @see Unicode工具界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class UnicodeTools extends Dialog {

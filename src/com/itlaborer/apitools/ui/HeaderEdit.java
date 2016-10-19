@@ -30,12 +30,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 /**
- * 
+ * Header工具界面
  * @author liudewei[793554262@qq.com]
- * @see Header工具界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class HeaderEdit extends Dialog {

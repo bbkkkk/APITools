@@ -16,12 +16,10 @@ import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
- * 
+ * 关于界面
  * @author liudewei[793554262@qq.com]
- * @see 关于界面
  * @version 1.0
  * @since 1.0
- * 
  */
 
 public class AboutTools extends Dialog {
