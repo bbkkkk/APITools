@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
+import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 /**

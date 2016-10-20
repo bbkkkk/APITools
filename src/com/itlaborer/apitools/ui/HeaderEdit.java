@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
+import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 import org.eclipse.swt.events.SelectionAdapter;

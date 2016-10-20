@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -28,6 +27,7 @@ import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.res.Resource;
+import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 import com.itlaborer.apitools.utils.JsonFormatUtils;
 

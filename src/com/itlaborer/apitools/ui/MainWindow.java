@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -59,6 +58,7 @@ import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
+import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 import com.itlaborer.apitools.utils.JsonFormatUtils;
 import com.itlaborer.apitools.utils.ParamUtils;
