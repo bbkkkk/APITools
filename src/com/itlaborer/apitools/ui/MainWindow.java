@@ -63,9 +63,12 @@ import com.itlaborer.apitools.utils.ParamUtils;
 import com.itlaborer.apitools.utils.PropertiesUtils;
 
 import net.dongliu.requests.RawResponse;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 程序主界面
+ * 
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
@@ -249,13 +252,13 @@ public class MainWindow {
 
 		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
 		menuItemCookie.setText("Cookie");
-		
+
 		// 服务器列表
 		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		serverSelect.setText("服务器列表");
 		servers = new Menu(serverSelect);
 		serverSelect.setMenu(servers);
-		
+
 		// API列表
 		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		apiSelect.setText("接口列表");
@@ -558,7 +561,8 @@ public class MainWindow {
 		parsClearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				clearParameters();
+				// 在别的ToolTipText更新时，鼠标点击所在的Button的ToolTipText会不停地闪烁，需要纠正
+				parsClearButton.setToolTipText(null);
 				try {
 					urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getAddress());
@@ -569,7 +573,12 @@ public class MainWindow {
 				}
 			}
 		});
-
+		parsClearButton.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseExit(MouseEvent e) {
+				parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
+			}
+		});
 		// 清空空格点击事件
 		clearSpaceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -973,7 +982,7 @@ public class MainWindow {
 					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
 				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
-			//加载API列表
+			// 加载API列表
 			loadApiArray = properties.getProperty("apilist").split(",");
 			if (null != loadApiArray && loadApiArray.length > 0) {
 				if (StringUtils.isNotEmpty(loadApiArray[0])) {
@@ -983,8 +992,8 @@ public class MainWindow {
 						final MenuItem apiItem = new MenuItem(apis, SWT.NONE);
 						apiItem.setText(loadApiArray[i]);
 						if (i == 0) {
-							apiItem.setImage(
-									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/checked.png"));
+							apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
+									"/com/itlaborer/apitools/res/checked.png"));
 						}
 						apiItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1001,7 +1010,7 @@ public class MainWindow {
 						});
 					}
 				} else {
-					this.loadApiJson  =null;
+					this.loadApiJson = null;
 				}
 			}
 			// 加载地址列表
@@ -1014,8 +1023,8 @@ public class MainWindow {
 						final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
 						serverItem.setText(loadAddressArray[i]);
 						if (i == 0) {
-							serverItem.setImage(
-									SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/checked.png"));
+							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
+									"/com/itlaborer/apitools/res/checked.png"));
 						}
 						serverItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1141,7 +1150,6 @@ public class MainWindow {
 				form[i][1].setText(pars.get(i).getValue());
 			}
 		}
-
 	}
 
 	// 获取输入框中的参数-供发起请求的时候使用
