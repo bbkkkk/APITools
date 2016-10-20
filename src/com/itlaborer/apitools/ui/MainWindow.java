@@ -31,6 +31,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -63,8 +65,6 @@ import com.itlaborer.apitools.utils.ParamUtils;
 import com.itlaborer.apitools.utils.PropertiesUtils;
 
 import net.dongliu.requests.RawResponse;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 程序主界面
@@ -164,7 +164,7 @@ public class MainWindow {
 		ApiUtils.SetCenter(mainWindowShell);
 		mainWindowShell.setSize(1148, 650);
 		mainWindowShell.setText("APITools" + "-" + Resource.VERSION);
-		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, "/com/itlaborer/apitools/res/icon.ico"));
+		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		ApiUtils.DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
@@ -993,7 +993,7 @@ public class MainWindow {
 						apiItem.setText(loadApiArray[i]);
 						if (i == 0) {
 							apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-									"/com/itlaborer/apitools/res/checked.png"));
+									Resource.IMAGE_CHECKED));
 						}
 						apiItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1003,7 +1003,7 @@ public class MainWindow {
 									apis.getItem(i).setImage(null);
 								}
 								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										"/com/itlaborer/apitools/res/checked.png"));
+										Resource.IMAGE_CHECKED));
 								loadApiJson = apiItem.getText();
 								InitApiList();
 							}
@@ -1024,7 +1024,7 @@ public class MainWindow {
 						serverItem.setText(loadAddressArray[i]);
 						if (i == 0) {
 							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-									"/com/itlaborer/apitools/res/checked.png"));
+									Resource.IMAGE_CHECKED));
 						}
 						serverItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1034,7 +1034,7 @@ public class MainWindow {
 									servers.getItem(i).setImage(null);
 								}
 								serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										"/com/itlaborer/apitools/res/checked.png"));
+										Resource.IMAGE_CHECKED));
 								urlText.setText(urlText.getText().replace(serverAdress, serverItem.getText()));
 								serverAdress = serverItem.getText();
 							}

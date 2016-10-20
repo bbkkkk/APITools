@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 import org.eclipse.swt.events.SelectionAdapter;
@@ -77,7 +78,7 @@ public class HeaderEdit extends Dialog {
 
 	private void createContents() {
 		headerEditShell = new Shell(getParent(), getStyle());
-		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, "/com/itlaborer/apitools/res/icon.ico"));
+		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, Resource.IMAGE_ICON));
 		headerEditShell.setSize(680, 420);
 		headerEditShell.setText(windowname + "参数工具");
 		ApiUtils.SetCenterinParent(getParent(), headerEditShell);

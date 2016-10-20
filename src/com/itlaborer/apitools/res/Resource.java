@@ -24,6 +24,9 @@ public class Resource {
 			+ "j.appender.FILE=org.apache.log4j.DailyRollingFileAppender \r\nlog4j.appender.FILE.file=log/APITools.log\r\nlog4j.appender.FILE.DatePattern='.'yyyy-MM-dd\r\nlog"
 			+ "4j.appender.FILE.layout=org.apache.log4j.PatternLayout\r\nlog4j.appender.FILE.layout.ConversionPattern=%d{[yyyy-MM-dd HH:mm:ss]}[%c][%-5p][%m]%n";
 	public static String MANUAL = "http://www.itlaborer.com/apitools_manual";
-	public static String FEEDBACK = "http://www.itlaborer.com/2016/08/07/apitools_feedback.html";
+	public static String FEEDBACK = "http://www.itlaborer.com/2016/08/07/apitools_feedback.html";	
+	//图片资源串
+	public static String IMAGE_ICON="/com/itlaborer/apitools/res/icon.ico";
+	public static String IMAGE_CHECKED="/com/itlaborer/apitools/res/checked.png";
 
 }

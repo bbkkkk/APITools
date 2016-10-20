@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
@@ -46,7 +47,7 @@ public class UnicodeTools extends Dialog {
 
 	private void createContents() {
 		unicodeToolsShell = new Shell(getParent(), getStyle());
-		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, "/com/itlaborer/apitools/res/icon.ico"));
+		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, Resource.IMAGE_ICON));
 		unicodeToolsShell.setSize(680, 420);
 		unicodeToolsShell.setText("Unicode编码/解码工具");
 		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);

@@ -27,6 +27,7 @@ import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
 import com.itlaborer.apitools.utils.JsonFormatUtils;
 
@@ -77,7 +78,7 @@ public class CovertTools extends Dialog {
 
 	private void createContents() {
 		covertToolsShell = new Shell(getParent(), getStyle());
-		covertToolsShell.setImage(SWTResourceManager.getImage(CovertTools.class, "/com/itlaborer/apitools/res/icon.ico"));
+		covertToolsShell.setImage(SWTResourceManager.getImage(CovertTools.class, Resource.IMAGE_ICON));
 		covertToolsShell.setSize(400, 180);
 		covertToolsShell.setText(getText());
 		ApiUtils.SetCenterinParent(getParent(), covertToolsShell);
