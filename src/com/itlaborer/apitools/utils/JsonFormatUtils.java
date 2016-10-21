@@ -6,6 +6,10 @@ public class JsonFormatUtils {
 		int level = 0;
 		StringBuffer jsonForMatStr = new StringBuffer();
 		for (int i = 0; i < jsonStr.length(); i++) {
+			char pre1 = 0;
+			if (i > 0) {
+				pre1 = jsonStr.charAt(i - 1);
+			}
 			char c = jsonStr.charAt(i);
 			if (level > 0 && '\n' == jsonForMatStr.charAt(jsonForMatStr.length() - 1)) {
 				jsonForMatStr.append(GetLevelStr(level));
@@ -17,7 +21,11 @@ public class JsonFormatUtils {
 				level++;
 				break;
 			case ',':
-				jsonForMatStr.append(c + "\n");
+				if (pre1 == '"') {
+					jsonForMatStr.append(c + "\n");
+				} else {
+					jsonForMatStr.append(c);
+				}
 				break;
 			case '}':
 			case ']':
@@ -31,9 +39,7 @@ public class JsonFormatUtils {
 				break;
 			}
 		}
-
 		return jsonForMatStr.toString();
-
 	}
 
 	private static String GetLevelStr(int level) {
@@ -43,5 +49,4 @@ public class JsonFormatUtils {
 		}
 		return levelStr.toString();
 	}
-
 }
