@@ -21,7 +21,7 @@ public class JsonFormatUtils {
 				level++;
 				break;
 			case ',':
-				if (pre1 == '"') {
+				if (pre1 == '"' || Character.isDigit(pre1)) {
 					jsonForMatStr.append(c + "\n");
 				} else {
 					jsonForMatStr.append(c);
