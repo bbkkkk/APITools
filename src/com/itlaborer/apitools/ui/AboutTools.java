@@ -17,6 +17,7 @@ import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
  * 关于界面
+ * 
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
@@ -51,27 +52,41 @@ public class AboutTools extends Dialog {
 	private void createContents() {
 		aboutToolsShell = new Shell(getParent(), getStyle());
 		aboutToolsShell.setImage(SWTResourceManager.getImage(AboutTools.class, Resource.IMAGE_ICON));
-		aboutToolsShell.setSize(400, 218);
+		aboutToolsShell.setSize(400, 391);
 		aboutToolsShell.setText(getText());
 		ApiUtils.SetCenterinParent(getParent(), aboutToolsShell);
 
 		Label copyRightlabel = new Label(aboutToolsShell, SWT.CENTER);
-		copyRightlabel.setBounds(10, 132, 375, 17);
+		copyRightlabel.setBounds(10, 311, 375, 17);
 		copyRightlabel.setText(Resource.AUTHOR);
 
 		Link link = new Link(aboutToolsShell, SWT.NONE);
-		link.setBounds(143, 157, 108, 17);
+		link.setBounds(143, 336, 108, 17);
 		link.setText("<a>www.itlaborer.com</a>");
 		link.addSelectionListener(new LinkSelection());
 
 		Label versionLabel = new Label(aboutToolsShell, SWT.NONE);
-		versionLabel.setBounds(184, 109, 25, 17);
+		versionLabel.setBounds(184, 288, 25, 17);
 		versionLabel.setText(Resource.VERSION);
 
-		Label readMeTextLabel = new Label(aboutToolsShell, SWT.WRAP);
-		readMeTextLabel.setBounds(10, 20, 375, 82);
-		readMeTextLabel
-				.setText(Resource.EXPLAIN);
+		Label readMeTextLabel = new Label(aboutToolsShell, SWT.BORDER | SWT.WRAP | SWT.SHADOW_NONE);
+		readMeTextLabel.setBounds(10, 33, 375, 114);
+		readMeTextLabel.setText(Resource.EXPLAIN);
+
+		Label lblgplV = new Label(aboutToolsShell, SWT.BORDER | SWT.WRAP | SWT.SHADOW_NONE);
+		lblgplV.setText(
+				"本程序遵从XXX开源协议开源");
+		lblgplV.setBounds(10, 176, 375, 106);
+
+		Label label_1 = new Label(aboutToolsShell, SWT.NONE);
+		label_1.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label_1.setText("版权声明：");
+		label_1.setBounds(10, 153, 57, 17);
+
+		Label label_2 = new Label(aboutToolsShell, SWT.NONE);
+		label_2.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label_2.setText("软件说明：");
+		label_2.setBounds(10, 10, 57, 17);
 	}
 
 	// 打开网站
