@@ -2,6 +2,7 @@ package com.itlaborer.apitools.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.program.Program;
@@ -69,24 +70,24 @@ public class AboutTools extends Dialog {
 		versionLabel.setBounds(184, 288, 25, 17);
 		versionLabel.setText(Resource.VERSION);
 
-		Label readMeTextLabel = new Label(aboutToolsShell, SWT.BORDER | SWT.WRAP | SWT.SHADOW_NONE);
+		StyledText readMeTextLabel = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
 		readMeTextLabel.setBounds(10, 33, 375, 114);
 		readMeTextLabel.setText(Resource.EXPLAIN);
 
-		Label lblgplV = new Label(aboutToolsShell, SWT.BORDER | SWT.WRAP | SWT.SHADOW_NONE);
+		StyledText lblgplV = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
 		lblgplV.setText(
-				"本程序遵从XXX开源协议开源");
+				"Copyright itlaborer.com\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.");
 		lblgplV.setBounds(10, 176, 375, 106);
 
 		Label label_1 = new Label(aboutToolsShell, SWT.NONE);
 		label_1.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label_1.setText("版权声明：");
-		label_1.setBounds(10, 153, 57, 17);
+		label_1.setText("Apache License:");
+		label_1.setBounds(10, 153, 136, 17);
 
 		Label label_2 = new Label(aboutToolsShell, SWT.NONE);
 		label_2.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label_2.setText("软件说明：");
-		label_2.setBounds(10, 10, 57, 17);
+		label_2.setText("软件说明:");
+		label_2.setBounds(10, 10, 136, 17);
 	}
 
 	// 打开网站
