@@ -126,7 +126,7 @@ public class MainWindow {
 		PropertyConfigurator.configure("config/log4j.properties ");
 		logger.info("程序启动, 程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
-		this.parsSum = 128;
+		this.parsSum = 196;
 		this.loadHistorySum = 30;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
@@ -992,8 +992,7 @@ public class MainWindow {
 						final MenuItem apiItem = new MenuItem(apis, SWT.NONE);
 						apiItem.setText(loadApiArray[i]);
 						if (i == 0) {
-							apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-									Resource.IMAGE_CHECKED));
+							apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 						}
 						apiItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1002,8 +1001,7 @@ public class MainWindow {
 								for (int i = 0; i < apis.getItemCount(); i++) {
 									apis.getItem(i).setImage(null);
 								}
-								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										Resource.IMAGE_CHECKED));
+								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 								loadApiJson = apiItem.getText();
 								InitApiList();
 							}
@@ -1023,8 +1021,7 @@ public class MainWindow {
 						final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
 						serverItem.setText(loadAddressArray[i]);
 						if (i == 0) {
-							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-									Resource.IMAGE_CHECKED));
+							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 						}
 						serverItem.addSelectionListener(new SelectionAdapter() {
 							@Override
@@ -1033,8 +1030,8 @@ public class MainWindow {
 								for (int i = 0; i < servers.getItemCount(); i++) {
 									servers.getItem(i).setImage(null);
 								}
-								serverItem.setImage(SWTResourceManager.getImage(MainWindow.class,
-										Resource.IMAGE_CHECKED));
+								serverItem.setImage(
+										SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 								urlText.setText(urlText.getText().replace(serverAdress, serverItem.getText()));
 								serverAdress = serverItem.getText();
 							}
@@ -1139,7 +1136,7 @@ public class MainWindow {
 		clearParameters();
 		if (null != pars) {
 			for (int i = 0; i < pars.size(); i++) {
-				if (i > 127) {
+				if (i > (this.parsSum - 1)) {
 					logger.info("使用的参数竟然超过了" + parsSum + "个");
 					statusBar.setText("暂不支持" + parsSum + "个以上参数");
 					break;
