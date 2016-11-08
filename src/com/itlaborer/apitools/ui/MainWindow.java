@@ -82,6 +82,7 @@ public class MainWindow {
 	private String[] loadApiArray;
 	private String loadApiJson;
 	private String loadCodeFile;
+	private String curentInterface;
 	private int loadHistorySum;
 
 	private ApiDoc apiDoc;
@@ -605,6 +606,8 @@ public class MainWindow {
 		// 接口选择事件
 		interfaceCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				curentInterface=apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+						.get(interfaceCombo.getSelectionIndex()).getAddress();
 				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -1032,8 +1035,8 @@ public class MainWindow {
 								}
 								serverItem.setImage(
 										SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
-								urlText.setText(urlText.getText().replace(serverAdress, serverItem.getText()));
 								serverAdress = serverItem.getText();
+								urlText.setText(serverAdress+curentInterface);
 							}
 						});
 					}
@@ -1112,6 +1115,7 @@ public class MainWindow {
 		try {
 			interfaceCombo.select(0);
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
+			curentInterface=apiItems.get(0).getAddress();
 			initParameters(apiItems.get(0).getParameters());
 		} catch (Exception e) {
 			logger.error("异常", e);
