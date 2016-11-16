@@ -123,7 +123,7 @@ public class CovertTools extends Dialog {
 				beginCovert.setEnabled(false);
 				saveButton.setEnabled(false);
 				statusText.setText("开始解析文件" + path.getPath());
-				setNameText.setText("api-fundapi" + apiDocVersion.getText() + ".json");
+				setNameText.setText("fundapi-" + apiDocVersion.getText() + ".json");
 				final String version = apiDocVersion.getText();
 				// 新线程中读取
 				new Thread() {
