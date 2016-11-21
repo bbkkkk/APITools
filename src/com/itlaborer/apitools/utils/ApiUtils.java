@@ -42,6 +42,7 @@ import net.dongliu.requests.Requests;
 
 /**
  * APITools工具类
+ * 
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
@@ -282,18 +283,23 @@ public class ApiUtils {
 
 	// 字符串转unicode
 	public static String string2Unicode(String string) {
-
 		StringBuffer unicode = new StringBuffer();
 		for (int i = 0; i < string.length(); i++) {
 			// 取出每一个字符
 			char c = string.charAt(i);
-			String unicodestring = Integer.toHexString(c);
-			// 英文的话，要补全四位
-			if (unicodestring.length() == 2) {
-				unicodestring = "00" + unicodestring;
+			if (c != '\n' && c != '\r') {
+				String unicodestring = Integer.toHexString(c);
+				// 英文的话，要补全四位
+				if (unicodestring.length() == 2) {
+					unicodestring = "00" + unicodestring;
+				}
+				// 转换为unicode
+				unicode.append("\\u" + unicodestring);
+			} else if (c == '\n') {
+				unicode.append("\n");
+			} else if (c == '\r') {
+				unicode.append("\r");
 			}
-			// 转换为unicode
-			unicode.append("\\u" + unicodestring);
 		}
 		return unicode.toString();
 	}
@@ -480,7 +486,7 @@ public class ApiUtils {
 		});
 	}
 
-	//拖拽支持
+	// 拖拽支持
 	public static void DropTargetSupport(Shell shell) {
 
 		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
@@ -513,6 +519,7 @@ public class ApiUtils {
 					File file = new File(files[i]);
 				}
 			}
+
 			@Override
 			public void dropAccept(DropTargetEvent event) {
 			}
