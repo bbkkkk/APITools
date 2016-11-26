@@ -22,6 +22,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.Clipboard;
@@ -196,7 +197,8 @@ public class MainWindow {
 		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("此功能暂未实现");
+				DesignTools designTools = new DesignTools();
+				designTools.open();
 			}
 		});
 		menuItemApiListEdit.setText("接口设计器");
@@ -858,6 +860,7 @@ public class MainWindow {
 						display.syncExec(new Thread() {
 							public void run() {
 								resultStyledText.setText(apiReturnStr);
+								RenderingColor(resultStyledText);
 								statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
 										+ (sumendtime - sumbegintime) + "ms" + "/Header:" + headerReturnStr);
 							}
@@ -950,8 +953,7 @@ public class MainWindow {
 				}
 			}
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
-			if (ApiUtils.SaveToFile(needsaveFile,
-					JsonFormatUtils.Format(JSON.toJSONString(needsaveApiDoc)))) {
+			if (ApiUtils.SaveToFile(needsaveFile, JsonFormatUtils.Format(JSON.toJSONString(needsaveApiDoc)))) {
 				statusBar.setText("保存成功");
 			} else {
 				statusBar.setText("保存失败，请重试");
@@ -1384,6 +1386,12 @@ public class MainWindow {
 		history = new ApiList();
 		history.setName("历史记录");
 		history.setApi(new ArrayList<ApiItem>());
+	}
+
+	// Json文本颜色渲染器
+	private void RenderingColor(StyledText styledText) {
+		StyleRange styleRange = new StyleRange();
+		styledText.setStyleRange(styleRange);
 	}
 
 	// 触发更新历史记录，只有在点击请求的时候才触发
