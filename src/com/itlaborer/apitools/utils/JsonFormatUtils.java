@@ -33,7 +33,7 @@ public class JsonFormatUtils {
 				break;
 			case ',':
 				// 在这里需要严格判断是否需要换行
-				if ((pre1 == '"' && next == '"') || (Character.isDigit(pre1) && next == '"')
+				if ((pre1 == '}') || (pre1 == '"' && next == '"') || (Character.isDigit(pre1) && next == '"')
 						|| ((jsonForMatStr.length() > 3)
 								&& (jsonForMatStr.substring(jsonForMatStr.length() - 4).equals("null")) && next == '"')
 						|| ((jsonForMatStr.length() > 3)
@@ -61,6 +61,7 @@ public class JsonFormatUtils {
 		return jsonForMatStr.toString();
 	}
 
+	// 缩进填充tab
 	private static String GetLevelStr(int tablevel) {
 		StringBuffer tablevelStr = new StringBuffer();
 		for (int level = 0; level < tablevel; level++) {
