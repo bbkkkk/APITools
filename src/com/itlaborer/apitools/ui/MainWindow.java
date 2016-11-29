@@ -1392,6 +1392,14 @@ public class MainWindow {
 	private void RenderingColor(StyledText styledText) {
 		StyleRange styleRange = new StyleRange();
 		styledText.setStyleRange(styleRange);
+		int startIndex = 0;
+		int endIndex = styledText.getText().length();
+		
+		if (endIndex == -1) {
+			return;
+		} else {
+
+		}
 	}
 
 	// 触发更新历史记录，只有在点击请求的时候才触发
