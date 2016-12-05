@@ -299,7 +299,7 @@ public class MainWindow {
 		urlText.setBounds(487, 8, 478, 25);
 		// HTTP请求的方法下拉选择框
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
-		methodSelectCombo.setBounds(971, 7, 67, 25);
+		methodSelectCombo.setBounds(970, 7, 66, 25);
 		formToolkit.adapt(methodSelectCombo);
 		methodSelectCombo.add("GET", 0);
 		methodSelectCombo.add("POST", 1);
@@ -310,35 +310,35 @@ public class MainWindow {
 
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
-		submitButton.setBounds(1044, 6, 90, 27);
+		submitButton.setBounds(1040, 6, 94, 27);
 		submitButton.setText("提      交");
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
 		parsCovertButton.setToolTipText("导入形如a=1&&b=2的参数串到表单");
 		parsCovertButton.setText("导入参数");
-		parsCovertButton.setBounds(487, 38, 70, 27);
+		parsCovertButton.setBounds(487, 38, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
 		// 重置参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
 		parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
 		parsClearButton.setText("重置参数");
-		parsClearButton.setBounds(563, 38, 70, 27);
+		parsClearButton.setBounds(562, 38, 72, 27);
 		formToolkit.adapt(parsClearButton, true, true);
 
 		// 排除空格
 		clearSpaceButton = new Button(mainWindowShell, SWT.NONE);
 		clearSpaceButton.setToolTipText("清除参数两头可能存在的空格");
 		clearSpaceButton.setText("TRIM参数");
-		clearSpaceButton.setBounds(639, 38, 70, 27);
+		clearSpaceButton.setBounds(637, 38, 72, 27);
 		formToolkit.adapt(clearSpaceButton, true, true);
 
 		// 重排参数
 		button = new Button(mainWindowShell, SWT.NONE);
 		button.setToolTipText("将参数重新从第一个表格重排列");
 		button.setText("重排参数");
-		button.setBounds(714, 38, 70, 27);
+		button.setBounds(712, 38, 72, 27);
 		formToolkit.adapt(button, true, true);
 
 		// auth
@@ -351,7 +351,7 @@ public class MainWindow {
 		});
 		btnAuthorization.setToolTipText("授权管理");
 		btnAuthorization.setText("Authorization");
-		btnAuthorization.setBounds(790, 38, 86, 27);
+		btnAuthorization.setBounds(787, 38, 92, 27);
 		formToolkit.adapt(btnAuthorization, true, true);
 
 		// api状态码
@@ -364,13 +364,13 @@ public class MainWindow {
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setToolTipText("清空结果内容");
 		textClearButton.setText("清空结果");
-		textClearButton.setBounds(970, 38, 69, 27);
+		textClearButton.setBounds(968, 38, 69, 27);
 		formToolkit.adapt(textClearButton, true, true);
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
 		toBrower.setToolTipText("用HTTP GET方式在浏览器中请求接口");
 		toBrower.setText("浏览器中打开");
-		toBrower.setBounds(1044, 38, 90, 27);
+		toBrower.setBounds(1040, 38, 94, 27);
 		formToolkit.adapt(toBrower, true, true);
 
 		// 参数table
@@ -1167,28 +1167,30 @@ public class MainWindow {
 
 	// 请求方法选择器
 	public void methodChoice(String method) {
-		switch (method.toUpperCase()) {
-		case "GET":
-			methodSelectCombo.select(0);
-			break;
-		case "POST":
-			methodSelectCombo.select(1);
-			break;
-		case "HEAD":
-			methodSelectCombo.select(2);
-			break;
-		case "PUT":
-			methodSelectCombo.select(3);
-			break;
-		case "PATCH":
-			methodSelectCombo.select(4);
-			break;
-		case "DELETE":
-			methodSelectCombo.select(5);
-			break;
-		default:
-			logger.info("未找到合适的请求方法,忽略");
-			break;
+		if (null != method) {
+			switch (method.toUpperCase()) {
+			case "GET":
+				methodSelectCombo.select(0);
+				break;
+			case "POST":
+				methodSelectCombo.select(1);
+				break;
+			case "HEAD":
+				methodSelectCombo.select(2);
+				break;
+			case "PUT":
+				methodSelectCombo.select(3);
+				break;
+			case "PATCH":
+				methodSelectCombo.select(4);
+				break;
+			case "DELETE":
+				methodSelectCombo.select(5);
+				break;
+			default:
+				logger.info("未找到合适的请求方法,忽略");
+				break;
+			}
 		}
 	}
 
