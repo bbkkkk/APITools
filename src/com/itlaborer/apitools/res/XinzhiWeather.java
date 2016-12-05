@@ -10,7 +10,7 @@ import com.itlaborer.apitools.model.ApiPar;
 /**
  * 心知天气API，作为示例接口文档
  * @author liudewei 
- * @version 1.0
+ * @version 1.1
  * @since 1.6
  */
 
@@ -25,6 +25,7 @@ public class XinzhiWeather {
 		ApiItem nowWeather = new ApiItem();
 		nowWeather.setAddress("now.json");
 		nowWeather.setName("天气实况");
+		nowWeather.setMethod("GET");
 		ArrayList<ApiPar> nowWeatherPars = new ArrayList<ApiPar>();
 		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
 		nowWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "北京"));
@@ -33,6 +34,7 @@ public class XinzhiWeather {
 		ApiItem daily = new ApiItem();
 		daily.setAddress("daily.json");
 		daily.setName("逐日预报和历史");
+		daily.setMethod("GET");
 		ArrayList<ApiPar> hourly_historyPars = new ArrayList<ApiPar>();
 		hourly_historyPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
 		hourly_historyPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
@@ -54,7 +56,8 @@ public class XinzhiWeather {
 
 		// 加入接口文档
 		apidoc.setApilist(apiList);
-		apidoc.setApi_version("心知天气-V3");
+		apidoc.setDoc_name("心知天气");
+		apidoc.setApi_version("V3");
 		apidoc.setDecode_version("1.0");
 	}
 

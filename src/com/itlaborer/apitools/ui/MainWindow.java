@@ -606,6 +606,8 @@ public class MainWindow {
 						.get(interfaceCombo.getSelectionIndex()).getAddress();
 				urlText.setText(serverAdress + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
+				methodChoice(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+						.get(interfaceCombo.getSelectionIndex()).getMethod());
 				initParameters(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getParameters());
 				logger.debug("切换到接口:" + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -1151,10 +1153,39 @@ public class MainWindow {
 			interfaceCombo.select(0);
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
 			curentInterface = apiItems.get(0).getAddress();
+			methodChoice(apiItems.get(0).getMethod());
 			initParameters(apiItems.get(0).getParameters());
+
 		} catch (Exception e) {
 			logger.error("异常", e);
 			urlText.setText(serverAdress);
+		}
+	}
+
+	// 请求方法选择器
+	public void methodChoice(String method) {
+		switch (method.toUpperCase()) {
+		case "GET":
+			methodSelectCombo.select(0);
+			break;
+		case "POST":
+			methodSelectCombo.select(1);
+			break;
+		case "HEAD":
+			methodSelectCombo.select(2);
+			break;
+		case "PUT":
+			methodSelectCombo.select(3);
+			break;
+		case "PATCH":
+			methodSelectCombo.select(4);
+			break;
+		case "DELETE":
+			methodSelectCombo.select(5);
+			break;
+		default:
+			logger.info("未找到合适的请求方法,忽略");
+			break;
 		}
 	}
 
@@ -1394,7 +1425,7 @@ public class MainWindow {
 		styledText.setStyleRange(styleRange);
 		int startIndex = 0;
 		int endIndex = styledText.getText().length();
-		
+
 		if (endIndex == -1) {
 			return;
 		} else {
