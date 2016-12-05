@@ -16,11 +16,14 @@ public class ApiItem {
 
 	@JSONField(ordinal = 1)
 	private String name;
+
 	@JSONField(ordinal = 2)
-	private String address;
+	private String explain;
 	@JSONField(ordinal = 3)
-	private String method;
+	private String address;
 	@JSONField(ordinal = 4)
+	private String method;
+	@JSONField(ordinal = 5)
 	private ArrayList<ApiPar> parameters;
 
 	public ApiItem() {
@@ -33,6 +36,14 @@ public class ApiItem {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getExplain() {
+		return explain;
+	}
+
+	public void setExplain(String explain) {
+		this.explain = explain;
 	}
 
 	public String getAddress() {

@@ -606,6 +606,8 @@ public class MainWindow {
 						.get(interfaceCombo.getSelectionIndex()).getAddress();
 				urlText.setText(serverAdress + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
+				interfaceCombo.setToolTipText(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+						.get(interfaceCombo.getSelectionIndex()).getExplain());
 				methodChoice(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getMethod());
 				initParameters(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -1154,6 +1156,7 @@ public class MainWindow {
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
 			curentInterface = apiItems.get(0).getAddress();
 			methodChoice(apiItems.get(0).getMethod());
+			interfaceCombo.setToolTipText(apiItems.get(0).getExplain());
 			initParameters(apiItems.get(0).getParameters());
 
 		} catch (Exception e) {
