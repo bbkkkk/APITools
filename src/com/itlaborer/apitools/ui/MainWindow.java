@@ -22,6 +22,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
@@ -98,6 +100,7 @@ public class MainWindow {
 	protected LinkedHashMap<String, String> cookies;
 	// 界面组件
 	protected Shell mainWindowShell;
+	private CTabFolder cTabFolder;
 	private final FormToolkit formToolkit;
 	private Button parsCovertButton;
 	private Button parsClearButton;
@@ -107,6 +110,7 @@ public class MainWindow {
 	private Combo modSelectCombo;
 	private Combo interfaceCombo;
 	private StyledText resultStyledText;
+	private StyledText resultHeaderStyledText;
 	private Text statusBar;
 	private Text parsText;
 	private Text urlText;
@@ -457,11 +461,28 @@ public class MainWindow {
 			});
 		}
 		// 接口返回内容显示区域
-		resultStyledText = new StyledText(mainWindowShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+
+		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
+		cTabFolder.setBounds(487, 71, 645, 499);
+		cTabFolder.setSelectionBackground(
+				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		cTabFolder.forceFocus();
+		CTabItem tabItem = new CTabItem(cTabFolder, SWT.BORDER);
+		tabItem.setText(" 响应内容  ");
+		CTabItem tabItem2 = new CTabItem(cTabFolder, SWT.BORDER);
+		tabItem2.setText(" 响应头部 ");
+
+		resultStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
+		tabItem.setControl(resultStyledText);
 		resultStyledText.setAlwaysShowScrollBars(true);
-		resultStyledText.setBounds(487, 70, 647, 500);
 		formToolkit.adapt(resultStyledText);
 		StyledTextAddContextMenu(resultStyledText);
+
+		resultHeaderStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
+		tabItem2.setControl(resultHeaderStyledText);
+		resultHeaderStyledText.setAlwaysShowScrollBars(true);
+		formToolkit.adapt(resultHeaderStyledText);
+		StyledTextAddContextMenu(resultHeaderStyledText);
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
@@ -733,140 +754,74 @@ public class MainWindow {
 							logger.debug("使用GET方式发起请求");
 							try {
 								result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								apiReturnStr = JsonFormatUtils.Format(result.readToText());
-								headerReturnStr = result.getHeaders().toString();
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						case "POST":
 							logger.debug("使用POST方式发起请求");
 							try {
 								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								apiReturnStr = JsonFormatUtils.Format(result.readToText());
-								headerReturnStr = result.getHeaders().toString();
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
-								headerReturnStr = null;
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						case "HEAD":
 							logger.debug("使用HEAD方式发起请求");
 							try {
 								result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								headerReturnStr = result.getHeaders().toString();
-								List<Entry<String, String>> header = result.getHeaders();
-								for (int i = 0; i < header.size(); i++) {
-									apiReturnStr += header.get(i).toString() + "\n";
-								}
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						case "PUT":
 							logger.debug("使用PUT方式发起请求");
 							try {
 								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								apiReturnStr = JsonFormatUtils.Format(result.readToText());
-								headerReturnStr = result.getHeaders().toString();
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						case "PATCH":
 							logger.debug("使用PATCH方式发起请求");
 							try {
 								result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								apiReturnStr = JsonFormatUtils.Format(result.readToText());
-								headerReturnStr = result.getHeaders().toString();
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						case "DELETE":
 							logger.debug("使用DELETE方式发起请求");
 							try {
 								result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
-								apiReturnStr = "";
-								headerReturnStr = "";
-								apiReturnStr = JsonFormatUtils.Format(result.readToText());
-								headerReturnStr = result.getHeaders().toString();
-								httpCode = result.getStatusCode();
-								logger.info("响应头部:" + result.getHeaders().toString());
 							} catch (Exception e) {
-								apiReturnStr = "";
-								headerReturnStr = "";
 								logger.error("异常", e);
-								httpend = System.currentTimeMillis();
-								httpTime = httpend - sumbegintime;
 							}
 							break;
 						default:
 							logger.debug("HTTP请求时未找到可用的方法");
-							apiReturnStr = "";
-							headerReturnStr = "你选择的方法本工具暂未实现";
 							break;
 						}
+						httpend = System.currentTimeMillis();
+						httpTime = httpend - sumbegintime;
+						apiReturnStr = "";
+						apiReturnStr = JsonFormatUtils.Format(result.readToText());
+						headerReturnStr = "";
+						List<Entry<String, String>> header = result.getHeaders();
+						for (int i = 0; i < header.size(); i++) {
+							headerReturnStr += header.get(i).toString() + "\n";
+						}
+						httpCode = result.getStatusCode();
+						logger.info("响应头部:" + result.getHeaders().toString());
 						// 标记请求结束时间
 						final long sumendtime = System.currentTimeMillis();
 						display.syncExec(new Thread() {
 							public void run() {
 								resultStyledText.setText(apiReturnStr);
+								resultHeaderStyledText.setText(headerReturnStr);
 								RenderingColor(resultStyledText);
 								statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
-										+ (sumendtime - sumbegintime) + "ms" + "/Header:" + headerReturnStr);
+										+ (sumendtime - sumbegintime) + "ms");
 							}
 						});
 					}
@@ -902,6 +857,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				resultStyledText.setText("");
+				resultHeaderStyledText.setText("");
 				statusBar.setText("");
 				logger.debug("清理结束");
 			}

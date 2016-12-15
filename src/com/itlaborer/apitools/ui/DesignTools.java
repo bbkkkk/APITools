@@ -8,6 +8,10 @@ import org.eclipse.swt.widgets.Shell;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.StyledText;
 
 public class DesignTools {
 
@@ -35,13 +39,13 @@ public class DesignTools {
 
 	/**
 	 * Create contents of the window.
+	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
 		shell = new Shell(SWT.MIN);
 		shell.setSize(1148, 650);
 		shell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
-		shell.setText("APIDesignTools-"+Resource.VERSION);
+		shell.setText("APIDesignTools-" + Resource.VERSION);
 		ApiUtils.SetCenter(shell);
 	}
-
 }
