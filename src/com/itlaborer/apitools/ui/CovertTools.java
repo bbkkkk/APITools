@@ -332,7 +332,6 @@ public class CovertTools extends Dialog {
 						if (parsrow != null) {
 							// 私有参数的个数,根据rowspan计算得到---API4.0没有共有参数
 							int n1 = Integer.parseInt(parsrow.get(1).child(1).attr("rowspan"));
-							// 获取公共参数
 							for (int i1 = 0; i1 < n1; i1++) {
 								ApiPar par = new ApiPar();
 								if (i1 == 0) {
@@ -348,6 +347,7 @@ public class CovertTools extends Dialog {
 							}
 						}
 						apiItem.setParameters(pars);
+						apiItem.setMethod("POST");
 					} catch (Exception e) {
 						logger.info("解析参数信息出错");
 						logger.error("异常", e);
