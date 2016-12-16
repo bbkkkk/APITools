@@ -81,27 +81,29 @@ public class MainWindow {
 
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 加载的配置文件项
-	private String[] loadAddressArray;
-	private String[] loadApiArray;
-	private String loadApiJson;
-	private String loadCodeFile;
-	private String curentInterface;
 	private int loadHistorySum;
+	private String loadReturnCodeFile;
+	private String[] loadServerAdressArray;
+	private String[] loadApiJsonFileArray;
 
-	private ApiDoc loadApiDoc;
-	private String serverAdress;
-	private Properties apiReturnCode;
-	private String apiReturnStr;
-	private ApiList history;
+	// 其他成员变量
 	private int httpCode, parsSum;
-	private String headerReturnStr;
 	private long httpTime;
+	private String serverAdress;
+	private String apiJsonFile;
+	private String interfaceContextPath;
+	private String bodyReturnStr;
+	private String headerReturnStr;
+	private ApiDoc apiDoc;
+	private ApiList history;
+	private Properties apiReturnCode;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
+	
 	// 界面组件
+	private final FormToolkit formToolkit;
 	protected Shell mainWindowShell;
 	private CTabFolder cTabFolder;
-	private final FormToolkit formToolkit;
 	private Button parsCovertButton;
 	private Button parsClearButton;
 	private Button toBrower;
@@ -109,7 +111,7 @@ public class MainWindow {
 	private Combo methodSelectCombo;
 	private Combo modSelectCombo;
 	private Combo interfaceCombo;
-	private StyledText resultStyledText;
+	private StyledText resultBodyStyledText;
 	private StyledText resultHeaderStyledText;
 	private Text statusBar;
 	private Text parsText;
@@ -472,11 +474,11 @@ public class MainWindow {
 		CTabItem tabItem2 = new CTabItem(cTabFolder, SWT.BORDER);
 		tabItem2.setText(" 响应头部 ");
 
-		resultStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
-		tabItem.setControl(resultStyledText);
-		resultStyledText.setAlwaysShowScrollBars(true);
-		formToolkit.adapt(resultStyledText);
-		StyledTextAddContextMenu(resultStyledText);
+		resultBodyStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
+		tabItem.setControl(resultBodyStyledText);
+		resultBodyStyledText.setAlwaysShowScrollBars(true);
+		formToolkit.adapt(resultBodyStyledText);
+		StyledTextAddContextMenu(resultBodyStyledText);
 
 		resultHeaderStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
 		tabItem2.setControl(resultHeaderStyledText);
@@ -582,9 +584,10 @@ public class MainWindow {
 				// 在别的ToolTipText更新时，鼠标点击所在的Button的ToolTipText会不停地闪烁，需要纠正
 				parsClearButton.setToolTipText(null);
 				try {
-					urlText.setText(serverAdress + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
-							.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
-					initParameters(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+					urlText.setText(
+							serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
+									.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
+					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
 				} catch (Exception e2) {
 					logger.error("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
@@ -615,25 +618,25 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				clearParameters();
-				initInterfaceCombo(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi());
-				logger.debug("切换到分组:" + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getName());
+				initInterfaceCombo(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi());
+				logger.debug("切换到分组:" + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getName());
 			}
 		});
 
 		// 接口选择事件
 		interfaceCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				curentInterface = loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				interfaceContextPath = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress();
-				urlText.setText(serverAdress + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getAddress());
-				interfaceCombo.setToolTipText(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
+						.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
+				interfaceCombo.setToolTipText(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getExplain());
-				methodChoice(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				methodChoice(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getMethod());
-				initParameters(loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getParameters());
-				logger.debug("切换到接口:" + loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				logger.debug("切换到接口:" + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getName());
 			}
 		});
@@ -667,7 +670,7 @@ public class MainWindow {
 		apiStatusButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String text = resultStyledText.getText();
+				String text = resultBodyStyledText.getText();
 				if (isJson(text) && !isXml(text) && !text.isEmpty()) {
 					logger.debug("返回的信息为JSON格式，开始尝试解析返回码");
 					try {
@@ -804,8 +807,8 @@ public class MainWindow {
 						}
 						httpend = System.currentTimeMillis();
 						httpTime = httpend - sumbegintime;
-						apiReturnStr = "";
-						apiReturnStr = JsonFormatUtils.Format(result.readToText());
+						bodyReturnStr = "";
+						bodyReturnStr = JsonFormatUtils.Format(result.readToText());
 						headerReturnStr = "";
 						List<Entry<String, String>> header = result.getHeaders();
 						for (int i = 0; i < header.size(); i++) {
@@ -817,9 +820,9 @@ public class MainWindow {
 						final long sumendtime = System.currentTimeMillis();
 						display.syncExec(new Thread() {
 							public void run() {
-								resultStyledText.setText(apiReturnStr);
+								resultBodyStyledText.setText(bodyReturnStr);
 								resultHeaderStyledText.setText(headerReturnStr);
-								RenderingColor(resultStyledText);
+								RenderingColor(resultBodyStyledText);
 								statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
 										+ (sumendtime - sumbegintime) + "ms");
 							}
@@ -856,7 +859,7 @@ public class MainWindow {
 		textClearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				resultStyledText.setText("");
+				resultBodyStyledText.setText("");
 				resultHeaderStyledText.setText("");
 				statusBar.setText("");
 				logger.debug("清理结束");
@@ -872,7 +875,7 @@ public class MainWindow {
 			return;
 		}
 		// 获取当前文档节点
-		ApiItem item = loadApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+		ApiItem item = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 				.get(interfaceCombo.getSelectionIndex());
 		ArrayList<ApiPar> pars = item.getParameters();
 		// 移除现有的参数
@@ -892,7 +895,7 @@ public class MainWindow {
 		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
 			return;
 		}
-		File needsaveFile = new File("./config/" + loadApiJson);
+		File needsaveFile = new File("./config/" + apiJsonFile);
 		ApiDoc needsaveApiDoc = new ApiDoc();
 		if (!needsaveFile.exists()) {
 			logger.warn("保存参数到接口文档时读取接口文档出错，文档不存在");
@@ -981,14 +984,14 @@ public class MainWindow {
 				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
 			}
 			// 加载API列表
-			loadApiArray = properties.getProperty("apilist").split(",");
-			if (null != loadApiArray && loadApiArray.length > 0) {
-				if (StringUtils.isNotEmpty(loadApiArray[0])) {
-					this.loadApiJson = loadApiArray[0];
+			loadApiJsonFileArray = properties.getProperty("apilist").split(",");
+			if (null != loadApiJsonFileArray && loadApiJsonFileArray.length > 0) {
+				if (StringUtils.isNotEmpty(loadApiJsonFileArray[0])) {
+					this.apiJsonFile = loadApiJsonFileArray[0];
 					// 初始化API下拉选择框
-					for (int i = 0; i < loadApiArray.length; i++) {
+					for (int i = 0; i < loadApiJsonFileArray.length; i++) {
 						final MenuItem apiItem = new MenuItem(apis, SWT.NONE);
-						apiItem.setText(loadApiArray[i]);
+						apiItem.setText(loadApiJsonFileArray[i]);
 						if (i == 0) {
 							apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 						}
@@ -1000,24 +1003,24 @@ public class MainWindow {
 									apis.getItem(i).setImage(null);
 								}
 								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
-								loadApiJson = apiItem.getText();
+								apiJsonFile = apiItem.getText();
 								InitApiList();
 							}
 						});
 					}
 				} else {
-					this.loadApiJson = null;
+					this.apiJsonFile = null;
 				}
 			}
 			// 加载地址列表
-			loadAddressArray = properties.getProperty("apiaddress").split(",");
-			if (null != loadAddressArray && loadAddressArray.length > 0) {
-				if (StringUtils.isNotEmpty(loadAddressArray[0])) {
-					this.serverAdress = loadAddressArray[0];
+			loadServerAdressArray = properties.getProperty("apiaddress").split(",");
+			if (null != loadServerAdressArray && loadServerAdressArray.length > 0) {
+				if (StringUtils.isNotEmpty(loadServerAdressArray[0])) {
+					this.serverAdress = loadServerAdressArray[0];
 					// 初始化服务器下拉选择框
-					for (int i = 0; i < loadAddressArray.length; i++) {
+					for (int i = 0; i < loadServerAdressArray.length; i++) {
 						final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
-						serverItem.setText(loadAddressArray[i]);
+						serverItem.setText(loadServerAdressArray[i]);
 						if (i == 0) {
 							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 						}
@@ -1031,7 +1034,7 @@ public class MainWindow {
 								serverItem.setImage(
 										SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 								serverAdress = serverItem.getText();
-								urlText.setText(serverAdress + curentInterface);
+								urlText.setText(serverAdress + interfaceContextPath);
 							}
 						});
 					}
@@ -1039,21 +1042,21 @@ public class MainWindow {
 					this.serverAdress = "http://127.0.0.1/";
 				}
 			}
-			this.loadCodeFile = properties.getProperty("returncodefile");
+			this.loadReturnCodeFile = properties.getProperty("returncodefile");
 		} catch (Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
 		}
 		// 此处开始加载返回码列表文件
-		File reader = new File("./config/" + loadCodeFile);
+		File reader = new File("./config/" + loadReturnCodeFile);
 		if (reader.exists()) {
 			apiReturnCode = PropertiesUtils.ReadProperties(reader);
-			logger.debug("加载返回码配置文件" + "./config/" + loadCodeFile);
+			logger.debug("加载返回码配置文件" + "./config/" + loadReturnCodeFile);
 		} else {
 			logger.debug("没有读到返回码配置,跳过加载");
 		}
 		// 配置文件加载完毕后开始加载API列表
-		if (null == loadApiJson) {
+		if (null == apiJsonFile) {
 			logger.debug("API列表为空，跳过加载");
 		} else {
 			InitApiList();
@@ -1062,17 +1065,17 @@ public class MainWindow {
 
 	// 初始化API列表信息
 	private void InitApiList() {
-		File apilistfile = new File("./config/" + loadApiJson);
+		File apilistfile = new File("./config/" + apiJsonFile);
 		if (!apilistfile.exists()) {
 			logger.warn("警告:您加载的API文档不存在，程序将跳过加载API列表，请检查配置");
 			return;
 		}
 		try {
-			loadApiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
+			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
 			// 初始化历史记录
 			initHistory();
-			if (loadApiDoc.getDecode_version().equals("1.0")) {
-				logger.debug("加载的api版本为" + loadApiDoc.getApi_version());
+			if (apiDoc.getDecode_version().equals("1.0")) {
+				logger.debug("加载的api版本为" + apiDoc.getApi_version());
 				initModCombo();
 			} else {
 				logger.warn("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
@@ -1085,15 +1088,15 @@ public class MainWindow {
 	// 初始化接口分类
 	private void initModCombo() {
 		modSelectCombo.removeAll();
-		if (null == loadApiDoc.getApilist()) {
+		if (null == apiDoc.getApilist()) {
 			return;
 		}
-		for (int i = 0; i < loadApiDoc.getApilist().size(); i++) {
-			modSelectCombo.add(loadApiDoc.getApilist().get(i).getName());
-			logger.debug("API分类:" + loadApiDoc.getApilist().get(i).getName() + "加载完毕");
+		for (int i = 0; i < apiDoc.getApilist().size(); i++) {
+			modSelectCombo.add(apiDoc.getApilist().get(i).getName());
+			logger.debug("API分类:" + apiDoc.getApilist().get(i).getName() + "加载完毕");
 		}
 		modSelectCombo.select(0);
-		initInterfaceCombo(loadApiDoc.getApilist().get(0).getApi());
+		initInterfaceCombo(apiDoc.getApilist().get(0).getApi());
 	}
 
 	// 初始化接口列表
@@ -1110,7 +1113,7 @@ public class MainWindow {
 		try {
 			interfaceCombo.select(0);
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
-			curentInterface = apiItems.get(0).getAddress();
+			interfaceContextPath = apiItems.get(0).getAddress();
 			methodChoice(apiItems.get(0).getMethod());
 			interfaceCombo.setToolTipText(apiItems.get(0).getExplain());
 			initParameters(apiItems.get(0).getParameters());
