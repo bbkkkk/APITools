@@ -99,7 +99,7 @@ public class MainWindow {
 	private Properties apiReturnCode;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
-	
+
 	// 界面组件
 	private final FormToolkit formToolkit;
 	protected Shell mainWindowShell;
@@ -584,9 +584,8 @@ public class MainWindow {
 				// 在别的ToolTipText更新时，鼠标点击所在的Button的ToolTipText会不停地闪烁，需要纠正
 				parsClearButton.setToolTipText(null);
 				try {
-					urlText.setText(
-							serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
-									.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
+					urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+							.get(interfaceCombo.getSelectionIndex()).getAddress());
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
 				} catch (Exception e2) {
@@ -628,8 +627,8 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				interfaceContextPath = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getAddress();
-				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex())
-						.getApi().get(interfaceCombo.getSelectionIndex()).getAddress());
+				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				interfaceCombo.setToolTipText(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getExplain());
 				methodChoice(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -1383,13 +1382,12 @@ public class MainWindow {
 		history.setApi(new ArrayList<ApiItem>());
 	}
 
-	// Json文本颜色渲染器
+	// TODO 待实现的JSON着色器
 	private void RenderingColor(StyledText styledText) {
 		StyleRange styleRange = new StyleRange();
 		styledText.setStyleRange(styleRange);
 		int startIndex = 0;
 		int endIndex = styledText.getText().length();
-
 		if (endIndex == -1) {
 			return;
 		} else {
@@ -1397,6 +1395,7 @@ public class MainWindow {
 		}
 	}
 
+	// TODO 历史记录器
 	// 触发更新历史记录，只有在点击请求的时候才触发
 	private void notifyHistory() {
 		ArrayList<ApiItem> historyList = history.getApi();
