@@ -167,10 +167,10 @@ public class MainWindow {
 
 	protected void createContents(final Display display) {
 		mainWindowShell = new Shell(display, SWT.MIN);
-		ApiUtils.SetCenter(mainWindowShell);
-		mainWindowShell.setSize(1148, 650);
+		mainWindowShell.setSize(1145, 680);
 		mainWindowShell.setText("APITools" + "-" + Resource.VERSION);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
+		ApiUtils.SetCenter(mainWindowShell);
 		ApiUtils.DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
@@ -379,7 +379,7 @@ public class MainWindow {
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
-		formTable.setBounds(7, 70, 476, 500);
+		formTable.setBounds(7, 70, 476, 530);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
@@ -463,7 +463,7 @@ public class MainWindow {
 		// 接口返回内容显示区域
 
 		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
-		cTabFolder.setBounds(487, 71, 645, 499);
+		cTabFolder.setBounds(487, 71, 645, 530);
 		cTabFolder.setSelectionBackground(
 				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		cTabFolder.forceFocus();
@@ -486,7 +486,7 @@ public class MainWindow {
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
-		statusBar.setBounds(7, 575, 1127, 23);
+		statusBar.setBounds(7, 605, 1127, 23);
 		formToolkit.adapt(statusBar, true, true);
 
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
@@ -809,7 +809,7 @@ public class MainWindow {
 						headerReturnStr = "";
 						List<Entry<String, String>> header = result.getHeaders();
 						for (int i = 0; i < header.size(); i++) {
-							headerReturnStr += header.get(i).toString() + "\n";
+							headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
 						}
 						httpCode = result.getStatusCode();
 						logger.info("响应头部:" + result.getHeaders().toString());
