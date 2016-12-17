@@ -89,6 +89,7 @@ public class MainWindow {
 	// 其他成员变量
 	private int httpCode, parsSum;
 	private long httpTime;
+	private String applicationName;
 	private String serverAdress;
 	private String apiJsonFile;
 	private String interfaceContextPath;
@@ -147,13 +148,13 @@ public class MainWindow {
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
-			window.open();
+			window.open(true);
 		} catch (Exception e) {
 			logger.error("异常", e);
 		}
 	}
 
-	public void open() {
+	public void open(Boolean mainWindowFlag) {
 		Display display = Display.getDefault();
 		createContents(display);
 		mainWindowShell.open();
@@ -164,13 +165,16 @@ public class MainWindow {
 			}
 		}
 		logger.info("再见~~~~~");
-		System.exit(0);
+		if (mainWindowFlag) {
+			System.exit(0);
+		}
 	}
 
 	protected void createContents(final Display display) {
+		applicationName = "APITools" + "-" + Resource.VERSION;
 		mainWindowShell = new Shell(display, SWT.MIN);
 		mainWindowShell.setSize(1145, 680);
-		mainWindowShell.setText("APITools" + "-" + Resource.VERSION);
+		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		ApiUtils.SetCenter(mainWindowShell);
 		ApiUtils.DropTargetSupport(mainWindowShell);
@@ -270,9 +274,19 @@ public class MainWindow {
 
 		// API列表
 		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
-		apiSelect.setText("接口文档列表");
+		apiSelect.setText("接口列表");
 		apis = new Menu(apiSelect);
 		apiSelect.setMenu(apis);
+
+		MenuItem menuItem = new MenuItem(rootMenu, SWT.NONE);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow mainWindow = new MainWindow();
+				mainWindow.open(false);
+			}
+		});
+		menuItem.setText("应用分身");
 
 		/////////////////// 帮助////////////////////////////////////////
 		MenuItem menuHelp = new MenuItem(rootMenu, SWT.CASCADE);
@@ -631,6 +645,7 @@ public class MainWindow {
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				interfaceCombo.setToolTipText(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getExplain());
+				mainWindowShell.setText(applicationName+ "-" + interfaceCombo.getText());
 				methodChoice(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getMethod());
 				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -1038,7 +1053,7 @@ public class MainWindow {
 						});
 					}
 				} else {
-					this.serverAdress = "http://127.0.0.1/";
+					this.serverAdress = "";
 				}
 			}
 			this.loadReturnCodeFile = properties.getProperty("returncodefile");
@@ -1111,6 +1126,7 @@ public class MainWindow {
 		}
 		try {
 			interfaceCombo.select(0);
+			mainWindowShell.setText(applicationName+ "-" + interfaceCombo.getText());
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
 			interfaceContextPath = apiItems.get(0).getAddress();
 			methodChoice(apiItems.get(0).getMethod());
