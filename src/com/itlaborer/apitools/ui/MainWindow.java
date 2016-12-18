@@ -43,7 +43,9 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -129,6 +131,8 @@ public class MainWindow {
 	private MenuItem apiSelect;
 	private Menu apis;
 	private Button btnAuthorization;
+	private Listener shortcutListener;
+	private Display display;
 
 	// 主窗口
 	public MainWindow() {
@@ -155,7 +159,7 @@ public class MainWindow {
 	}
 
 	public void open(Boolean mainWindowFlag) {
-		Display display = Display.getDefault();
+		display = Display.getDefault();
 		createContents(display);
 		mainWindowShell.open();
 		InitSystem();
@@ -165,6 +169,7 @@ public class MainWindow {
 			}
 		}
 		logger.info("再见~~~~~");
+		display.removeFilter(SWT.KeyDown, shortcutListener);
 		if (mainWindowFlag) {
 			System.exit(0);
 		}
@@ -282,8 +287,7 @@ public class MainWindow {
 		menuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				MainWindow mainWindow = new MainWindow();
-				mainWindow.open(false);
+				initNewWindow(false);
 			}
 		});
 		menuItem.setText("应用分身");
@@ -506,6 +510,27 @@ public class MainWindow {
 		formToolkit.adapt(statusBar, true, true);
 
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
+		// 全局快捷键
+		shortcutListener = new Listener() {
+			public void handleEvent(Event e) {
+				// Ctrl+n开启新的窗口
+				if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'n')) {
+					initNewWindow(false);
+				}
+				// Ctrl+Enter执行提交
+				if ((e.stateMask == SWT.CTRL) && (e.keyCode == SWT.CR)) {
+					if (!(resultBodyStyledText.isFocusControl() || resultHeaderStyledText.isFocusControl())) {
+						sentRequest();
+					}
+				}
+				// Ctrl+l清空结果
+				if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'l')) {
+					clearResult();
+				}
+			}
+		};
+		display.addFilter(SWT.KeyDown, shortcutListener);
+
 		// 保存事件
 		menuItemSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -645,7 +670,7 @@ public class MainWindow {
 						.get(interfaceCombo.getSelectionIndex()).getAddress());
 				interfaceCombo.setToolTipText(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getExplain());
-				mainWindowShell.setText(applicationName+ "-" + interfaceCombo.getText());
+				mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
 				methodChoice(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 						.get(interfaceCombo.getSelectionIndex()).getMethod());
 				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
@@ -753,96 +778,7 @@ public class MainWindow {
 		submitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("请求中······");
-				final HashMap<String, String> pars = getParameters();
-				parsText.setText(ParamUtils.mapToQuery(pars));
-				final String url = urlText.getText();
-				final String method = methodSelectCombo.getText();
-				// 通知更新历史
-				notifyHistory();
-				new Thread() {
-					public void run() {
-						logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
-						final long sumbegintime = System.currentTimeMillis();
-						long httpend = System.currentTimeMillis();
-						RawResponse result = null;
-						switch (method) {
-						case "GET":
-							logger.debug("使用GET方式发起请求");
-							try {
-								result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						case "POST":
-							logger.debug("使用POST方式发起请求");
-							try {
-								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						case "HEAD":
-							logger.debug("使用HEAD方式发起请求");
-							try {
-								result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						case "PUT":
-							logger.debug("使用PUT方式发起请求");
-							try {
-								result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						case "PATCH":
-							logger.debug("使用PATCH方式发起请求");
-							try {
-								result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						case "DELETE":
-							logger.debug("使用DELETE方式发起请求");
-							try {
-								result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
-							} catch (Exception e) {
-								logger.error("异常", e);
-							}
-							break;
-						default:
-							logger.debug("HTTP请求时未找到可用的方法");
-							break;
-						}
-						httpend = System.currentTimeMillis();
-						httpTime = httpend - sumbegintime;
-						bodyReturnStr = "";
-						bodyReturnStr = JsonFormatUtils.Format(result.readToText());
-						headerReturnStr = "";
-						List<Entry<String, String>> header = result.getHeaders();
-						for (int i = 0; i < header.size(); i++) {
-							headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
-						}
-						httpCode = result.getStatusCode();
-						logger.info("响应头部:" + result.getHeaders().toString());
-						// 标记请求结束时间
-						final long sumendtime = System.currentTimeMillis();
-						display.syncExec(new Thread() {
-							public void run() {
-								resultBodyStyledText.setText(bodyReturnStr);
-								resultHeaderStyledText.setText(headerReturnStr);
-								RenderingColor(resultBodyStyledText);
-								statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
-										+ (sumendtime - sumbegintime) + "ms");
-							}
-						});
-					}
-				}.start();
+				sentRequest();
 			}
 		});
 
@@ -873,12 +809,104 @@ public class MainWindow {
 		textClearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				resultBodyStyledText.setText("");
-				resultHeaderStyledText.setText("");
-				statusBar.setText("");
-				logger.debug("清理结束");
+				clearResult();
 			}
 		});
+	}
+
+	// 提交请求
+	private void sentRequest() {
+		statusBar.setText("请求中······");
+		final HashMap<String, String> pars = getParameters();
+		parsText.setText(ParamUtils.mapToQuery(pars));
+		final String url = urlText.getText();
+		final String method = methodSelectCombo.getText();
+		// 通知更新历史
+		notifyHistory();
+		Thread httpThread = new Thread() {
+			public void run() {
+				logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
+				final long sumbegintime = System.currentTimeMillis();
+				long httpend = System.currentTimeMillis();
+				RawResponse result = null;
+				switch (method) {
+				case "GET":
+					logger.debug("使用GET方式发起请求");
+					try {
+						result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				case "POST":
+					logger.debug("使用POST方式发起请求");
+					try {
+						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				case "HEAD":
+					logger.debug("使用HEAD方式发起请求");
+					try {
+						result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				case "PUT":
+					logger.debug("使用PUT方式发起请求");
+					try {
+						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				case "PATCH":
+					logger.debug("使用PATCH方式发起请求");
+					try {
+						result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				case "DELETE":
+					logger.debug("使用DELETE方式发起请求");
+					try {
+						result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
+					} catch (Exception e) {
+						logger.error("异常", e);
+					}
+					break;
+				default:
+					logger.debug("HTTP请求时未找到可用的方法");
+					break;
+				}
+				httpend = System.currentTimeMillis();
+				httpTime = httpend - sumbegintime;
+				bodyReturnStr = "";
+				bodyReturnStr = JsonFormatUtils.Format(result.readToText());
+				headerReturnStr = "";
+				List<Entry<String, String>> header = result.getHeaders();
+				for (int i = 0; i < header.size(); i++) {
+					headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
+				}
+				httpCode = result.getStatusCode();
+				logger.info("响应头部:" + result.getHeaders().toString());
+				// 标记请求结束时间
+				final long sumendtime = System.currentTimeMillis();
+				display.syncExec(new Thread() {
+					public void run() {
+						resultBodyStyledText.setText(bodyReturnStr);
+						resultHeaderStyledText.setText(headerReturnStr);
+						RenderingColor(resultBodyStyledText);
+						statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
+								+ (sumendtime - sumbegintime) + "ms");
+					}
+				});
+			}
+		};
+		httpThread.start();
 	}
 
 	// 保存参数到内存
@@ -1126,7 +1154,7 @@ public class MainWindow {
 		}
 		try {
 			interfaceCombo.select(0);
-			mainWindowShell.setText(applicationName+ "-" + interfaceCombo.getText());
+			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
 			urlText.setText(serverAdress + apiItems.get(0).getAddress());
 			interfaceContextPath = apiItems.get(0).getAddress();
 			methodChoice(apiItems.get(0).getMethod());
@@ -1207,6 +1235,14 @@ public class MainWindow {
 			}
 		}
 		return par;
+	}
+
+	// 清空结果
+	private void clearResult() {
+		resultBodyStyledText.setText("");
+		resultHeaderStyledText.setText("");
+		statusBar.setText("");
+		logger.debug("清理结束");
 	}
 
 	// 清空参数信息-清空表单和参数输入框
@@ -1388,6 +1424,12 @@ public class MainWindow {
 				}
 			}
 		});
+	}
+
+	// 开启一个新的窗口
+	private void initNewWindow(boolean mainWindowFlag) {
+		MainWindow mainWindow = new MainWindow();
+		mainWindow.open(mainWindowFlag);
 	}
 
 	// 初始化历史记录
