@@ -544,12 +544,6 @@ public class MainWindow {
 						keyDownFlag = true;
 						SavePars2Memory();
 					}
-					// Ctrl+shift+s写入文档
-					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.SHIFT) && (e.keyCode == KeyCode.KEY_S)) {
-						keyDownFlag = true;
-						SavePars2Memory();
-						SavePars2File();
-					}
 				}
 			}
 		};
