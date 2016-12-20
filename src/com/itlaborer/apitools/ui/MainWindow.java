@@ -97,6 +97,9 @@ public class MainWindow {
 	private String interfaceContextPath;
 	private String bodyReturnStr;
 	private String headerReturnStr;
+	private boolean keyDownFlag = false;
+	private boolean windowFocusFlag = false;
+	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
 	private ApiList history;
 	private Properties apiReturnCode;
@@ -132,6 +135,7 @@ public class MainWindow {
 	private Menu apis;
 	private Button btnAuthorization;
 	private Listener shortcutListener;
+	private Listener shortcutListenerRecover;
 	private Display display;
 
 	// 主窗口
@@ -152,13 +156,14 @@ public class MainWindow {
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
-			window.open(true);
+			window.open(true, false);
 		} catch (Exception e) {
 			logger.error("异常", e);
 		}
 	}
 
-	public void open(Boolean mainWindowFlag) {
+	public void open(boolean mainWindowFlag, boolean openByShortcutFlag) {
+		this.openByShortcutFlag = openByShortcutFlag;
 		display = Display.getDefault();
 		createContents(display);
 		mainWindowShell.open();
@@ -170,6 +175,7 @@ public class MainWindow {
 		}
 		logger.info("再见~~~~~");
 		display.removeFilter(SWT.KeyDown, shortcutListener);
+		display.removeFilter(SWT.KeyUp, shortcutListenerRecover);
 		if (mainWindowFlag) {
 			System.exit(0);
 		}
@@ -287,7 +293,7 @@ public class MainWindow {
 		menuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initNewWindow(false);
+				initNewWindow(false, false);
 			}
 		});
 		menuItem.setText("应用分身");
@@ -510,26 +516,57 @@ public class MainWindow {
 		formToolkit.adapt(statusBar, true, true);
 
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
-		// 全局快捷键
+		// 全局快捷键--要注意阻止快捷键重复执行
+		// 按键按下时执行快捷键操作
 		shortcutListener = new Listener() {
 			public void handleEvent(Event e) {
-				// Ctrl+n开启新的窗口
-				if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'n')) {
-					initNewWindow(false);
-				}
-				// Ctrl+Enter执行提交
-				if ((e.stateMask == SWT.CTRL) && (e.keyCode == SWT.CR)) {
-					if (!(resultBodyStyledText.isFocusControl() || resultHeaderStyledText.isFocusControl())) {
-						sentRequest();
+				// 只有窗口是激活状态，并且按键是第一次按下时才执行快捷键操作，避免重复不停的执行
+				if ((openByShortcutFlag == false) && (windowFocusFlag == true) && (keyDownFlag == false)) {
+					// Ctrl+n开启新的窗口
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'n')) {
+						keyDownFlag = true;
+						initNewWindow(false, true);
 					}
-				}
-				// Ctrl+l清空结果
-				if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'l')) {
-					clearResult();
+					// Ctrl+Enter执行提交
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == SWT.CR)) {
+						if (!(resultBodyStyledText.isFocusControl() || resultHeaderStyledText.isFocusControl())) {
+							keyDownFlag = true;
+							sentRequest();
+						}
+					}
+					// Ctrl+l清空结果
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'l')) {
+						keyDownFlag = true;
+						clearResult();
+					}
 				}
 			}
 		};
+		//按键释放时标记
+		shortcutListenerRecover = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				openByShortcutFlag = false;
+				keyDownFlag = false;
+			}
+		};
+		// 窗口活动标志
+		mainWindowShell.addListener(SWT.Activate, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				windowFocusFlag = true;
+				logger.debug(mainWindowShell.hashCode() + "窗口获得焦点");
+			}
+		});
+		mainWindowShell.addListener(SWT.Deactivate, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				windowFocusFlag = false;
+				logger.debug(mainWindowShell.hashCode() + "窗口失去焦点");
+			}
+		});
 		display.addFilter(SWT.KeyDown, shortcutListener);
+		display.addFilter(SWT.KeyUp, shortcutListenerRecover);
 
 		// 保存事件
 		menuItemSave.addSelectionListener(new SelectionAdapter() {
@@ -1427,9 +1464,9 @@ public class MainWindow {
 	}
 
 	// 开启一个新的窗口
-	private void initNewWindow(boolean mainWindowFlag) {
+	private void initNewWindow(boolean mainWindowFlag, boolean openByShortcutFlag) {
 		MainWindow mainWindow = new MainWindow();
-		mainWindow.open(mainWindowFlag);
+		mainWindow.open(mainWindowFlag, openByShortcutFlag);
 	}
 
 	// 初始化历史记录
