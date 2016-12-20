@@ -523,26 +523,38 @@ public class MainWindow {
 				// 只有窗口是激活状态，并且按键是第一次按下时才执行快捷键操作，避免重复不停的执行
 				if ((openByShortcutFlag == false) && (windowFocusFlag == true) && (keyDownFlag == false)) {
 					// Ctrl+n开启新的窗口
-					if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'n')) {
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_N)) {
 						keyDownFlag = true;
 						initNewWindow(false, true);
 					}
 					// Ctrl+Enter执行提交
-					if ((e.stateMask == SWT.CTRL) && (e.keyCode == SWT.CR)) {
+					if ((e.stateMask == SWT.CTRL)
+							&& ((e.keyCode == KeyCode.ENTER) || (e.keyCode == KeyCode.SMALL_KEY_BOARD_ENTER))) {
 						if (!(resultBodyStyledText.isFocusControl() || resultHeaderStyledText.isFocusControl())) {
 							keyDownFlag = true;
 							sentRequest();
 						}
 					}
 					// Ctrl+l清空结果
-					if ((e.stateMask == SWT.CTRL) && (e.keyCode == 'l')) {
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_L)) {
 						keyDownFlag = true;
 						clearResult();
+					}
+					// Ctrl+s临时保存
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_S)) {
+						keyDownFlag = true;
+						SavePars2Memory();
+					}
+					// Ctrl+shift+s写入文档
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.SHIFT) && (e.keyCode == KeyCode.KEY_S)) {
+						keyDownFlag = true;
+						SavePars2Memory();
+						SavePars2File();
 					}
 				}
 			}
 		};
-		//按键释放时标记
+		// 按键释放时标记
 		shortcutListenerRecover = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -573,7 +585,6 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				SavePars2Memory();
-				statusBar.setText("保存成功，程序关闭前有效");
 			}
 		});
 		// 保存事件
@@ -965,6 +976,7 @@ public class MainWindow {
 				pars.add(new ApiPar(form[i][0].getText(), form[i][0].getToolTipText(), form[i][1].getText()));
 			}
 		}
+		statusBar.setText("保存成功，程序关闭前有效");
 	}
 
 	// 保存参数到文件
