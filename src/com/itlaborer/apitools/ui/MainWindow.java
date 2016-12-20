@@ -61,6 +61,7 @@ import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.res.KeyCode;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
@@ -530,10 +531,8 @@ public class MainWindow {
 					// Ctrl+Enter执行提交
 					if ((e.stateMask == SWT.CTRL)
 							&& ((e.keyCode == KeyCode.ENTER) || (e.keyCode == KeyCode.SMALL_KEY_BOARD_ENTER))) {
-						if (!(resultBodyStyledText.isFocusControl() || resultHeaderStyledText.isFocusControl())) {
-							keyDownFlag = true;
-							sentRequest();
-						}
+						keyDownFlag = true;
+						sentRequest();
 					}
 					// Ctrl+l清空结果
 					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_L)) {

@@ -1,4 +1,4 @@
-package com.itlaborer.apitools.ui;
+package com.itlaborer.apitools.res;
 
 public class KeyCode {
 	/**
