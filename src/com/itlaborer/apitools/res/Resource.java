@@ -9,7 +9,7 @@ package com.itlaborer.apitools.res;
 
 public class Resource {
 
-	public static String VERSION = "V1.8";
+	public static String VERSION = "V1.8.1";
 	public static String AUTHOR = "作者:恒生电子/刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
 	public static String CONFIG = "#主配置文件\r\n#请按照参数名进行相关配置\r\n#服务器地址,如果有多台服务器，请用,（英文逗号）分开"
