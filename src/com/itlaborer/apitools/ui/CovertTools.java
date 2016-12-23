@@ -323,56 +323,51 @@ public class CovertTools extends Dialog {
 					apiItem.setAddress(tables.get(1).child(0).child(1).child(1).text().substring(23)
 							.replaceAll("\\(.*?\\)|\\{.*?}|\\[.*?]|（.*?）", "").trim());
 				} catch (StringIndexOutOfBoundsException e) {
-					apiItem.setAddress("接口地址未知");
+					apiItem.setAddress("接口地址未知，请手动订正");
 					logger.error("异常", e);
 				}
+				// 开始处理参数，获取所有的信息接口参数在第二个table
 				ArrayList<ApiPar> pars = new ArrayList<ApiPar>();
-				try {
-					// 开始处理参数，获取所有的信息
-					Elements parsrow = tables.get(2).getElementsByTag("tr");
-					if (parsrow != null) {
-						// 私有参数的个数,根据rowspan计算得到私有参数个数
-						// 判断方法，首先找到标记为私有参数的位置，并从从此处获取rowspan，然后开始遍历rowspan行
-						int privateParSartIndex = 0;
-						for (int i1 = 0; i1 < parsrow.size(); i1++) {
-							if (parsrow.get(i1).child(1).text().equals("私有参数")) {
-								privateParSartIndex = i1;
-								logger.info("识别到了开始位置：" + privateParSartIndex);
-								break;
-							}
-						}
-						// 获取私有参数个数，根据rowspan
-						int rowspan = Integer.parseInt(parsrow.get(privateParSartIndex).child(1).attr("rowspan"));
-						// 获取默认值在第几列
-						int colDefault = 9;
-						for (int i1 = 0; i1 < parsrow.get(0).childNodes().size(); i1++) {
-							if (parsrow.get(0).child(i1).text().equals("默认值")) {
-								colDefault = i1;
-								logger.info("识别到了默认值所在的列数：" + colDefault);
-								break;
-							}
-						}
-						// 循环获取参数个数
-						for (int i1 = privateParSartIndex; i1 < privateParSartIndex + rowspan; i1++) {
-							ApiPar par = new ApiPar();
-							if (i1 == privateParSartIndex) {
-								par.setName(parsrow.get(i1).child(2).text());
-								par.setTip(parsrow.get(i1).child(3).text());
-								par.setValue(parsrow.get(i1).child(colDefault).text() + "");
-							} else {
-								par.setName(parsrow.get(i1).child(1).text());
-								par.setTip(parsrow.get(i1).child(2).text());
-								par.setValue(parsrow.get(i1).child(colDefault - 1).text() + "");
-							}
-							pars.add(par);
+				Elements parsrow = tables.get(2).getElementsByTag("tr");
+				if (parsrow != null) {
+					// 私有参数的个数,根据rowspan计算得到私有参数个数
+					// 判断方法，首先找到标记为私有参数的位置，并从从此处获取rowspan，然后开始遍历rowspan行
+					int privateParSartIndex = 0;
+					for (int i1 = 0; i1 < parsrow.size(); i1++) {
+						if (parsrow.get(i1).child(1).text().equals("私有参数")) {
+							privateParSartIndex = i1;
+							logger.info("识别到了开始位置：" + privateParSartIndex);
+							break;
 						}
 					}
-					apiItem.setParameters(pars);
-					apiItem.setMethod("POST");
-				} catch (Exception e) {
-					logger.debug("解析参数信息出错");
-					logger.debug("异常", e);
+					// 获取私有参数个数，根据rowspan
+					int rowspan = Integer.parseInt(parsrow.get(privateParSartIndex).child(1).attr("rowspan"));
+					// 获取默认值在第几列
+					int colDefault = 9;
+					for (int i1 = 0; i1 < parsrow.get(0).childNodes().size(); i1++) {
+						if (parsrow.get(0).child(i1).text().equals("默认值")) {
+							colDefault = i1;
+							logger.info("识别到了默认值所在的列数：" + colDefault);
+							break;
+						}
+					}
+					// 循环获取参数个数
+					for (int i1 = privateParSartIndex; i1 < privateParSartIndex + rowspan; i1++) {
+						ApiPar par = new ApiPar();
+						if (i1 == privateParSartIndex) {
+							par.setName(parsrow.get(i1).child(2).text());
+							par.setTip(parsrow.get(i1).child(3).text());
+							par.setValue(parsrow.get(i1).child(colDefault).text() + "");
+						} else {
+							par.setName(parsrow.get(i1).child(1).text());
+							par.setTip(parsrow.get(i1).child(2).text());
+							par.setValue(parsrow.get(i1).child(colDefault - 1).text() + "");
+						}
+						pars.add(par);
+					}
 				}
+				apiItem.setParameters(pars);
+				apiItem.setMethod("POST");
 			}
 			// 暴力执法，如果捕获异常就跳过此页面
 			catch (Exception e) {
