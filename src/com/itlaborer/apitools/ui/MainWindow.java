@@ -318,10 +318,44 @@ public class MainWindow {
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		modSelectCombo.setBounds(8, 8, 224, 25);
 		formToolkit.adapt(modSelectCombo);
+
+		Menu menu_6 = new Menu(modSelectCombo);
+		modSelectCombo.setMenu(menu_6);
+
+		MenuItem menuItem_4 = new MenuItem(menu_6, SWT.NONE);
+		menuItem_4.setText("接口设计器");
+
+		MenuItem menuItem_5 = new MenuItem(menu_6, SWT.NONE);
+		menuItem_5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此分类吗？删除后此分类下的接口也将删除，并且将无法恢复");
+				mySelectionDialog.open();
+			}
+		});
+		menuItem_5.setText("删除此分类");
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		interfaceCombo.setBounds(237, 8, 245, 25);
 		formToolkit.adapt(interfaceCombo);
+
+		Menu menu_4 = new Menu(interfaceCombo);
+		interfaceCombo.setMenu(menu_4);
+
+		MenuItem menuItem_1 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_1.setText("编辑此接口");
+
+		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此接口吗？删除后将无法恢复");
+				mySelectionDialog.open();
+			}
+		});
+		menuItem_2.setText("删除此接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
 		parsText.setBounds(7, 39, 476, 25);
@@ -350,6 +384,12 @@ public class MainWindow {
 		parsCovertButton.setText("导入参数");
 		parsCovertButton.setBounds(487, 38, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
+
+		Menu menu_5 = new Menu(parsCovertButton);
+		parsCovertButton.setMenu(menu_5);
+
+		MenuItem menuItem_3 = new MenuItem(menu_5, SWT.NONE);
+		menuItem_3.setText("切换分隔符");
 
 		// 重置参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
