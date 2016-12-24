@@ -61,31 +61,30 @@ public class MySelectionDialog extends Dialog {
 		ApiUtils.SetCenterinParent(getParent(), shell);
 		shell.setText(getText());
 
-		Label lblNewLabel = new Label(shell, SWT.WRAP);
-		lblNewLabel.setBounds(10, 10, 374, 103);
-		lblNewLabel.setText(text);
+		Label lblText = new Label(shell, SWT.WRAP);
+		lblText.setBounds(10, 10, 374, 103);
+		lblText.setText(text);
 
-		Button button = new Button(shell, SWT.NONE);
-		button.addSelectionListener(new SelectionAdapter() {
+		Button buttonYes = new Button(shell, SWT.NONE);
+		buttonYes.setBounds(213, 115, 80, 27);
+		buttonYes.setText("是");
+		buttonYes.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				flag = true;
 				shell.dispose();
 			}
 		});
-		button.setBounds(213, 115, 80, 27);
-		button.setText("是");
 
-		Button button_1 = new Button(shell, SWT.NONE);
-		button_1.addSelectionListener(new SelectionAdapter() {
+		Button buttonNo = new Button(shell, SWT.NONE);
+		buttonNo.setBounds(304, 115, 80, 27);
+		buttonNo.setText("否");
+		buttonNo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				flag = false;
 				shell.dispose();
 			}
 		});
-		button_1.setBounds(304, 115, 80, 27);
-		button_1.setText("否");
-
 	}
 }

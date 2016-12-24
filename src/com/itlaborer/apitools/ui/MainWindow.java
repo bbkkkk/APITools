@@ -201,13 +201,13 @@ public class MainWindow {
 		MenuItem menuEdit = new MenuItem(rootMenu, SWT.CASCADE);
 		menuEdit.setText("编辑");
 
-		Menu menu_1 = new Menu(menuEdit);
-		menuEdit.setMenu(menu_1);
+		Menu menuSave = new Menu(menuEdit);
+		menuEdit.setMenu(menuSave);
 
-		MenuItem menuItemSave = new MenuItem(menu_1, SWT.NONE);
+		MenuItem menuItemSave = new MenuItem(menuSave, SWT.NONE);
 		menuItemSave.setText("保存当前接口参数（程序关闭前有效）");
 
-		MenuItem menuItemSaveToFile = new MenuItem(menu_1, SWT.NONE);
+		MenuItem menuItemSaveToFile = new MenuItem(menuSave, SWT.NONE);
 		menuItemSaveToFile.setText("保存当前接口参数（保存到接口文档）");
 
 		// 工具菜单///////////////////////////////////////////////////
@@ -1099,7 +1099,7 @@ public class MainWindow {
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 					JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
-				statusBar.setText("保存成功");
+				statusBar.setText("保存成功，已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败，请重试");
 			}
