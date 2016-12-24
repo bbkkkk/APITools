@@ -352,7 +352,45 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此接口吗？删除后将无法恢复");
-				mySelectionDialog.open();
+				boolean flag = mySelectionDialog.open();
+				if (flag && (interfaceCombo.getSelectionIndex() != -1)) {
+					try {
+						int modindex = modSelectCombo.getSelectionIndex();
+						int interfaceindex = interfaceCombo.getSelectionIndex();
+						logger.debug("开始删除接口:" + modSelectCombo.getText() + "模块下的" + interfaceCombo.getText());
+						// 移除
+						apiDoc.getApilist().get(modindex).getApi().remove(interfaceindex);
+						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+						// 重新初始化界面
+						interfaceCombo.remove(interfaceindex);
+						if (interfaceCombo.getItemCount() == 0) {
+							logger.debug("此模块下的接口被删光了");
+							mainWindowShell.setText(applicationName);
+							clearParameters();
+							urlText.setText("");
+						}
+						// 删除的是最后一个，则初始化倒数第二个
+						else if (interfaceindex == interfaceCombo.getItemCount()) {
+							interfaceCombo.select(interfaceindex - 1);
+							initSelectInterface(modindex, interfaceindex - 1);
+						} else {
+							interfaceCombo.select(interfaceindex);
+							initSelectInterface(modindex, interfaceindex);
+						}
+						logger.debug("删除完成");
+						statusBar.setText("删除完成");
+					} catch (Exception e2) {
+						logger.debug("删除时发生异常", e2);
+						statusBar.setText("删除失败");
+					}
+
+				} else if (interfaceCombo.getSelectionIndex() == -1) {
+					statusBar.setText("没有接口可供删除");
+				} else {
+					logger.debug("放弃删除接口:" + modSelectCombo.getText() + "模块下的" + interfaceCombo.getText());
+				}
 			}
 		});
 		menuItem_2.setText("删除此接口");
@@ -745,19 +783,7 @@ public class MainWindow {
 		// 接口选择事件
 		interfaceCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				interfaceContextPath = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getAddress();
-				urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getAddress());
-				interfaceCombo.setToolTipText(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getExplain());
-				mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
-				methodChoice(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getMethod());
-				initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getParameters());
-				logger.debug("切换到接口:" + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-						.get(interfaceCombo.getSelectionIndex()).getName());
+				initSelectInterface(modSelectCombo.getSelectionIndex(), interfaceCombo.getSelectionIndex());
 			}
 		});
 
@@ -1235,17 +1261,13 @@ public class MainWindow {
 			interfaceCombo.add(apiItems.get(i).getName());
 		}
 		try {
+			// 默认初始化这个分类下的第一个接口
 			interfaceCombo.select(0);
-			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
-			urlText.setText(serverAdress + apiItems.get(0).getAddress());
-			interfaceContextPath = apiItems.get(0).getAddress();
-			methodChoice(apiItems.get(0).getMethod());
-			interfaceCombo.setToolTipText(apiItems.get(0).getExplain());
-			initParameters(apiItems.get(0).getParameters());
+			initSelectInterface(modSelectCombo.getSelectionIndex(), interfaceCombo.getSelectionIndex());
 
 		} catch (Exception e) {
 			logger.error("异常", e);
-			urlText.setText(serverAdress);
+			urlText.setText("");
 		}
 	}
 
@@ -1288,6 +1310,16 @@ public class MainWindow {
 			apiPars.add(new ApiPar(entry.getKey(), entry.getValue()));
 		}
 		return apiPars;
+	}
+
+	private void initSelectInterface(int modindex, int interfaceindex) {
+		interfaceContextPath = apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress();
+		urlText.setText(serverAdress + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress());
+		interfaceCombo.setToolTipText(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getExplain());
+		mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
+		methodChoice(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getMethod());
+		initParameters(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getParameters());
+		logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
 	}
 
 	// 参数初始化
