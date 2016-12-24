@@ -1087,16 +1087,9 @@ public class MainWindow {
 		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
 			return;
 		}
-		File needsaveFile = new File("./config/" + apiJsonFile);
-		ApiDoc needsaveApiDoc = new ApiDoc();
-		if (!needsaveFile.exists()) {
-			logger.warn("保存参数到接口文档时读取接口文档出错，文档不存在");
-			return;
-		}
 		try {
-			needsaveApiDoc = JSON.parseObject(ApiUtils.ReadFromFile(needsaveFile, "UTF-8"), ApiDoc.class);
 			// 获取当前文档节点
-			ApiItem item = needsaveApiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+			ApiItem item = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 					.get(interfaceCombo.getSelectionIndex());
 			ArrayList<ApiPar> pars = item.getParameters();
 			// 移除现有的参数
@@ -1108,7 +1101,8 @@ public class MainWindow {
 				}
 			}
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
-			if (ApiUtils.SaveToFile(needsaveFile, JsonFormatUtils.Format(JSON.toJSONString(needsaveApiDoc)))) {
+			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+					JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
 				statusBar.setText("保存成功");
 			} else {
 				statusBar.setText("保存失败，请重试");
