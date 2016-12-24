@@ -106,6 +106,7 @@ public class MainWindow {
 	private Properties apiReturnCode;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
+	private HashMap<String, ApiItem> tempSavePars;
 
 	// 界面组件
 	private final FormToolkit formToolkit;
@@ -148,6 +149,7 @@ public class MainWindow {
 		this.loadHistorySum = 30;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
+		this.tempSavePars = new HashMap<String, ApiItem>();
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
 		this.header.put("SocksTimeout", "30000");
 		this.header.put("ConnectTimeout", "30000");
@@ -1066,17 +1068,21 @@ public class MainWindow {
 			return;
 		}
 		// 获取当前文档节点
-		ApiItem item = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-				.get(interfaceCombo.getSelectionIndex());
-		ArrayList<ApiPar> pars = item.getParameters();
-		// 移除现有的参数
-		pars.removeAll(pars);
-		// 重新从form框初始化
+		ApiItem item = new ApiItem();
+		item.setName(interfaceCombo.getText());
+		item.setExplain(interfaceCombo.getToolTipText());
+		item.setAddress(urlText.getText().replace(serverAdress, ""));
+		item.setMethod(methodSelectCombo.getText());
+		item.setParameters(new ArrayList<ApiPar>());
+		// 从form框初始化
 		for (int i = 0; i < form.length; i++) {
 			if (StringUtils.isNotEmpty(form[i][0].getText()) || StringUtils.isNotEmpty(form[i][1].getText())) {
-				pars.add(new ApiPar(form[i][0].getText(), form[i][0].getToolTipText(), form[i][1].getText()));
+				item.getParameters().add(new ApiPar(form[i][0].getText() + "", form[i][0].getToolTipText() + "",
+						form[i][1].getText() + ""));
 			}
 		}
+		// 做个标识临时存起来
+		tempSavePars.put(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText()), item);
 		statusBar.setText("保存成功，程序关闭前有效");
 	}
 
@@ -1088,18 +1094,8 @@ public class MainWindow {
 			return;
 		}
 		try {
-			// 获取当前文档节点
-			ApiItem item = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-					.get(interfaceCombo.getSelectionIndex());
-			ArrayList<ApiPar> pars = item.getParameters();
-			// 移除现有的参数
-			pars.removeAll(pars);
-			// 重新从form框初始化
-			for (int i = 0; i < form.length; i++) {
-				if (StringUtils.isNotEmpty(form[i][0].getText()) || StringUtils.isNotEmpty(form[i][1].getText())) {
-					pars.add(new ApiPar(form[i][0].getText(), form[i][0].getToolTipText(), form[i][1].getText()));
-				}
-			}
+			apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi().set(interfaceCombo.getSelectionIndex(),
+					tempSavePars.get(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText())));
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 					JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
@@ -1312,13 +1308,26 @@ public class MainWindow {
 
 	// 初始化选择的接口
 	private void initSelectInterface(int modindex, int interfaceindex) {
-		interfaceContextPath = apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress();
-		urlText.setText(serverAdress + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress());
-		interfaceCombo.setToolTipText(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getExplain());
-		mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
-		methodChoice(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getMethod());
-		initParameters(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getParameters());
-		logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
+		// 初始化前要判断是否之前有保存过，如果有保存过，则初始化保存的那份数据
+		ApiItem apiItem = tempSavePars.get(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText()));
+		if (null != apiItem) {
+			logger.debug("此接口有之前保存的数据，读取保存的数据");
+			interfaceContextPath = apiItem.getAddress();
+			urlText.setText(serverAdress + apiItem.getAddress());
+			interfaceCombo.setToolTipText(apiItem.getExplain());
+			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
+			methodChoice(apiItem.getMethod());
+			initParameters(apiItem.getParameters());
+			logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
+		} else {
+			interfaceContextPath = apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress();
+			urlText.setText(serverAdress + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress());
+			interfaceCombo.setToolTipText(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getExplain());
+			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
+			methodChoice(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getMethod());
+			initParameters(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getParameters());
+			logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
+		}
 	}
 
 	// 参数初始化
