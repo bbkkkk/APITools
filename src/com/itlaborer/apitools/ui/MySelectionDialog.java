@@ -73,7 +73,7 @@ public class MySelectionDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		button.setBounds(218, 119, 80, 27);
+		button.setBounds(213, 115, 80, 27);
 		button.setText("是");
 
 		Button button_1 = new Button(shell, SWT.NONE);
@@ -84,7 +84,7 @@ public class MySelectionDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		button_1.setBounds(304, 119, 80, 27);
+		button_1.setBounds(304, 115, 80, 27);
 		button_1.setText("否");
 
 	}
