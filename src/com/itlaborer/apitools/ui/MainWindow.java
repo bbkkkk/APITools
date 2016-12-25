@@ -325,12 +325,25 @@ public class MainWindow {
 		Menu menu_6 = new Menu(modSelectCombo);
 		modSelectCombo.setMenu(menu_6);
 
+		MenuItem menuItem_8 = new MenuItem(menu_6, SWT.NONE);
+		menuItem_8.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Clipboard clipboard = new Clipboard(modSelectCombo.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { modSelectCombo.getText() }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				statusBar.setText("已复制到剪切板:" + modSelectCombo.getText());
+			}
+		});
+		menuItem_8.setText("复制模块名");
+
 		MenuItem menuItem_4 = new MenuItem(menu_6, SWT.NONE);
 		menuItem_4.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
-						"重命名模块名", modSelectCombo.getText());
+						"重命名模块", modSelectCombo.getText());
 				String nameFromDialog = reNameModDialog.open();
 				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
 					logger.debug("模块名没有发生变化");
@@ -355,6 +368,7 @@ public class MainWindow {
 						apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+						statusBar.setText("模块名被修改为:" + nameFromDialog);
 					}
 				}
 			}
@@ -420,8 +434,57 @@ public class MainWindow {
 		Menu menu_4 = new Menu(interfaceCombo);
 		interfaceCombo.setMenu(menu_4);
 
+		MenuItem menuItem_9 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_9.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Clipboard clipboard = new Clipboard(interfaceCombo.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { interfaceCombo.getText() }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				statusBar.setText("已复制到剪切板:" + interfaceCombo.getText());
+			}
+		});
+		menuItem_9.setText("复制接口名");
+
 		MenuItem menuItem_1 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_1.setText("编辑此接口");
+		menuItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
+						"重命名接口", interfaceCombo.getText());
+				String nameFromDialog = reNameModDialog.open();
+				if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
+					logger.debug("接口名没有发生变化");
+				} else if (StringUtils.isEmpty(nameFromDialog)) {
+					logger.debug("新接口名为空");
+					statusBar.setText("接口名不准为空");
+				} else {
+					// 重名判断
+					boolean flag = false;
+					ArrayList<ApiItem> items = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi();
+					for (int i = 0; i < items.size(); i++) {
+						if (StringUtils.equals(items.get(i).getName(), nameFromDialog)
+								&& (i != interfaceCombo.getSelectionIndex())) {
+							flag = true;
+							break;
+						}
+					}
+					if (flag) {
+						logger.debug("重命名接口时发生重名");
+						statusBar.setText("重命名时发现重名接口，放弃重命名");
+					} else {
+						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
+						apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+						statusBar.setText("接口名被修改为:" + nameFromDialog);
+					}
+				}
+			}
+		});
+		menuItem_1.setText("重命名此接口");
 
 		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
 		menuItem_2.addSelectionListener(new SelectionAdapter() {
