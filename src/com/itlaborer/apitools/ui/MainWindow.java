@@ -218,6 +218,8 @@ public class MainWindow {
 		menuToolKit.setMenu(menu);
 		// 工具-接口列表编辑
 		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
+		menuItemApiListEdit.setText("接口设计器");
+		menuItemApiListEdit.setEnabled(false);
 		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -225,7 +227,6 @@ public class MainWindow {
 				designTools.open();
 			}
 		});
-		menuItemApiListEdit.setText("接口设计器");
 
 		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
 		menuItemMd5.setText("MD5加密");
@@ -325,7 +326,40 @@ public class MainWindow {
 		modSelectCombo.setMenu(menu_6);
 
 		MenuItem menuItem_4 = new MenuItem(menu_6, SWT.NONE);
-		menuItem_4.setText("接口设计器");
+		menuItem_4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
+						"重命名模块名", modSelectCombo.getText());
+				String nameFromDialog = reNameModDialog.open();
+				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
+					logger.debug("模块名没有发生变化");
+				} else if (StringUtils.isEmpty(nameFromDialog)) {
+					logger.debug("新模块名为空");
+					statusBar.setText("模块名不准为空");
+				} else {
+					// 重名判断
+					boolean flag = false;
+					for (int i = 0; i < apiDoc.getApilist().size(); i++) {
+						if (StringUtils.equals(apiDoc.getApilist().get(i).getName(), nameFromDialog)
+								&& (i != modSelectCombo.getSelectionIndex())) {
+							flag = true;
+							break;
+						}
+					}
+					if (flag) {
+						logger.debug("重命名模块时发生重名");
+						statusBar.setText("重命名时发现重名模块，放弃重命名");
+					} else {
+						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
+						apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+					}
+				}
+			}
+		});
+		menuItem_4.setText("重命名此模块");
 
 		MenuItem menuItem_5 = new MenuItem(menu_6, SWT.NONE);
 		menuItem_5.addSelectionListener(new SelectionAdapter() {
@@ -340,7 +374,7 @@ public class MainWindow {
 						logger.debug("开始删除模块:" + modSelectCombo.getText());
 						// 移除
 						apiDoc.getApilist().remove(modindex);
-						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
+						// 保存
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
@@ -374,7 +408,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_5.setText("删除此分类");
+		menuItem_5.setText("删除此模块");
+
+		MenuItem menuItem_7 = new MenuItem(menu_6, SWT.NONE);
+		menuItem_7.setText("新增一个模块");
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		interfaceCombo.setBounds(237, 8, 245, 25);
@@ -434,6 +471,9 @@ public class MainWindow {
 			}
 		});
 		menuItem_2.setText("删除此接口");
+
+		MenuItem menuItem_6 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_6.setText("新增一个接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
 		parsText.setBounds(7, 39, 476, 25);
@@ -492,16 +532,16 @@ public class MainWindow {
 
 		// auth
 		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
+		btnAuthorization.setToolTipText("授权管理");
+		btnAuthorization.setText("Authorization");
+		btnAuthorization.setBounds(787, 38, 92, 27);
+		formToolkit.adapt(btnAuthorization, true, true);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("此功能暂未实现");
 			}
 		});
-		btnAuthorization.setToolTipText("授权管理");
-		btnAuthorization.setText("Authorization");
-		btnAuthorization.setBounds(787, 38, 92, 27);
-		formToolkit.adapt(btnAuthorization, true, true);
 
 		// api状态码
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
