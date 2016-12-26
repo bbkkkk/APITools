@@ -199,7 +199,7 @@ public class MainWindow {
 		// 工具菜单///////////////////////////////////////////////////
 		/////////////////// 编辑////////////////////////////////////////
 		MenuItem menuEdit = new MenuItem(rootMenu, SWT.CASCADE);
-		menuEdit.setText("编辑");
+		menuEdit.setText("文件");
 
 		Menu menuSave = new Menu(menuEdit);
 		menuEdit.setMenu(menuSave);
@@ -319,7 +319,7 @@ public class MainWindow {
 		menuItemAbout.setText("关于");
 		// 模块选择
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
-		modSelectCombo.setBounds(3, 3, 229, 25);
+		modSelectCombo.setBounds(3, 3, 230, 25);
 		formToolkit.adapt(modSelectCombo);
 
 		Menu menu_6 = new Menu(modSelectCombo);

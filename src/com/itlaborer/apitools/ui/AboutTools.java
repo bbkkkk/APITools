@@ -67,7 +67,7 @@ public class AboutTools extends Dialog {
 		link.addSelectionListener(new LinkSelection());
 
 		Label versionLabel = new Label(aboutToolsShell, SWT.NONE);
-		versionLabel.setBounds(184, 288, 25, 17);
+		versionLabel.setBounds(184, 288, 43, 17);
 		versionLabel.setText(Resource.VERSION);
 
 		StyledText readMeTextLabel = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
