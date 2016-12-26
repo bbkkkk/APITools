@@ -576,6 +576,7 @@ public class MainWindow {
 		menuItem_2.setText("删除此接口");
 
 		MenuItem menuItem_6 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_6.setEnabled(false);
 		menuItem_6.setText("新增一个接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
