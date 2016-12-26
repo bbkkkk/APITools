@@ -319,7 +319,7 @@ public class MainWindow {
 		menuItemAbout.setText("关于");
 		// 模块选择
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
-		modSelectCombo.setBounds(3, 5, 229, 25);
+		modSelectCombo.setBounds(3, 3, 229, 25);
 		formToolkit.adapt(modSelectCombo);
 
 		Menu menu_6 = new Menu(modSelectCombo);
@@ -468,7 +468,7 @@ public class MainWindow {
 		menuItem_7.setText("新增一个模块");
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
-		interfaceCombo.setBounds(237, 5, 245, 25);
+		interfaceCombo.setBounds(237, 3, 245, 25);
 		formToolkit.adapt(interfaceCombo);
 
 		Menu menu_4 = new Menu(interfaceCombo);
@@ -579,13 +579,13 @@ public class MainWindow {
 		menuItem_6.setText("新增一个接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
-		parsText.setBounds(3, 36, 480, 25);
+		parsText.setBounds(3, 32, 480, 25);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
-		urlText.setBounds(487, 5, 478, 25);
+		urlText.setBounds(487, 3, 478, 25);
 		// HTTP请求的方法下拉选择框
 		methodSelectCombo = new Combo(mainWindowShell, SWT.DROP_DOWN | SWT.READ_ONLY);
-		methodSelectCombo.setBounds(970, 5, 66, 25);
+		methodSelectCombo.setBounds(970, 3, 66, 25);
 		formToolkit.adapt(methodSelectCombo);
 		methodSelectCombo.add("GET", 0);
 		methodSelectCombo.add("POST", 1);
@@ -596,14 +596,14 @@ public class MainWindow {
 
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
-		submitButton.setBounds(1040, 4, 97, 27);
+		submitButton.setBounds(1040, 3, 97, 27);
 		submitButton.setText("提      交");
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
 		parsCovertButton.setToolTipText("导入形如a=1&&b=2的参数串到表单");
 		parsCovertButton.setText("导入参数");
-		parsCovertButton.setBounds(487, 35, 72, 27);
+		parsCovertButton.setBounds(487, 32, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
 		Menu menu_5 = new Menu(parsCovertButton);
@@ -616,28 +616,28 @@ public class MainWindow {
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
 		parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
 		parsClearButton.setText("重置参数");
-		parsClearButton.setBounds(562, 35, 72, 27);
+		parsClearButton.setBounds(562, 32, 72, 27);
 		formToolkit.adapt(parsClearButton, true, true);
 
 		// 排除空格
 		clearSpaceButton = new Button(mainWindowShell, SWT.NONE);
 		clearSpaceButton.setToolTipText("清除参数两头可能存在的空格");
 		clearSpaceButton.setText("TRIM参数");
-		clearSpaceButton.setBounds(637, 35, 72, 27);
+		clearSpaceButton.setBounds(637, 32, 72, 27);
 		formToolkit.adapt(clearSpaceButton, true, true);
 
 		// 重排参数
 		button = new Button(mainWindowShell, SWT.NONE);
 		button.setToolTipText("将参数重新从第一个表格重排列");
 		button.setText("重排参数");
-		button.setBounds(712, 35, 72, 27);
+		button.setBounds(712, 32, 72, 27);
 		formToolkit.adapt(button, true, true);
 
 		// auth
 		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.setToolTipText("授权管理");
 		btnAuthorization.setText("Authorization");
-		btnAuthorization.setBounds(787, 35, 92, 27);
+		btnAuthorization.setBounds(787, 32, 92, 27);
 		formToolkit.adapt(btnAuthorization, true, true);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -650,24 +650,24 @@ public class MainWindow {
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
 		apiStatusButton.setToolTipText("解析Response里的code值");
 		apiStatusButton.setText("返回码解读");
-		apiStatusButton.setBounds(882, 35, 83, 27);
+		apiStatusButton.setBounds(882, 32, 83, 27);
 		formToolkit.adapt(apiStatusButton, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setToolTipText("清空结果内容");
 		textClearButton.setText("清空结果");
-		textClearButton.setBounds(968, 35, 69, 27);
+		textClearButton.setBounds(968, 32, 69, 27);
 		formToolkit.adapt(textClearButton, true, true);
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
 		toBrower.setToolTipText("用HTTP GET方式在浏览器中请求接口");
 		toBrower.setText("浏览器中打开");
-		toBrower.setBounds(1040, 35, 97, 27);
+		toBrower.setBounds(1040, 32, 97, 27);
 		formToolkit.adapt(toBrower, true, true);
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
-		formTable.setBounds(3, 67, 480, 533);
+		formTable.setBounds(3, 62, 480, 540);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
@@ -751,7 +751,7 @@ public class MainWindow {
 		// 接口返回内容显示区域
 
 		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
-		cTabFolder.setBounds(487, 68, 649, 533);
+		cTabFolder.setBounds(487, 62, 649, 540);
 		cTabFolder.setSelectionBackground(
 				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		cTabFolder.forceFocus();
