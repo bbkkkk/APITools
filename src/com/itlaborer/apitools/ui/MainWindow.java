@@ -596,14 +596,14 @@ public class MainWindow {
 
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
-		submitButton.setBounds(1040, 3, 97, 27);
+		submitButton.setBounds(1040, 2, 97, 27);
 		submitButton.setText("提      交");
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
 		parsCovertButton.setToolTipText("导入形如a=1&&b=2的参数串到表单");
 		parsCovertButton.setText("导入参数");
-		parsCovertButton.setBounds(487, 32, 72, 27);
+		parsCovertButton.setBounds(487, 31, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
 		Menu menu_5 = new Menu(parsCovertButton);
@@ -616,28 +616,28 @@ public class MainWindow {
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
 		parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
 		parsClearButton.setText("重置参数");
-		parsClearButton.setBounds(562, 32, 72, 27);
+		parsClearButton.setBounds(562, 31, 72, 27);
 		formToolkit.adapt(parsClearButton, true, true);
 
 		// 排除空格
 		clearSpaceButton = new Button(mainWindowShell, SWT.NONE);
 		clearSpaceButton.setToolTipText("清除参数两头可能存在的空格");
 		clearSpaceButton.setText("TRIM参数");
-		clearSpaceButton.setBounds(637, 32, 72, 27);
+		clearSpaceButton.setBounds(637, 31, 72, 27);
 		formToolkit.adapt(clearSpaceButton, true, true);
 
 		// 重排参数
 		button = new Button(mainWindowShell, SWT.NONE);
 		button.setToolTipText("将参数重新从第一个表格重排列");
 		button.setText("重排参数");
-		button.setBounds(712, 32, 72, 27);
+		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
 
 		// auth
 		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.setToolTipText("授权管理");
 		btnAuthorization.setText("Authorization");
-		btnAuthorization.setBounds(787, 32, 92, 27);
+		btnAuthorization.setBounds(787, 31, 92, 27);
 		formToolkit.adapt(btnAuthorization, true, true);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -650,19 +650,19 @@ public class MainWindow {
 		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
 		apiStatusButton.setToolTipText("解析Response里的code值");
 		apiStatusButton.setText("返回码解读");
-		apiStatusButton.setBounds(882, 32, 83, 27);
+		apiStatusButton.setBounds(882, 31, 83, 27);
 		formToolkit.adapt(apiStatusButton, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setToolTipText("清空结果内容");
 		textClearButton.setText("清空结果");
-		textClearButton.setBounds(968, 32, 69, 27);
+		textClearButton.setBounds(968, 31, 69, 27);
 		formToolkit.adapt(textClearButton, true, true);
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
 		toBrower.setToolTipText("用HTTP GET方式在浏览器中请求接口");
 		toBrower.setText("浏览器中打开");
-		toBrower.setBounds(1040, 32, 97, 27);
+		toBrower.setBounds(1040, 31, 97, 27);
 		formToolkit.adapt(toBrower, true, true);
 
 		// 参数table
@@ -774,7 +774,7 @@ public class MainWindow {
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
-		statusBar.setBounds(3, 605, 1134, 23);
+		statusBar.setBounds(3, 605, 1134, 25);
 		formToolkit.adapt(statusBar, true, true);
 
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
