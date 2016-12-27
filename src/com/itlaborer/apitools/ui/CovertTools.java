@@ -80,12 +80,12 @@ public class CovertTools extends Dialog {
 	private void createContents() {
 		covertToolsShell = new Shell(getParent(), getStyle());
 		covertToolsShell.setImage(SWTResourceManager.getImage(CovertTools.class, Resource.IMAGE_ICON));
-		covertToolsShell.setSize(400, 166);
+		covertToolsShell.setSize(400, 161);
 		covertToolsShell.setText(getText());
 		ApiUtils.SetCenterinParent(getParent(), covertToolsShell);
 
 		filePath = new Text(covertToolsShell, SWT.BORDER);
-		filePath.setBounds(3, 16, 237, 25);
+		filePath.setBounds(3, 10, 237, 25);
 
 		Button fileSelect = new Button(covertToolsShell, SWT.NONE);
 		fileSelect.addSelectionListener(new SelectionAdapter() {
@@ -101,7 +101,7 @@ public class CovertTools extends Dialog {
 				}
 			}
 		});
-		fileSelect.setBounds(319, 15, 73, 27);
+		fileSelect.setBounds(319, 9, 73, 27);
 		fileSelect.setText("选择文件");
 
 		final Button beginCovert = new Button(covertToolsShell, SWT.NONE);
@@ -155,14 +155,14 @@ public class CovertTools extends Dialog {
 			}
 		});
 		beginCovert.setText("开始转换");
-		beginCovert.setBounds(249, 48, 143, 27);
+		beginCovert.setBounds(249, 40, 143, 27);
 
 		setNameText = new Text(covertToolsShell, SWT.BORDER);
-		setNameText.setBounds(88, 80, 152, 25);
+		setNameText.setBounds(91, 73, 149, 25);
 
 		Label setName = new Label(covertToolsShell, SWT.NONE);
 		setName.setFont(SWTResourceManager.getFont("微软雅黑", 13, SWT.NORMAL));
-		setName.setBounds(3, 78, 90, 25);
+		setName.setBounds(3, 72, 90, 25);
 		setName.setText("保存文件名");
 		saveButton = new Button(covertToolsShell, SWT.NONE);
 		saveButton.addSelectionListener(new SelectionAdapter() {
@@ -184,24 +184,24 @@ public class CovertTools extends Dialog {
 				}
 			}
 		});
-		saveButton.setBounds(249, 81, 143, 27);
+		saveButton.setBounds(249, 73, 143, 27);
 		saveButton.setText("保存文件");
 
 		apiDocVersion = new Text(covertToolsShell, SWT.BORDER);
-		apiDocVersion.setBounds(88, 47, 152, 25);
+		apiDocVersion.setBounds(88, 41, 152, 25);
 
 		apiDocVersionl = new Label(covertToolsShell, SWT.NONE);
 		apiDocVersionl.setText("手 册 版 本");
 		apiDocVersionl.setFont(SWTResourceManager.getFont("微软雅黑", 13, SWT.NORMAL));
-		apiDocVersionl.setBounds(3, 47, 90, 25);
+		apiDocVersionl.setBounds(3, 41, 90, 25);
 
 		versionSelect = new Combo(covertToolsShell, SWT.NONE | SWT.READ_ONLY);
-		versionSelect.setBounds(249, 16, 65, 25);
+		versionSelect.setBounds(248, 10, 65, 25);
 		versionSelect.add("API4.0");
 		versionSelect.select(0);
 
 		statusText = new Text(covertToolsShell, SWT.BORDER);
-		statusText.setBounds(3, 111, 389, 23);
+		statusText.setBounds(3, 105, 389, 23);
 	}
 
 	/**
