@@ -58,11 +58,11 @@ public class Base64Tools extends Dialog {
 		final StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
-		styledText.setBounds(6, 8, 662, 346);
+		styledText.setBounds(3, 3, 669, 357);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 		// 编码
 		Button encodeButton = new Button(base64ToolsShell, SWT.NONE);
-		encodeButton.setBounds(5, 360, 342, 27);
+		encodeButton.setBounds(3, 363, 333, 27);
 		encodeButton.setText("Base64编码");
 		encodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -76,7 +76,7 @@ public class Base64Tools extends Dialog {
 		// 解码
 		Button decodeButton = new Button(base64ToolsShell, SWT.NONE);
 		decodeButton.setText("Base64解码");
-		decodeButton.setBounds(353, 360, 317, 27);
+		decodeButton.setBounds(339, 363, 333, 27);
 		decodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

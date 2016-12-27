@@ -71,23 +71,23 @@ public class AboutTools extends Dialog {
 		versionLabel.setText(Resource.VERSION);
 
 		StyledText readMeTextLabel = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
-		readMeTextLabel.setBounds(10, 33, 375, 114);
+		readMeTextLabel.setBounds(3, 33, 389, 114);
 		readMeTextLabel.setText(Resource.EXPLAIN);
 
 		StyledText lblgplV = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
 		lblgplV.setText(
 				"Copyright itlaborer.com\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.");
-		lblgplV.setBounds(10, 176, 375, 106);
+		lblgplV.setBounds(3, 176, 389, 106);
 
 		Label label_1 = new Label(aboutToolsShell, SWT.NONE);
 		label_1.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_1.setText("Apache License:");
-		label_1.setBounds(10, 153, 136, 17);
+		label_1.setBounds(3, 155, 136, 17);
 
 		Label label_2 = new Label(aboutToolsShell, SWT.NONE);
 		label_2.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_2.setText("软件说明:");
-		label_2.setBounds(10, 10, 136, 17);
+		label_2.setBounds(3, 12, 136, 17);
 	}
 
 	// 打开网站

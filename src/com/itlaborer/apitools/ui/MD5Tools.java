@@ -54,12 +54,12 @@ public class MD5Tools extends Dialog {
 
 		final StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
-		styledText.setBounds(6, 8, 662, 346);
+		styledText.setBounds(3, 3, 669, 357);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		// 小写加密
 		Button btnNewButton = new Button(md5ToolsShell, SWT.NONE);
-		btnNewButton.setBounds(5, 360, 342, 27);
+		btnNewButton.setBounds(3, 363, 333, 27);
 		btnNewButton.setText("32位小写MD5");
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -73,7 +73,7 @@ public class MD5Tools extends Dialog {
 		// 大写加密
 		Button btnmd = new Button(md5ToolsShell, SWT.NONE);
 		btnmd.setText("32位大写MD5");
-		btnmd.setBounds(353, 360, 317, 27);
+		btnmd.setBounds(339, 363, 333, 27);
 		btnmd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

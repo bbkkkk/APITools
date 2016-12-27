@@ -53,12 +53,12 @@ public class UnicodeTools extends Dialog {
 		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);
 
 		final StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
-		styledText.setBounds(6, 8, 662, 346);
+		styledText.setBounds(3, 3, 669, 357);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		//全Unicode编码
 		Button allUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);
-		allUnicodeButton.setBounds(5,360, 215, 27);
+		allUnicodeButton.setBounds(3,363, 221, 27);
 		allUnicodeButton.setText("全Unicode编码");
 		allUnicodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -77,7 +77,7 @@ public class UnicodeTools extends Dialog {
 		//中文Unicode编码
 		Button zhUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);
 		zhUnicodeButton.setText("中文Unicode编码");
-		zhUnicodeButton.setBounds(226, 360,221, 27);
+		zhUnicodeButton.setBounds(226, 363,222, 27);
 		zhUnicodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -95,7 +95,7 @@ public class UnicodeTools extends Dialog {
 		//Unicode解码
 		Button unicodeDecodeButton = new Button(unicodeToolsShell, SWT.NONE);
 		unicodeDecodeButton.setText("Unicode解码");
-		unicodeDecodeButton.setBounds(453,360, 216, 27);
+		unicodeDecodeButton.setBounds(450,363, 222, 27);
 		unicodeDecodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

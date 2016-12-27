@@ -58,12 +58,12 @@ public class UrlEncodeTools extends Dialog {
 
 		final StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
-		styledText.setBounds(6, 8, 662, 346);
+		styledText.setBounds(3, 3, 669, 357);
 		ApiUtils.StyledTextAddContextMenu(styledText);
 
 		// URL编码
 		Button btnNewButton = new Button(urlEncodeToolsShell, SWT.NONE);
-		btnNewButton.setBounds(5, 360, 342, 27);
+		btnNewButton.setBounds(3, 363, 333, 27);
 		btnNewButton.setText("URL编码");
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -86,7 +86,7 @@ public class UrlEncodeTools extends Dialog {
 		// URL解码
 		Button btnmd = new Button(urlEncodeToolsShell, SWT.NONE);
 		btnmd.setText("URL解码");
-		btnmd.setBounds(353, 360, 317, 27);
+		btnmd.setBounds(339, 363, 333, 27);
 		btnmd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

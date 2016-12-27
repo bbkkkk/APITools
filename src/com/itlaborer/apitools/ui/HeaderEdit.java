@@ -85,7 +85,7 @@ public class HeaderEdit extends Dialog {
 		ApiUtils.SetCenterinParent(getParent(), headerEditShell);
 
 		formTable = new Table(headerEditShell, SWT.BORDER | SWT.HIDE_SELECTION);
-		formTable.setBounds(6, 8, 662, 346);
+		formTable.setBounds(3, 3, 669, 357);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
 		formTable.setItemCount(parsSum);
@@ -98,15 +98,13 @@ public class HeaderEdit extends Dialog {
 
 		TableColumn nameColumn = new TableColumn(formTable, SWT.BORDER);
 		nameColumn.setWidth(
-				(formTable.getBounds().width - tblclmnNewColumn.getWidth() - formTable.getVerticalBar().getSize().x - 4)
-						/ 2);
+				295);
 		nameColumn.setText("参数名");
 		nameColumn.setResizable(false);
 
 		TableColumn valueColumn_1 = new TableColumn(formTable, SWT.BORDER);
 		valueColumn_1.setWidth(
-				(formTable.getBounds().width - tblclmnNewColumn.getWidth() - formTable.getVerticalBar().getSize().x - 4)
-						/ 2);
+				314);
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
 
@@ -124,7 +122,7 @@ public class HeaderEdit extends Dialog {
 				headerEditShell.dispose();
 			}
 		});
-		btnNewButton.setBounds(5, 360, 342, 27);
+		btnNewButton.setBounds(3, 363, 333, 27);
 		btnNewButton.setText("保存并退出");
 
 		Button button = new Button(headerEditShell, SWT.NONE);
@@ -136,7 +134,7 @@ public class HeaderEdit extends Dialog {
 				headerEditShell.dispose();
 			}
 		});
-		button.setBounds(353, 360, 317, 27);
+		button.setBounds(339, 363, 333, 27);
 
 		form = new Text[parsSum][2];
 		label = new Label[parsSum];
