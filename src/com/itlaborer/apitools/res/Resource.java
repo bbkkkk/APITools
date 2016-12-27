@@ -15,7 +15,7 @@ public class Resource {
 	public static String CONFIG = "#主配置文件\r\n#请按照参数名进行相关配置\r\n#服务器地址,如果有多台服务器，请用,（英文逗号）分开"
 			+ "\r\napiaddress=https://api.thinkpage.cn/v3/weather/\r\n#自动装载的API列表文件\r\napilist=api-xinzhiweather.json\r\n#自动装载的错误码列表文件-仅支持恒生FUNDAPI\r\nreturncodefile"
 			+ "=xxx.properties\r\n#历史记录条数\r\nhsitorysum=30";
-	public static String EXPLAIN = "这是一个适合HTTP接口的测试工具，可以快速的填充参数，拉取接口返回的结果,如果你"
+	public static String EXPLAIN = "这是一个适合HTTP服务的请求工具，可以快速的填充参数，拉取接口返回的结果,如果你"
 			+ "不想每次测试接口的时候都手动输入大量的参数,可以预先编辑好接口和参数列表,这样工具启动的时候" + "可以自动加载预先定义好的接口信息,这一切都是如此的简单,你只需要掌握"
 			+ "简单的JSON格式书写规则即可";
 	public static String LOG4J = "log4j.rootLogger=INFO,CONSOLE,FILE\r\n\r\nlog4j.logger.CONSOLE=INFO\r\nlog4j.logger.FILE=INFO\r\n\r\n#打印到Console的日志配置\r\nlog4j.appender.CO"
