@@ -187,7 +187,7 @@ public class MainWindow {
 	protected void createContents(final Display display) {
 		applicationName = "APITools" + "-" + Resource.VERSION;
 		mainWindowShell = new Shell(display, SWT.MIN);
-		mainWindowShell.setSize(1145, 680);
+		mainWindowShell.setSize(1145, 670);
 		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		ApiUtils.SetCenter(mainWindowShell);
@@ -668,7 +668,7 @@ public class MainWindow {
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
-		formTable.setBounds(3, 62, 480, 540);
+		formTable.setBounds(3, 62, 480, 530);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
@@ -752,7 +752,7 @@ public class MainWindow {
 		// 接口返回内容显示区域
 
 		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
-		cTabFolder.setBounds(487, 62, 649, 540);
+		cTabFolder.setBounds(487, 62, 649, 530);
 		cTabFolder.setSelectionBackground(
 				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		cTabFolder.forceFocus();
@@ -775,7 +775,7 @@ public class MainWindow {
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
-		statusBar.setBounds(3, 605, 1134, 25);
+		statusBar.setBounds(3, 595, 1134, 25);
 		formToolkit.adapt(statusBar, true, true);
 
 		// 各个组件的监听事件//////////////////////////////////////////////////////////////////////////////////////////
