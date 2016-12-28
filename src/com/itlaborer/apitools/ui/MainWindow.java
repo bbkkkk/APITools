@@ -430,38 +430,42 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				String modname;
 				CreateModDialog createModDialog = new CreateModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				modname = createModDialog.open();
-				if (StringUtils.isEmpty(modname)) {
-					logger.debug("模块名为空，放弃添加");
-					statusBar.setText("不能创建名字为空的模块");
-				} else {
-
-					// 重名判断
-					boolean flag = false;
-					for (int i = 0; i < apiDoc.getApilist().size(); i++) {
-						if (StringUtils.equals(apiDoc.getApilist().get(i).getName(), modname)
-								&& (i != modSelectCombo.getSelectionIndex())) {
-							flag = true;
-							break;
-						}
-					}
-					if (flag) {
-						logger.debug("不能添加重名的模块");
-						statusBar.setText("不能添加重名的模块");
+				Object[] res = createModDialog.open();
+				if ((boolean) res[0]) {
+					modname = (String) res[1];
+					if (StringUtils.isEmpty(modname)) {
+						logger.debug("模块名为空，放弃添加");
+						statusBar.setText("不能创建名字为空的模块");
 					} else {
-						modSelectCombo.add(modname);
-						ApiList apiList = new ApiList();
-						apiList.setName(modname);
-						apiDoc.getApilist().add(apiList);
-						try {
-							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-									JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
-							modSelectCombo.select(modSelectCombo.getItemCount() - 1);
-							initSelectMod(modSelectCombo.getItemCount() - 1);
-						} catch (Exception e2) {
-							logger.debug("创建新模块写入报错", e2);
+						// 重名判断
+						boolean flag = false;
+						for (int i = 0; i < apiDoc.getApilist().size(); i++) {
+							if (StringUtils.equals(apiDoc.getApilist().get(i).getName(), modname)
+									&& (i != modSelectCombo.getSelectionIndex())) {
+								flag = true;
+								break;
+							}
+						}
+						if (flag) {
+							logger.debug("不能添加重名的模块");
+							statusBar.setText("不能添加重名的模块");
+						} else {
+							modSelectCombo.add(modname);
+							ApiList apiList = new ApiList();
+							apiList.setName(modname);
+							apiDoc.getApilist().add(apiList);
+							try {
+								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+										JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
+								initSelectMod(modSelectCombo.getItemCount() - 1);
+							} catch (Exception e2) {
+								logger.debug("创建新模块写入报错", e2);
+							}
 						}
 					}
+				} else {
+					logger.debug("放弃新增模块");
 				}
 			}
 		});

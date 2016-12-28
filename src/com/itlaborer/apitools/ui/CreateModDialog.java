@@ -19,6 +19,7 @@ public class CreateModDialog extends Dialog {
 	protected Shell shell;
 	private String text;
 	private Text nameText;
+	private boolean saveFlag = false;
 
 	/**
 	 * Create the dialog.
@@ -35,7 +36,7 @@ public class CreateModDialog extends Dialog {
 	 * 
 	 * @return the result
 	 */
-	public String open() {
+	public Object[] open() {
 		createContents();
 		shell.open();
 		shell.layout();
@@ -45,7 +46,7 @@ public class CreateModDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return text;
+		return (new Object[] { saveFlag, text });
 	}
 
 	/**
@@ -64,6 +65,7 @@ public class CreateModDialog extends Dialog {
 		buttonYes.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				saveFlag = true;
 				text = nameText.getText();
 				shell.dispose();
 			}
@@ -78,6 +80,7 @@ public class CreateModDialog extends Dialog {
 		buttonNo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				saveFlag = false;
 				shell.dispose();
 			}
 		});
