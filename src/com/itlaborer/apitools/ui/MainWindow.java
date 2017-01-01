@@ -93,7 +93,7 @@ public class MainWindow {
 	private String[] loadServerAdressArray;
 	private String[] loadApiJsonFileArray;
 
-	// 其他成员变量
+	// 其他成员变量-
 	private int httpCode, parsSum;
 	private long httpTime;
 	private String applicationName;
