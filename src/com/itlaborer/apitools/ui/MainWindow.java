@@ -1566,7 +1566,11 @@ public class MainWindow {
 			return;
 		}
 		// 获取当前文档节点
-		ApiItem item = new ApiItem();
+		ApiItem item = tempSavePars.get(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				.get(interfaceCombo.getSelectionIndex()).getUuid());
+		if (null == item) {
+			item = new ApiItem();
+		}
 		item.setUuid(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 				.get(interfaceCombo.getSelectionIndex()).getUuid());
 		item.setName(interfaceCombo.getText());
@@ -1760,6 +1764,7 @@ public class MainWindow {
 			// 1.0------>1.1
 			if (apiDoc.getDecode_version() == 1.0) {
 				logger.debug("加载了低版本的api文档，开始更新");
+				logger.debug("开始将接口文档从1.0升级到1.1");
 				// 补正uuid
 				for (int i = 0; i < apiDoc.getApilist().size(); i++) {
 					for (int b = 0; b < apiDoc.getApilist().get(i).getApi().size(); b++) {
@@ -1913,7 +1918,7 @@ public class MainWindow {
 	private HashMap<String, String> getParameters() {
 		HashMap<String, String> par = new HashMap<String, String>();
 		for (int i = 0; i < parsSum; i++) {
-			if (!(form[i][0].getText().isEmpty() || form[i][1].getText().isEmpty())) {
+			if ((!(form[i][0].getText().isEmpty() || form[i][1].getText().isEmpty())) && !frozenFlag[i]) {
 				par.put(form[i][0].getText(), form[i][1].getText());
 			}
 		}
@@ -1933,10 +1938,15 @@ public class MainWindow {
 		statusBar.setText("");
 		parsText.setText("");
 		for (int i = 0; i < parsSum; i++) {
+			frozenFlag[i] = false;
 			form[i][0].setText("");
 			form[i][0].setToolTipText("");
 			form[i][1].setText("");
 			form[i][1].setToolTipText("");
+			label[i].setToolTipText("");
+			// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+			form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+			form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		}
 	}
 
