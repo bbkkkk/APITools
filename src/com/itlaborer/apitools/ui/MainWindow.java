@@ -1756,8 +1756,9 @@ public class MainWindow {
 		}
 		try {
 			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
-			// 检查接口文档是否有uuid，老版本的文档没有，需要补正
-			if (apiDoc.getDecode_version() < 1.1) {
+			// 检查接口文档是老版本的文档没有，需要补正
+			// 1.0------>1.1
+			if (apiDoc.getDecode_version() == 1.0) {
 				logger.debug("加载了低版本的api文档，开始更新");
 				// 补正uuid
 				for (int i = 0; i < apiDoc.getApilist().size(); i++) {
@@ -1771,11 +1772,11 @@ public class MainWindow {
 				ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
 			}
-			// 初始化历史记录
-			initHistory();
 			// 加载前判断版本
 			if (apiDoc.getDecode_version().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getApi_version());
+				// 初始化历史记录
+				initHistory();
 				initMod();
 			} else {
 				logger.warn("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
