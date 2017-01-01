@@ -211,7 +211,7 @@ public class CovertTools extends Dialog {
 		// 新建一个ApiDoc对象
 		ApiDoc apiDoc = new ApiDoc();
 		apiDoc.setApi_version(apiDocVersion);
-		apiDoc.setDecode_version("1.0");
+		apiDoc.setDecode_version(1.1);
 		// 判断读取的是什么文件
 		// html版本
 		if (path.getPath().substring(path.getPath().lastIndexOf(".") + 1).equals("html")
@@ -314,7 +314,8 @@ public class CovertTools extends Dialog {
 				Document document = Jsoup.parse(new File(apiHTMLPath.get(i)), "UTF-8");
 				Elements tables = document.getElementsByTag("table");
 				// 接口元素列表有6个table
-
+				// UUID
+				apiItem.setUuid(ApiUtils.getUUID());
 				// 名字
 				apiItem.setName(tables.get(1).child(0).child(0).child(1).text());
 				// 地址

@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -111,6 +112,7 @@ public class MainWindow {
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
 	private HashMap<String, ApiItem> tempSavePars;
+	private boolean[] frozenFlag;
 
 	// 界面组件
 	private final FormToolkit formToolkit;
@@ -702,6 +704,7 @@ public class MainWindow {
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
 		form = new Text[parsSum][2];
+		frozenFlag = new boolean[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
 			final int b = i;
@@ -967,15 +970,21 @@ public class MainWindow {
 						statusBar.setText("空的输入框，放弃冻结");
 					} else {
 						if (StringUtils.equals(menuItem1SubFrozen.getText(), "冻结此参数")) {
+							// 冻结标志
+							frozenFlag[b] = true;
 							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-							form[b][0].setEnabled(false);
-							form[b][1].setEnabled(false);
+							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							menuItem1SubFrozen.setText("解冻此参数");
 							statusBar.setText("冻结参数完毕");
 						} else if (StringUtils.equals(menuItem1SubFrozen.getText(), "解冻此参数")) {
+							// 解冻标志
+							frozenFlag[b] = false;
 							label[b].setToolTipText("");
-							form[b][0].setEnabled(true);
-							form[b][1].setEnabled(true);
+							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							menuItem1SubFrozen.setText("冻结此参数");
 							statusBar.setText("解冻参数完毕");
 						}
@@ -1558,6 +1567,8 @@ public class MainWindow {
 		}
 		// 获取当前文档节点
 		ApiItem item = new ApiItem();
+		item.setUuid(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				.get(interfaceCombo.getSelectionIndex()).getUuid());
 		item.setName(interfaceCombo.getText());
 		item.setExplain(interfaceCombo.getToolTipText());
 		item.setAddress(urlText.getText().replace(serverAdress, ""));
@@ -1571,7 +1582,8 @@ public class MainWindow {
 			}
 		}
 		// 做个标识临时存起来
-		tempSavePars.put(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText()), item);
+		tempSavePars.put(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+				.get(interfaceCombo.getSelectionIndex()).getUuid(), item);
 		statusBar.setText("保存成功，程序关闭前有效");
 	}
 
@@ -1584,7 +1596,8 @@ public class MainWindow {
 		}
 		try {
 			apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi().set(interfaceCombo.getSelectionIndex(),
-					tempSavePars.get(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText())));
+					tempSavePars.get(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 					JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
@@ -1743,13 +1756,30 @@ public class MainWindow {
 		}
 		try {
 			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
+			// 检查接口文档是否有uuid，老版本的文档没有，需要补正
+			if (apiDoc.getDecode_version() < 1.1) {
+				logger.debug("加载了低版本的api文档，开始更新");
+				// 补正uuid
+				for (int i = 0; i < apiDoc.getApilist().size(); i++) {
+					for (int b = 0; b < apiDoc.getApilist().get(i).getApi().size(); b++) {
+						apiDoc.getApilist().get(i).getApi().get(b).setUuid(ApiUtils.getUUID());
+					}
+				}
+				// 更新解析版本
+				apiDoc.setDecode_version(1.1);
+				// 保存
+				ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+			}
 			// 初始化历史记录
 			initHistory();
-			if (apiDoc.getDecode_version().equals("1.0")) {
+			// 加载前判断版本
+			if (apiDoc.getDecode_version().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getApi_version());
 				initMod();
 			} else {
 				logger.warn("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
+				statusBar.setText("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
 			}
 		} catch (Exception e) {
 			logger.error("异常:" + e);
@@ -1798,7 +1828,7 @@ public class MainWindow {
 	// 初始化选择的接口
 	private void initSelectInterface(int modindex, int interfaceindex) {
 		// 初始化前要判断是否之前有保存过，如果有保存过，则初始化保存的那份数据
-		ApiItem apiItem = tempSavePars.get(ApiUtils.MD5(modSelectCombo.getText() + interfaceCombo.getText()));
+		ApiItem apiItem = tempSavePars.get(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getUuid());
 		if (null != apiItem) {
 			logger.debug("此接口有之前保存的数据，读取保存的数据");
 			interfaceContextPath = apiItem.getAddress();

@@ -15,19 +15,28 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class ApiItem {
 
 	@JSONField(ordinal = 1)
-	private String name;
-
+	private String uuid;
 	@JSONField(ordinal = 2)
-	private String explain;
+	private String name;
 	@JSONField(ordinal = 3)
-	private String address;
+	private String explain;
 	@JSONField(ordinal = 4)
-	private String method;
+	private String address;
 	@JSONField(ordinal = 5)
+	private String method;
+	@JSONField(ordinal = 6)
 	private ArrayList<ApiPar> parameters;
 
 	public ApiItem() {
 
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getName() {

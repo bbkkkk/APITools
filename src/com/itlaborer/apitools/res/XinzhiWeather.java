@@ -6,6 +6,7 @@ import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiList;
 import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.utils.ApiUtils;
 
 /**
  * 心知天气API，作为示例接口文档
@@ -24,6 +25,7 @@ public class XinzhiWeather {
 		this.apidoc = new ApiDoc();
 		// 第一个接口
 		ApiItem nowWeather = new ApiItem();
+		nowWeather.setUuid(ApiUtils.getUUID());
 		nowWeather.setAddress("now.json");
 		nowWeather.setName("天气实况");
 		nowWeather.setExplain("可以通过此接口获取到全国的城市的当日天气信息");
@@ -34,6 +36,7 @@ public class XinzhiWeather {
 		nowWeather.setParameters(nowWeatherPars);
 		// 第二个接口
 		ApiItem daily = new ApiItem();
+		daily.setUuid(ApiUtils.getUUID());
 		daily.setAddress("daily.json");
 		daily.setName("逐日预报和历史");
 		daily.setExplain("可以通过此接口获取到全国的城市的近七日天气信息");
@@ -61,7 +64,7 @@ public class XinzhiWeather {
 		apidoc.setApilist(apiList);
 		apidoc.setDoc_name("心知天气");
 		apidoc.setApi_version("V3");
-		apidoc.setDecode_version("1.0");
+		apidoc.setDecode_version(1.1);
 	}
 
 	public ApiDoc getApidoc() {

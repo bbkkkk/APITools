@@ -15,6 +15,7 @@ import java.security.MessageDigest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -524,5 +525,11 @@ public class ApiUtils {
 			public void dropAccept(DropTargetEvent event) {
 			}
 		});
+	}
+
+	// UUID生成器
+	public static String getUUID() {
+		UUID uuid = UUID.randomUUID();
+		return uuid.toString();
 	}
 }
