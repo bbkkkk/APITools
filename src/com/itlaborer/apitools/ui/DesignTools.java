@@ -35,6 +35,7 @@ public class DesignTools {
 
 	/**
 	 * Create contents of the window.
+	 * 
 	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {

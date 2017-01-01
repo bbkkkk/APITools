@@ -3,6 +3,7 @@ package com.itlaborer.apitools.ui;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,8 +37,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
@@ -66,6 +69,7 @@ import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.Base64Utils;
 import com.itlaborer.apitools.utils.JsonFormatUtils;
 import com.itlaborer.apitools.utils.ParamUtils;
 import com.itlaborer.apitools.utils.PropertiesUtils;
@@ -76,7 +80,7 @@ import net.dongliu.requests.RawResponse;
  * 程序主界面
  * 
  * @author liudewei[793554262@qq.com]
- * @version 1.0
+ * @version 1.8
  * @since 1.0
  */
 
@@ -219,7 +223,6 @@ public class MainWindow {
 		// 工具-接口列表编辑
 		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
 		menuItemApiListEdit.setText("接口设计器");
-		menuItemApiListEdit.setEnabled(false);
 		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -470,6 +473,7 @@ public class MainWindow {
 			}
 		});
 		menuItem_7.setText("新增一个模块");
+
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		interfaceCombo.setBounds(237, 3, 245, 25);
@@ -700,6 +704,7 @@ public class MainWindow {
 		form = new Text[parsSum][2];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
+			final int b = i;
 			// 第一列
 			TableEditor editor0 = new TableEditor(formTable);
 			label[i] = new Label(formTable, SWT.NONE | SWT.CENTER);
@@ -707,6 +712,302 @@ public class MainWindow {
 			label[i].setText(new DecimalFormat("000").format(i + 1));
 			editor0.grabHorizontal = true;
 			editor0.setEditor(label[i], items[i], 0);
+
+			Menu frozenPar = new Menu(label[i]);
+			label[i].setMenu(frozenPar);
+			final MenuItem menuItem1SubFrozen = new MenuItem(frozenPar, SWT.NONE);
+			menuItem1SubFrozen.setText("冻结此参数");
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			MenuItem mntmKey = new MenuItem(frozenPar, SWT.CASCADE);
+			mntmKey.setText("参数名操作");
+
+			Menu menuKey = new Menu(mntmKey);
+			mntmKey.setMenu(menuKey);
+
+			MenuItem menuItemKeyUrlEncode = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyUrlEncode.setText("UrlEncode");
+			menuItemKeyUrlEncode.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						try {
+							form[b][0].setText(URLEncoder.encode(form[b][0].getText(), "UTF-8"));
+						} catch (UnsupportedEncodingException e1) {
+							logger.debug("转码异常", e1);
+						}
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyUrlDecode = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyUrlDecode.setText("UrlDecode");
+			menuItemKeyUrlDecode.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						try {
+							form[b][0].setText(URLDecoder.decode(form[b][0].getText(), "UTF-8"));
+						} catch (UnsupportedEncodingException e1) {
+							logger.debug("解码异常", e1);
+						}
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyBase64 = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyBase64.setText("Base64转码");
+			menuItemKeyBase64.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						form[b][0].setText(Base64Utils.encode(form[b][0].getText().getBytes()));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyBase64D = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyBase64D.setText("Base64解码");
+			menuItemKeyBase64D.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						byte[] bytes = Base64Utils.decode(form[b][0].getText());
+						form[b][0].setText((null == bytes) ? form[b][0].getText() : new String(bytes));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyMD5Cap = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyMD5Cap.setText("MD5大写");
+			menuItemKeyMD5Cap.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						form[b][0].setText(ApiUtils.MD5(form[b][0].getText()));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyMD5Low = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyMD5Low.setText("MD5小写");
+			menuItemKeyMD5Low.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						form[b][0].setText(ApiUtils.MD5(form[b][0].getText()).toLowerCase());
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemKeyTrim = new MenuItem(menuKey, SWT.NONE);
+			menuItemKeyTrim.setText("TRIM");
+			menuItemKeyTrim.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+						form[b][0].setText(form[b][0].getText().trim());
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+			///////////////////////////////////////////////////////////////////////////////////
+			MenuItem mntmValue = new MenuItem(frozenPar, SWT.CASCADE);
+			mntmValue.setText("参数值操作");
+
+			Menu menuValue = new Menu(mntmValue);
+			mntmValue.setMenu(menuValue);
+
+			MenuItem menuItemValueUrlEncode = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueUrlEncode.setText("UrlEncode");
+			menuItemValueUrlEncode.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						try {
+							form[b][1].setText(URLEncoder.encode(form[b][1].getText(), "UTF-8"));
+						} catch (UnsupportedEncodingException e1) {
+							logger.debug("转码异常", e1);
+						}
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueUrlDecode = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueUrlDecode.setText("UrlDecode");
+			menuItemValueUrlDecode.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						try {
+							form[b][1].setText(URLDecoder.decode(form[b][1].getText(), "UTF-8"));
+						} catch (UnsupportedEncodingException e1) {
+							logger.debug("解码异常", e1);
+						}
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueBase64 = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueBase64.setText("Base64转码");
+			menuItemValueBase64.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(Base64Utils.encode(form[b][1].getText().getBytes()));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueBase64D = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueBase64D.setText("Base64解码");
+			menuItemValueBase64D.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						byte[] bytes = Base64Utils.decode(form[b][1].getText());
+						form[b][1].setText((null == bytes) ? form[b][1].getText() : new String(bytes));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueMD5Cap = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueMD5Cap.setText("MD5大写");
+			menuItemValueMD5Cap.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()));
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueMD5Low = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueMD5Low.setText("MD5小写");
+			menuItemValueMD5Low.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()).toLowerCase());
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+
+			MenuItem menuItemValueTrim = new MenuItem(menuValue, SWT.NONE);
+			menuItemValueTrim.setText("TRIM");
+			menuItemValueTrim.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(form[b][1].getText().trim());
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+			//////////////////////////////////////////////////////////////////////////
+			// 参数冻结解冻事件
+			menuItem1SubFrozen.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (StringUtils.isEmpty(form[b][0].getText())) {
+						statusBar.setText("空的输入框，放弃冻结");
+					} else {
+						if (StringUtils.equals(menuItem1SubFrozen.getText(), "冻结此参数")) {
+							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+							form[b][0].setEnabled(false);
+							form[b][1].setEnabled(false);
+							menuItem1SubFrozen.setText("解冻此参数");
+							statusBar.setText("冻结参数完毕");
+						} else if (StringUtils.equals(menuItem1SubFrozen.getText(), "解冻此参数")) {
+							label[b].setToolTipText("");
+							form[b][0].setEnabled(true);
+							form[b][1].setEnabled(true);
+							menuItem1SubFrozen.setText("冻结此参数");
+							statusBar.setText("解冻参数完毕");
+						}
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+
+				}
+			});
+
+			// 鼠标事件
+			label[i].addMouseTrackListener(new MouseTrackListener() {
+				@Override
+				public void mouseHover(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
 
 			// 第二列
 			TableEditor editor1 = new TableEditor(formTable);
@@ -720,8 +1021,7 @@ public class MainWindow {
 			form[i][1].setText(items[i].getText(2));
 			editor2.grabHorizontal = true;
 			editor2.setEditor(form[i][1], items[i], 2);
-			// 设置焦点变色
-			final int b = i;
+			// 设置焦点变色--鼠标和焦点
 			form[i][0].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
@@ -752,9 +1052,50 @@ public class MainWindow {
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
-		}
-		// 接口返回内容显示区域
+			form[i][0].addMouseTrackListener(new MouseTrackListener() {
 
+				@Override
+				public void mouseHover(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
+
+			form[i][1].addMouseTrackListener(new MouseTrackListener() {
+
+				@Override
+				public void mouseHover(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
+		}
+
+		// 接口返回内容显示区域
 		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
 		cTabFolder.setBounds(487, 62, 649, 530);
 		cTabFolder.setSelectionBackground(

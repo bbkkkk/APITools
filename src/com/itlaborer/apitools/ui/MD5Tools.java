@@ -1,5 +1,6 @@
 package com.itlaborer.apitools.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -66,7 +67,7 @@ public class MD5Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("加密串:" + styledText.getText());
 				styledText.setText(
-						styledText.getText().length() == 0 ? "" : (ApiUtils.MD5(styledText.getText()).toLowerCase()));
+						StringUtils.isEmpty(styledText.getText())?"" : (ApiUtils.MD5(styledText.getText()).toLowerCase()));
 			}
 		});
 
@@ -78,7 +79,7 @@ public class MD5Tools extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("加密串:" + styledText.getText());
-				styledText.setText(styledText.getText().length() == 0 ? "" : ApiUtils.MD5(styledText.getText()));
+				styledText.setText(StringUtils.isEmpty(styledText.getText())? "" : ApiUtils.MD5(styledText.getText()));
 			}
 		});
 	}
