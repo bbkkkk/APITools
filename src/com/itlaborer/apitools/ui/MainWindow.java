@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -226,6 +225,7 @@ public class MainWindow {
 		// 工具-接口列表编辑
 		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
 		menuItemApiListEdit.setText("接口设计器");
+		menuItemApiListEdit.setEnabled(false);
 		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
