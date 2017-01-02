@@ -773,7 +773,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(Base64Utils.encode(form[b][0].getText()));
+						form[b][0].setText(Base64Utils.encodeString(form[b][0].getText()));
 					}
 				}
 
@@ -788,7 +788,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(Base64Utils.decode(form[b][0].getText()));
+						form[b][0].setText(Base64Utils.decodeString(form[b][0].getText()));
 					}
 				}
 
@@ -892,7 +892,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(Base64Utils.encode(form[b][1].getText()));
+						form[b][1].setText(Base64Utils.encodeString(form[b][1].getText()));
 					}
 				}
 
@@ -907,7 +907,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(Base64Utils.decode(form[b][1].getText()));
+						form[b][1].setText(Base64Utils.decodeString(form[b][1].getText()));
 					}
 				}
 
@@ -1970,6 +1970,19 @@ public class MainWindow {
 							form[j][0].setText("");
 							form[j][0].setToolTipText("");
 							form[j][1].setText("");
+							// 判断是否做过冻结，如果是，则需要移动锁定标志位
+							if ((form[j][0].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
+								label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+								// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+								form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+								form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+								menuItem1SubFrozen[i].setText("解冻此参数");
+								label[j].setToolTipText("");
+								// label[j].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+								form[j][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+								form[j][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+								menuItem1SubFrozen[j].setText("冻结此参数");
+							}
 							break;
 						} else {
 							// 落花流水忽西东

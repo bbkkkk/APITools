@@ -70,7 +70,7 @@ public class Base64Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isNotEmpty(styledText.getText())) {
 					logger.debug("编码串:" + styledText.getText());
-					styledText.setText(Base64Utils.encode(styledText.getText()));
+					styledText.setText(Base64Utils.encodeString(styledText.getText()));
 				}
 			}
 		});
@@ -82,7 +82,7 @@ public class Base64Tools extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Base64解码-----
-				styledText.setText(Base64Utils.decode(styledText.getText()));
+				styledText.setText(Base64Utils.decodeString(styledText.getText()));
 			}
 		});
 	}

@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class Base64Utils {
 
-	// 使用jdk8自带的base64工具类
-	public static String encode(String string) {
+	// 使用jdk8自带的base64工具类编码
+	public static String encodeString(String string) {
 		if (StringUtils.isEmpty(string)) {
 			return "";
 		} else {
@@ -21,7 +21,8 @@ public final class Base64Utils {
 		}
 	}
 
-	public static String decode(String string) {
+	// 使用jdk8自带的base64工具类解码
+	public static String decodeString(String string) {
 		if (StringUtils.isEmpty(string)) {
 			return "";
 		} else {
