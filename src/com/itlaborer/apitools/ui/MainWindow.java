@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -137,6 +136,7 @@ public class MainWindow {
 	private Table formTable;
 	private Text[][] form;
 	private Label[] label;
+	private MenuItem[] menuItem1SubFrozen;
 	private MenuItem serverSelect;
 	private Menu servers;
 	private MenuItem apiSelect;
@@ -704,6 +704,7 @@ public class MainWindow {
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
 		form = new Text[parsSum][2];
+		menuItem1SubFrozen = new MenuItem[parsSum];
 		frozenFlag = new boolean[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
@@ -718,8 +719,8 @@ public class MainWindow {
 
 			Menu frozenPar = new Menu(label[i]);
 			label[i].setMenu(frozenPar);
-			final MenuItem menuItem1SubFrozen = new MenuItem(frozenPar, SWT.NONE);
-			menuItem1SubFrozen.setText("冻结此参数");
+			menuItem1SubFrozen[i] = (MenuItem) new MenuItem(frozenPar, SWT.NONE);
+			menuItem1SubFrozen[i].setText("冻结此参数");
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			MenuItem mntmKey = new MenuItem(frozenPar, SWT.CASCADE);
@@ -963,29 +964,29 @@ public class MainWindow {
 			});
 			//////////////////////////////////////////////////////////////////////////
 			// 参数冻结解冻事件
-			menuItem1SubFrozen.addSelectionListener(new SelectionListener() {
+			menuItem1SubFrozen[i].addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isEmpty(form[b][0].getText())) {
 						statusBar.setText("空的输入框，放弃冻结");
 					} else {
-						if (StringUtils.equals(menuItem1SubFrozen.getText(), "冻结此参数")) {
+						if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "冻结此参数")) {
 							// 冻结标志
 							frozenFlag[b] = true;
 							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-							menuItem1SubFrozen.setText("解冻此参数");
+							menuItem1SubFrozen[b].setText("解冻此参数");
 							statusBar.setText("冻结参数完毕");
-						} else if (StringUtils.equals(menuItem1SubFrozen.getText(), "解冻此参数")) {
+						} else if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "解冻此参数")) {
 							// 解冻标志
 							frozenFlag[b] = false;
 							label[b].setToolTipText("");
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-							menuItem1SubFrozen.setText("冻结此参数");
+							menuItem1SubFrozen[b].setText("冻结此参数");
 							statusBar.setText("解冻参数完毕");
 						}
 					}
@@ -1284,6 +1285,9 @@ public class MainWindow {
 							.get(interfaceCombo.getSelectionIndex()).getAddress());
 					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
+					// 重置参数时，删除内存中临时保存的数据
+					tempSavePars.remove(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+							.get(interfaceCombo.getSelectionIndex()).getUuid());
 				} catch (Exception e2) {
 					logger.error("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
 				}
@@ -1599,6 +1603,7 @@ public class MainWindow {
 			return;
 		}
 		try {
+			// 将临时区的内容拷贝到加载的文档里
 			apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi().set(interfaceCombo.getSelectionIndex(),
 					tempSavePars.get(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
@@ -1939,6 +1944,7 @@ public class MainWindow {
 		parsText.setText("");
 		for (int i = 0; i < parsSum; i++) {
 			frozenFlag[i] = false;
+			menuItem1SubFrozen[i].setText("冻结此参数");
 			form[i][0].setText("");
 			form[i][0].setToolTipText("");
 			form[i][1].setText("");
