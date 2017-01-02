@@ -42,6 +42,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -111,7 +112,6 @@ public class MainWindow {
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
 	private HashMap<String, ApiItem> tempSavePars;
-	private boolean[] frozenFlag;
 
 	// 界面组件
 	private final FormToolkit formToolkit;
@@ -705,7 +705,6 @@ public class MainWindow {
 		label = new Label[parsSum];
 		form = new Text[parsSum][2];
 		menuItem1SubFrozen = new MenuItem[parsSum];
-		frozenFlag = new boolean[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
 			final int b = i;
@@ -972,7 +971,6 @@ public class MainWindow {
 					} else {
 						if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "冻结此参数")) {
 							// 冻结标志
-							frozenFlag[b] = true;
 							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
@@ -981,7 +979,6 @@ public class MainWindow {
 							statusBar.setText("冻结参数完毕");
 						} else if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "解冻此参数")) {
 							// 解冻标志
-							frozenFlag[b] = false;
 							label[b].setToolTipText("");
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
@@ -1923,7 +1920,8 @@ public class MainWindow {
 	private HashMap<String, String> getParameters() {
 		HashMap<String, String> par = new HashMap<String, String>();
 		for (int i = 0; i < parsSum; i++) {
-			if ((!(form[i][0].getText().isEmpty() || form[i][1].getText().isEmpty())) && !frozenFlag[i]) {
+			if (!(form[i][0].getText().isEmpty() || form[i][1].getText().isEmpty())
+					&& !(form[i][0].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
 				par.put(form[i][0].getText(), form[i][1].getText());
 			}
 		}
@@ -1943,7 +1941,6 @@ public class MainWindow {
 		statusBar.setText("");
 		parsText.setText("");
 		for (int i = 0; i < parsSum; i++) {
-			frozenFlag[i] = false;
 			menuItem1SubFrozen[i].setText("冻结此参数");
 			form[i][0].setText("");
 			form[i][0].setToolTipText("");
