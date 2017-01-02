@@ -66,7 +66,7 @@ public class XinzhiWeather {
 		apidoc.setDoc_name("心知天气");
 		apidoc.setApi_version("V3");
 		apidoc.setDecode_version(1.1);
-		apidoc.setBaseurl("https://api.thinkpage.cn/v3/weather/|https://api.thinkpage.cn/v3/weather/");
+		apidoc.setServerlist("https://api.thinkpage.cn/v3/weather/|https://api.thinkpage.cn/v3/weather/");
 	}
 
 	public ApiDoc getApidoc() {

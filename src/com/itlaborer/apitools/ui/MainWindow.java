@@ -1750,9 +1750,9 @@ public class MainWindow {
 				apiDoc.setDecode_version(1.1);
 				// 更新地址到接口文档
 				if (StringUtils.isEmpty(properties.getProperty("apiaddress"))) {
-					apiDoc.setBaseurl("服务器地址列表请维护在这里,多个服务器之间用竖划线分割");
+					apiDoc.setServerlist("服务器地址列表请维护在这里,多个服务器之间用竖划线分割");
 				} else {
-					apiDoc.setBaseurl(properties.getProperty("apiaddress"));
+					apiDoc.setServerlist(properties.getProperty("apiaddress"));
 				}
 				// 保存
 				ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
@@ -1762,7 +1762,7 @@ public class MainWindow {
 			if (apiDoc.getDecode_version().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getApi_version());
 				// 初始化历史记录
-				initServerList(apiDoc.getBaseurl());
+				initServerList(apiDoc.getServerlist());
 				initHistory();
 				initMod();
 			} else {
