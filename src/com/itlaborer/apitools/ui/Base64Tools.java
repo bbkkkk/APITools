@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Base64工具界面
+ * 
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
@@ -69,7 +70,7 @@ public class Base64Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isNotEmpty(styledText.getText())) {
 					logger.debug("编码串:" + styledText.getText());
-					styledText.setText(Base64Utils.encode(styledText.getText().getBytes()));
+					styledText.setText(Base64Utils.encode(styledText.getText()));
 				}
 			}
 		});
@@ -80,10 +81,8 @@ public class Base64Tools extends Dialog {
 		decodeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//Base64解码-----
-				byte[] bytes = Base64Utils.decode(styledText.getText());
-				styledText.setText((null == bytes) ? styledText.getText() : new String(bytes));
-
+				// Base64解码-----
+				styledText.setText(Base64Utils.decode(styledText.getText()));
 			}
 		});
 	}

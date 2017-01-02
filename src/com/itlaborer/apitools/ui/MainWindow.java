@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -772,7 +773,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(Base64Utils.encode(form[b][0].getText().getBytes()));
+						form[b][0].setText(Base64Utils.encode(form[b][0].getText()));
 					}
 				}
 
@@ -787,8 +788,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						byte[] bytes = Base64Utils.decode(form[b][0].getText());
-						form[b][0].setText((null == bytes) ? form[b][0].getText() : new String(bytes));
+						form[b][0].setText(Base64Utils.decode(form[b][0].getText()));
 					}
 				}
 
@@ -892,7 +892,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(Base64Utils.encode(form[b][1].getText().getBytes()));
+						form[b][1].setText(Base64Utils.encode(form[b][1].getText()));
 					}
 				}
 
@@ -907,8 +907,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						byte[] bytes = Base64Utils.decode(form[b][1].getText());
-						form[b][1].setText((null == bytes) ? form[b][1].getText() : new String(bytes));
+						form[b][1].setText(Base64Utils.decode(form[b][1].getText()));
 					}
 				}
 
@@ -1715,6 +1714,7 @@ public class MainWindow {
 							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 						}
 						serverItem.addSelectionListener(new SelectionAdapter() {
+
 							@Override
 							public void widgetSelected(SelectionEvent e) {
 								// 设置焦点
@@ -1733,7 +1733,9 @@ public class MainWindow {
 				}
 			}
 			this.loadReturnCodeFile = properties.getProperty("returncodefile");
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
 		}
