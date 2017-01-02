@@ -1739,15 +1739,21 @@ public class MainWindow {
 			// 1.0------>1.1
 			if (apiDoc.getDecode_version() == 1.0) {
 				logger.debug("加载了低版本的api文档，开始更新");
+				/////////////////////// 1.0升级到1.1////////////////////////////////////
 				logger.debug("开始将接口文档从1.0升级到1.1");
 				// 补正uuid
 				for (int i = 0; i < apiDoc.getApilist().size(); i++) {
-					for (int b = 0; b < apiDoc.getApilist().get(i).getApi().size(); b++) {
-						apiDoc.getApilist().get(i).getApi().get(b).setUuid(ApiUtils.getUUID());
+					// 判断空模块
+					if (null != apiDoc.getApilist().get(i).getApi()) {
+						for (int b = 0; b < apiDoc.getApilist().get(i).getApi().size(); b++) {
+							apiDoc.getApilist().get(i).getApi().get(b).setUuid(ApiUtils.getUUID());
+						}
 					}
 				}
 				// 更新解析版本
 				apiDoc.setDecode_version(1.1);
+				///////////////////////// 1.0升级到1.1
+				///////////////////////// END////////////////////////////////
 				// 更新地址到接口文档
 				if (StringUtils.isEmpty(properties.getProperty("apiaddress"))) {
 					apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
