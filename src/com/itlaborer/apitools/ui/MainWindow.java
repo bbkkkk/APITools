@@ -97,6 +97,7 @@ public class MainWindow {
 	// 其他成员变量-
 	private int httpCode, parsSum;
 	private long httpTime;
+	private Properties properties;
 	private String applicationName;
 	private String serverAdress;
 	private String apiJsonFile;
@@ -153,6 +154,7 @@ public class MainWindow {
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 196;
 		this.loadHistorySum = 30;
+		this.serverAdress = "";
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -286,13 +288,13 @@ public class MainWindow {
 
 		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
 		menuItemCookie.setText("Cookie");
-		
+
 		// API列表
 		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		apiSelect.setText("接口列表");
 		apis = new Menu(apiSelect);
 		apiSelect.setMenu(apis);
-		
+
 		// 服务器列表
 		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		serverSelect.setText("服务器列表");
@@ -1665,7 +1667,7 @@ public class MainWindow {
 		// 此处开始加载配置文件内容
 		try {
 			// 加载配置
-			Properties properties = PropertiesUtils.ReadProperties(configFile);
+			properties = PropertiesUtils.ReadProperties(configFile);
 
 			// 配置历史记录条数
 			if ((null != properties.getProperty("hsitorysum"))
@@ -1699,37 +1701,6 @@ public class MainWindow {
 					}
 				} else {
 					this.apiJsonFile = null;
-				}
-			}
-			// 加载地址列表
-			loadServerAdressArray = properties.getProperty("apiaddress").split(",");
-			if (null != loadServerAdressArray && loadServerAdressArray.length > 0) {
-				if (StringUtils.isNotEmpty(loadServerAdressArray[0])) {
-					this.serverAdress = loadServerAdressArray[0];
-					// 初始化服务器下拉选择框
-					for (int i = 0; i < loadServerAdressArray.length; i++) {
-						final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
-						serverItem.setText(loadServerAdressArray[i]);
-						if (i == 0) {
-							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
-						}
-						serverItem.addSelectionListener(new SelectionAdapter() {
-
-							@Override
-							public void widgetSelected(SelectionEvent e) {
-								// 设置焦点
-								for (int i = 0; i < servers.getItemCount(); i++) {
-									servers.getItem(i).setImage(null);
-								}
-								serverItem.setImage(
-										SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
-								serverAdress = serverItem.getText();
-								urlText.setText(serverAdress + interfaceContextPath);
-							}
-						});
-					}
-				} else {
-					this.serverAdress = "";
 				}
 			}
 			this.loadReturnCodeFile = properties.getProperty("returncodefile");
@@ -1777,6 +1748,12 @@ public class MainWindow {
 				}
 				// 更新解析版本
 				apiDoc.setDecode_version(1.1);
+				// 更新地址到接口文档
+				if (StringUtils.isEmpty(properties.getProperty("apiaddress"))) {
+					apiDoc.setBaseurl("服务器地址列表请维护在这里,多个服务器之间用竖划线分割");
+				} else {
+					apiDoc.setBaseurl(properties.getProperty("apiaddress"));
+				}
 				// 保存
 				ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
@@ -1785,6 +1762,7 @@ public class MainWindow {
 			if (apiDoc.getDecode_version().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getApi_version());
 				// 初始化历史记录
+				initServerList(apiDoc.getBaseurl());
 				initHistory();
 				initMod();
 			} else {
@@ -1792,7 +1770,50 @@ public class MainWindow {
 				statusBar.setText("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
 			}
 		} catch (Exception e) {
-			logger.error("异常:" + e);
+			logger.error("异常:", e);
+		}
+	}
+
+	// 地址列表加载方法
+	private void initServerList(String serverlist) {
+		// 移除之前的数据
+		for (MenuItem menuItem : servers.getItems()) {
+			menuItem.dispose();
+		}
+		// 加载地址列表
+		if (null == serverlist) {
+			logger.info("没有读取到服务器信息，调过加载");
+			return;
+		}
+		logger.info("加载到的服务器列表:" + serverlist);
+		loadServerAdressArray = serverlist.split("\\|");
+		if (null != loadServerAdressArray && loadServerAdressArray.length > 0) {
+			if (StringUtils.isNotEmpty(loadServerAdressArray[0])) {
+				this.serverAdress = loadServerAdressArray[0];
+				// 初始化服务器下拉选择框
+				for (int i = 0; i < loadServerAdressArray.length; i++) {
+					final MenuItem serverItem = new MenuItem(servers, SWT.NONE);
+					serverItem.setText(loadServerAdressArray[i]);
+					if (i == 0) {
+						serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
+					}
+					serverItem.addSelectionListener(new SelectionAdapter() {
+
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							// 设置焦点
+							for (int i = 0; i < servers.getItemCount(); i++) {
+								servers.getItem(i).setImage(null);
+							}
+							serverItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
+							serverAdress = serverItem.getText();
+							urlText.setText(serverAdress + interfaceContextPath);
+						}
+					});
+				}
+			} else {
+				this.serverAdress = "";
+			}
 		}
 	}
 

@@ -21,8 +21,7 @@ public class XinzhiWeather {
 	private ApiDoc apidoc;
 
 	public XinzhiWeather() {
-		// 模板里的接口列表是取自心知天气的接口，感谢感谢
-		this.apidoc = new ApiDoc();
+
 		// 第一个接口
 		ApiItem nowWeather = new ApiItem();
 		nowWeather.setUuid(ApiUtils.getUUID());
@@ -60,11 +59,14 @@ public class XinzhiWeather {
 		ArrayList<ApiList> apiList = new ArrayList<ApiList>();
 		apiList.add(xinzhi);
 
+		// 模板里的接口列表是取自心知天气的接口，感谢感谢
+		this.apidoc = new ApiDoc();
 		// 加入接口文档
 		apidoc.setApilist(apiList);
 		apidoc.setDoc_name("心知天气");
 		apidoc.setApi_version("V3");
 		apidoc.setDecode_version(1.1);
+		apidoc.setBaseurl("https://api.thinkpage.cn/v3/weather/|https://api.thinkpage.cn/v3/weather/");
 	}
 
 	public ApiDoc getApidoc() {

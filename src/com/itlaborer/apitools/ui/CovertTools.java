@@ -212,6 +212,7 @@ public class CovertTools extends Dialog {
 		ApiDoc apiDoc = new ApiDoc();
 		apiDoc.setApi_version(apiDocVersion);
 		apiDoc.setDecode_version(1.1);
+		apiDoc.setBaseurl("服务器地址列表请维护在这里,多个服务器之间用竖划线分割");
 		// 判断读取的是什么文件
 		// html版本
 		if (path.getPath().substring(path.getPath().lastIndexOf(".") + 1).equals("html")

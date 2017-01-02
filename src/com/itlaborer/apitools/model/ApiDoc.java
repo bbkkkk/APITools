@@ -23,6 +23,8 @@ public class ApiDoc {
 	@JSONField(ordinal = 3)
 	private String api_version;
 	@JSONField(ordinal = 4)
+	private String baseurl;
+	@JSONField(ordinal = 5)
 	private ArrayList<ApiList> apilist;
 
 	public ApiDoc() {
@@ -51,6 +53,14 @@ public class ApiDoc {
 
 	public void setApi_version(String api_version) {
 		this.api_version = api_version;
+	}
+
+	public String getBaseurl() {
+		return baseurl;
+	}
+
+	public void setBaseurl(String baseurl) {
+		this.baseurl = baseurl;
 	}
 
 	public ArrayList<ApiList> getApilist() {
