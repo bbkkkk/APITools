@@ -1750,7 +1750,7 @@ public class MainWindow {
 				apiDoc.setDecode_version(1.1);
 				// 更新地址到接口文档
 				if (StringUtils.isEmpty(properties.getProperty("apiaddress"))) {
-					apiDoc.setServerlist("服务器地址列表请维护在这里,多个服务器之间用竖划线分割");
+					apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
 				} else {
 					apiDoc.setServerlist(properties.getProperty("apiaddress"));
 				}
