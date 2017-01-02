@@ -286,18 +286,18 @@ public class MainWindow {
 
 		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
 		menuItemCookie.setText("Cookie");
-
-		// 服务器列表
-		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
-		serverSelect.setText("服务器列表");
-		servers = new Menu(serverSelect);
-		serverSelect.setMenu(servers);
-
+		
 		// API列表
 		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
 		apiSelect.setText("接口列表");
 		apis = new Menu(apiSelect);
 		apiSelect.setMenu(apis);
+		
+		// 服务器列表
+		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
+		serverSelect.setText("服务器列表");
+		servers = new Menu(serverSelect);
+		serverSelect.setMenu(servers);
 
 		MenuItem menuItem = new MenuItem(rootMenu, SWT.NONE);
 		menuItem.addSelectionListener(new SelectionAdapter() {
