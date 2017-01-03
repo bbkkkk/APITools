@@ -17,58 +17,58 @@ import com.itlaborer.apitools.utils.JsonFormatUtils;
 public class ApiDoc {
 
 	@JSONField(ordinal = 1)
-	private String doc_name;
+	private Double decodeversion;
 	@JSONField(ordinal = 2)
-	private Double decode_version;
+	private String apiname;
 	@JSONField(ordinal = 3)
-	private String api_version;
+	private String apiversion;
 	@JSONField(ordinal = 4)
 	private String serverlist;
 	@JSONField(ordinal = 5)
-	private ArrayList<ApiList> apilist;
+	private ArrayList<ApiMod> item;
 
 	public ApiDoc() {
 
 	}
 
-	public String getDoc_name() {
-		return doc_name;
+	public Double getDecodeversion() {
+		return decodeversion;
 	}
 
-	public void setDoc_name(String doc_name) {
-		this.doc_name = doc_name;
+	public void setDecodeversion(Double decode_version) {
+		this.decodeversion = decode_version;
 	}
 
-	public Double getDecode_version() {
-		return decode_version;
+	public String getApiname() {
+		return apiname;
 	}
 
-	public void setDecode_version(Double decode_version) {
-		this.decode_version = decode_version;
+	public void setApiname(String api_name) {
+		this.apiname = api_name;
 	}
 
-	public String getApi_version() {
-		return api_version;
+	public String getApiversion() {
+		return apiversion;
 	}
 
-	public void setApi_version(String api_version) {
-		this.api_version = api_version;
+	public void setApiversion(String api_version) {
+		this.apiversion = api_version;
 	}
 
 	public String getServerlist() {
 		return serverlist;
 	}
 
-	public void setServerlist(String baseurl) {
-		this.serverlist = baseurl;
+	public void setServerlist(String serverlist) {
+		this.serverlist = serverlist;
 	}
 
-	public ArrayList<ApiList> getApilist() {
-		return apilist;
+	public ArrayList<ApiMod> getItem() {
+		return item;
 	}
 
-	public void setApilist(ArrayList<ApiList> apilist) {
-		this.apilist = apilist;
+	public void setItem(ArrayList<ApiMod> item) {
+		this.item = item;
 	}
 
 	public String toString() {

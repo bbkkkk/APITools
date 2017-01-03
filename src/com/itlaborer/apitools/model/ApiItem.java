@@ -19,9 +19,9 @@ public class ApiItem {
 	@JSONField(ordinal = 2)
 	private String name;
 	@JSONField(ordinal = 3)
-	private String explain;
+	private String description;
 	@JSONField(ordinal = 4)
-	private String address;
+	private String path;
 	@JSONField(ordinal = 5)
 	private String method;
 	@JSONField(ordinal = 6)
@@ -47,20 +47,20 @@ public class ApiItem {
 		this.name = name;
 	}
 
-	public String getExplain() {
-		return explain;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setExplain(String explain) {
-		this.explain = explain;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getPath() {
+		return path;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getMethod() {

@@ -63,7 +63,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
-import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiMod;
 import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.res.KeyCode;
 import com.itlaborer.apitools.res.Resource;
@@ -108,7 +108,7 @@ public class MainWindow {
 	private boolean windowFocusFlag = false;
 	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
-	private ApiList history;
+	private ApiMod history;
 	private Properties apiReturnCode;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
@@ -361,8 +361,8 @@ public class MainWindow {
 				} else {
 					// 重名判断
 					boolean flag = false;
-					for (int i = 0; i < apiDoc.getApilist().size(); i++) {
-						if (StringUtils.equals(apiDoc.getApilist().get(i).getName(), nameFromDialog)
+					for (int i = 0; i < apiDoc.getItem().size(); i++) {
+						if (StringUtils.equals(apiDoc.getItem().get(i).getName(), nameFromDialog)
 								&& (i != modSelectCombo.getSelectionIndex())) {
 							flag = true;
 							break;
@@ -373,7 +373,7 @@ public class MainWindow {
 						statusBar.setText("重命名时发现重名模块，放弃重命名");
 					} else {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
-						apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
 						statusBar.setText("模块名被修改为:" + nameFromDialog);
@@ -395,7 +395,7 @@ public class MainWindow {
 						int modindex = modSelectCombo.getSelectionIndex();
 						logger.debug("开始删除模块:" + modSelectCombo.getText());
 						// 移除
-						apiDoc.getApilist().remove(modindex);
+						apiDoc.getItem().remove(modindex);
 						// 保存
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
@@ -447,8 +447,8 @@ public class MainWindow {
 					} else {
 						// 重名判断
 						boolean flag = false;
-						for (int i = 0; i < apiDoc.getApilist().size(); i++) {
-							if (StringUtils.equals(apiDoc.getApilist().get(i).getName(), modname)
+						for (int i = 0; i < apiDoc.getItem().size(); i++) {
+							if (StringUtils.equals(apiDoc.getItem().get(i).getName(), modname)
 									&& (i != modSelectCombo.getSelectionIndex())) {
 								flag = true;
 								break;
@@ -459,9 +459,9 @@ public class MainWindow {
 							statusBar.setText("不能添加重名的模块");
 						} else {
 							modSelectCombo.add(modname);
-							ApiList apiList = new ApiList();
+							ApiMod apiList = new ApiMod();
 							apiList.setName(modname);
-							apiDoc.getApilist().add(apiList);
+							apiDoc.getItem().add(apiList);
 							try {
 								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 										JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
@@ -515,7 +515,7 @@ public class MainWindow {
 				} else {
 					// 重名判断
 					boolean flag = false;
-					ArrayList<ApiItem> items = apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi();
+					ArrayList<ApiItem> items = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem();
 					for (int i = 0; i < items.size(); i++) {
 						if (StringUtils.equals(items.get(i).getName(), nameFromDialog)
 								&& (i != interfaceCombo.getSelectionIndex())) {
@@ -528,7 +528,7 @@ public class MainWindow {
 						statusBar.setText("重命名时发现重名接口，放弃重命名");
 					} else {
 						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
-						apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
@@ -552,7 +552,7 @@ public class MainWindow {
 						int interfaceindex = interfaceCombo.getSelectionIndex();
 						logger.debug("开始删除接口:" + modSelectCombo.getText() + "模块下的" + interfaceCombo.getText());
 						// 移除
-						apiDoc.getApilist().get(modindex).getApi().remove(interfaceindex);
+						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
@@ -1279,12 +1279,12 @@ public class MainWindow {
 				// 在别的ToolTipText更新时，鼠标点击所在的Button的ToolTipText会不停地闪烁，需要纠正
 				parsClearButton.setToolTipText(null);
 				try {
-					urlText.setText(serverAdress + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
-							.get(interfaceCombo.getSelectionIndex()).getAddress());
-					initParameters(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+					urlText.setText(serverAdress + apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+							.get(interfaceCombo.getSelectionIndex()).getPath());
+					initParameters(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
 					// 重置参数时，删除内存中临时保存的数据
-					tempSavePars.remove(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+					tempSavePars.remove(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid());
 				} catch (Exception e2) {
 					logger.error("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
@@ -1316,7 +1316,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				clearParameters();
 				initSelectMod(modSelectCombo.getSelectionIndex());
-				logger.debug("切换到分组:" + apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getName());
+				logger.debug("切换到分组:" + apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getName());
 			}
 		});
 
@@ -1568,16 +1568,16 @@ public class MainWindow {
 			return;
 		}
 		// 获取当前文档节点
-		ApiItem item = tempSavePars.get(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+		ApiItem item = tempSavePars.get(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 				.get(interfaceCombo.getSelectionIndex()).getUuid());
 		if (null == item) {
 			item = new ApiItem();
 		}
-		item.setUuid(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+		item.setUuid(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 				.get(interfaceCombo.getSelectionIndex()).getUuid());
 		item.setName(interfaceCombo.getText());
-		item.setExplain(interfaceCombo.getToolTipText());
-		item.setAddress(urlText.getText().replace(serverAdress, ""));
+		item.setDescription(interfaceCombo.getToolTipText());
+		item.setPath(urlText.getText().replace(serverAdress, ""));
 		item.setMethod(methodSelectCombo.getText());
 		item.setParameters(new ArrayList<ApiPar>());
 		// 从form框初始化
@@ -1588,7 +1588,7 @@ public class MainWindow {
 			}
 		}
 		// 做个标识临时存起来
-		tempSavePars.put(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+		tempSavePars.put(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 				.get(interfaceCombo.getSelectionIndex()).getUuid(), item);
 		statusBar.setText("保存成功，程序关闭前有效");
 	}
@@ -1602,8 +1602,8 @@ public class MainWindow {
 		}
 		try {
 			// 将临时区的内容拷贝到加载的文档里
-			apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi().set(interfaceCombo.getSelectionIndex(),
-					tempSavePars.get(apiDoc.getApilist().get(modSelectCombo.getSelectionIndex()).getApi()
+			apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().set(interfaceCombo.getSelectionIndex(),
+					tempSavePars.get(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
@@ -1737,21 +1737,21 @@ public class MainWindow {
 			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
 			// 检查接口文档是老版本的文档没有，需要补正
 			// 1.0------>1.1
-			if (apiDoc.getDecode_version() == 1.0) {
+			if (apiDoc.getDecodeversion() == 1.0) {
 				logger.debug("加载了低版本的api文档，开始更新");
 				/////////////////////// 1.0升级到1.1////////////////////////////////////
 				logger.debug("开始将接口文档从1.0升级到1.1");
 				// 补正uuid
-				for (int i = 0; i < apiDoc.getApilist().size(); i++) {
+				for (int i = 0; i < apiDoc.getItem().size(); i++) {
 					// 判断空模块
-					if (null != apiDoc.getApilist().get(i).getApi()) {
-						for (int b = 0; b < apiDoc.getApilist().get(i).getApi().size(); b++) {
-							apiDoc.getApilist().get(i).getApi().get(b).setUuid(ApiUtils.getUUID());
+					if (null != apiDoc.getItem().get(i).getItem()) {
+						for (int b = 0; b < apiDoc.getItem().get(i).getItem().size(); b++) {
+							apiDoc.getItem().get(i).getItem().get(b).setUuid(ApiUtils.getUUID());
 						}
 					}
 				}
 				// 更新解析版本
-				apiDoc.setDecode_version(1.1);
+				apiDoc.setDecodeversion(1.1);
 				///////////////////////// 1.0升级到1.1
 				///////////////////////// END////////////////////////////////
 				// 更新地址到接口文档
@@ -1765,8 +1765,8 @@ public class MainWindow {
 						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
 			}
 			// 加载前判断版本
-			if (apiDoc.getDecode_version().equals(1.1)) {
-				logger.debug("加载的api版本为" + apiDoc.getApi_version());
+			if (apiDoc.getDecodeversion().equals(1.1)) {
+				logger.debug("加载的api版本为" + apiDoc.getApiversion());
 				// 初始化历史记录
 				initServerList(apiDoc.getServerlist());
 				initHistory();
@@ -1826,12 +1826,12 @@ public class MainWindow {
 	// 初始化接口模块
 	private void initMod() {
 		modSelectCombo.removeAll();
-		if (null == apiDoc.getApilist()) {
+		if (null == apiDoc.getItem()) {
 			return;
 		}
-		for (int i = 0; i < apiDoc.getApilist().size(); i++) {
-			modSelectCombo.add(apiDoc.getApilist().get(i).getName());
-			logger.debug("API分类:" + apiDoc.getApilist().get(i).getName() + "加载完毕");
+		for (int i = 0; i < apiDoc.getItem().size(); i++) {
+			modSelectCombo.add(apiDoc.getItem().get(i).getName());
+			logger.debug("API分类:" + apiDoc.getItem().get(i).getName() + "加载完毕");
 		}
 		if (modSelectCombo.getItemCount() > 0) {
 			modSelectCombo.select(0);
@@ -1843,13 +1843,13 @@ public class MainWindow {
 	private void initSelectMod(int modindex) {
 		clearParameters();
 		interfaceCombo.removeAll();
-		if (null == apiDoc.getApilist().get(modindex).getApi()
-				|| apiDoc.getApilist().get(modindex).getApi().size() == 0) {
+		if (null == apiDoc.getItem().get(modindex).getItem()
+				|| apiDoc.getItem().get(modindex).getItem().size() == 0) {
 			logger.debug("当前分类下无接口信息，跳过加载");
 			return;
 		}
-		for (int i = 0; i < apiDoc.getApilist().get(modindex).getApi().size(); i++) {
-			interfaceCombo.add(apiDoc.getApilist().get(modindex).getApi().get(i).getName());
+		for (int i = 0; i < apiDoc.getItem().get(modindex).getItem().size(); i++) {
+			interfaceCombo.add(apiDoc.getItem().get(modindex).getItem().get(i).getName());
 		}
 		try {
 			// 默认初始化这个分类下的第一个接口
@@ -1865,24 +1865,24 @@ public class MainWindow {
 	// 初始化选择的接口
 	private void initSelectInterface(int modindex, int interfaceindex) {
 		// 初始化前要判断是否之前有保存过，如果有保存过，则初始化保存的那份数据
-		ApiItem apiItem = tempSavePars.get(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getUuid());
+		ApiItem apiItem = tempSavePars.get(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getUuid());
 		if (null != apiItem) {
 			logger.debug("此接口有之前保存的数据，读取保存的数据");
-			interfaceContextPath = apiItem.getAddress();
-			urlText.setText(serverAdress + apiItem.getAddress());
-			interfaceCombo.setToolTipText(apiItem.getExplain());
+			interfaceContextPath = apiItem.getPath();
+			urlText.setText(serverAdress + apiItem.getPath());
+			interfaceCombo.setToolTipText(apiItem.getDescription());
 			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
 			methodChoice(apiItem.getMethod());
 			initParameters(apiItem.getParameters());
-			logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
+			logger.debug("切换到接口:" + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getName());
 		} else {
-			interfaceContextPath = apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress();
-			urlText.setText(serverAdress + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getAddress());
-			interfaceCombo.setToolTipText(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getExplain());
+			interfaceContextPath = apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath();
+			urlText.setText(serverAdress + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath());
+			interfaceCombo.setToolTipText(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getDescription());
 			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
-			methodChoice(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getMethod());
-			initParameters(apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getParameters());
-			logger.debug("切换到接口:" + apiDoc.getApilist().get(modindex).getApi().get(interfaceindex).getName());
+			methodChoice(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getMethod());
+			initParameters(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getParameters());
+			logger.debug("切换到接口:" + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getName());
 		}
 	}
 
@@ -2173,9 +2173,9 @@ public class MainWindow {
 	// 初始化历史记录
 	// 后期会支持保存历史记录
 	private void initHistory() {
-		history = new ApiList();
+		history = new ApiMod();
 		history.setName("历史记录");
-		history.setApi(new ArrayList<ApiItem>());
+		history.setItem(new ArrayList<ApiItem>());
 	}
 
 	// TODO 待实现的JSON着色器
@@ -2194,7 +2194,7 @@ public class MainWindow {
 	// TODO 历史记录器
 	// 触发更新历史记录，只有在点击请求的时候才触发
 	private void notifyHistory() {
-		ArrayList<ApiItem> historyList = history.getApi();
+		ArrayList<ApiItem> historyList = history.getItem();
 		if (historyList.size() < this.loadHistorySum) {
 			@SuppressWarnings("unused")
 			ApiItem item = new ApiItem();

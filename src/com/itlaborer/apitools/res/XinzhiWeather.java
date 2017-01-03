@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
-import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiMod;
 import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.utils.ApiUtils;
 
@@ -25,9 +25,9 @@ public class XinzhiWeather {
 		// 第一个接口
 		ApiItem nowWeather = new ApiItem();
 		nowWeather.setUuid(ApiUtils.getUUID());
-		nowWeather.setAddress("now.json");
+		nowWeather.setPath("now.json");
 		nowWeather.setName("天气实况");
-		nowWeather.setExplain("可以通过此接口获取到全国的城市的当日天气信息");
+		nowWeather.setDescription("可以通过此接口获取到全国的城市的当日天气信息");
 		nowWeather.setMethod("GET");
 		ArrayList<ApiPar> nowWeatherPars = new ArrayList<ApiPar>();
 		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
@@ -36,9 +36,9 @@ public class XinzhiWeather {
 		// 第二个接口
 		ApiItem daily = new ApiItem();
 		daily.setUuid(ApiUtils.getUUID());
-		daily.setAddress("daily.json");
+		daily.setPath("daily.json");
 		daily.setName("逐日预报和历史");
-		daily.setExplain("可以通过此接口获取到全国的城市的近七日天气信息");
+		daily.setDescription("可以通过此接口获取到全国的城市的近七日天气信息");
 		daily.setMethod("GET");
 		ArrayList<ApiPar> hourly_historyPars = new ArrayList<ApiPar>();
 		hourly_historyPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
@@ -51,21 +51,21 @@ public class XinzhiWeather {
 		apiItems.add(daily);
 
 		// 心知分组
-		ApiList xinzhi = new ApiList();
+		ApiMod xinzhi = new ApiMod();
 		xinzhi.setName("心知天气");
-		xinzhi.setApi(apiItems);
+		xinzhi.setItem(apiItems);
 
 		// 加入分组列表
-		ArrayList<ApiList> apiList = new ArrayList<ApiList>();
+		ArrayList<ApiMod> apiList = new ArrayList<ApiMod>();
 		apiList.add(xinzhi);
 
 		// 模板里的接口列表是取自心知天气的接口，感谢感谢
 		this.apidoc = new ApiDoc();
 		// 加入接口文档
-		apidoc.setApilist(apiList);
-		apidoc.setDoc_name("心知天气");
-		apidoc.setApi_version("V3");
-		apidoc.setDecode_version(1.1);
+		apidoc.setItem(apiList);
+		apidoc.setApiname("心知天气");
+		apidoc.setApiversion("V3");
+		apidoc.setDecodeversion(1.1);
 		apidoc.setServerlist("https://api.thinkpage.cn/v3/weather/|https://api.thinkpage.cn/v3/weather/");
 	}
 

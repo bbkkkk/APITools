@@ -11,7 +11,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @since 1.0
  */
 
-public class ApiList {
+public class ApiMod {
 
 	/*
 	 * 分类名字和api列表
@@ -20,9 +20,9 @@ public class ApiList {
 	@JSONField(ordinal = 1)
 	private String name;
 	@JSONField(ordinal = 2)
-	private ArrayList<ApiItem> api;
+	private ArrayList<ApiItem> item;
 
-	public ApiList() {
+	public ApiMod() {
 
 	}
 
@@ -34,12 +34,12 @@ public class ApiList {
 		this.name = name;
 	}
 
-	public ArrayList<ApiItem> getApi() {
-		return api;
+	public ArrayList<ApiItem> getItem() {
+		return item;
 	}
 
-	public void setApi(ArrayList<ApiItem> api) {
-		this.api = api;
+	public void setItem(ArrayList<ApiItem> item) {
+		this.item = item;
 	}
 
 }

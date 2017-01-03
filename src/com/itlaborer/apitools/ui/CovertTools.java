@@ -24,7 +24,7 @@ import org.jsoup.select.Elements;
 import com.alibaba.fastjson.JSON;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
-import com.itlaborer.apitools.model.ApiList;
+import com.itlaborer.apitools.model.ApiMod;
 import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
@@ -210,8 +210,8 @@ public class CovertTools extends Dialog {
 	public String CovertApiDoc(String apiDocVersion) {
 		// 新建一个ApiDoc对象
 		ApiDoc apiDoc = new ApiDoc();
-		apiDoc.setApi_version(apiDocVersion);
-		apiDoc.setDecode_version(1.1);
+		apiDoc.setApiversion(apiDocVersion);
+		apiDoc.setDecodeversion(1.1);
 		apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
 		// 判断读取的是什么文件
 		// html版本
@@ -222,9 +222,9 @@ public class CovertTools extends Dialog {
 			logger.info("读取到html格式的手册文件");
 			// 用户选择的可能是主页的index.html也有可能是html下的index.html,做个简单的判断
 			if (new File(path.getParent() + "/html/index.html").exists()) {
-				apiDoc.setApilist(CovertApilist(path.getParent() + "/html/index.html"));
+				apiDoc.setItem(CovertApilist(path.getParent() + "/html/index.html"));
 			} else {
-				apiDoc.setApilist(CovertApilist(path.getPath()));
+				apiDoc.setItem(CovertApilist(path.getPath()));
 			}
 			// chm,注意，chm需要调用hh可执行程序解析，这个东东只有windows下存在
 		} else if (path.getPath().substring(path.getPath().lastIndexOf(".") + 1).equals("chm")
@@ -245,7 +245,7 @@ public class CovertTools extends Dialog {
 				Process process = rn.exec(command);
 				// 这里需要判断是否解压完毕，解压完毕后再接着去解析
 				process.waitFor();
-				apiDoc.setApilist(CovertApilist(tmp.getPath() + "/index.html"));
+				apiDoc.setItem(CovertApilist(tmp.getPath() + "/index.html"));
 				ApiUtils.DeleteDir(tmp);
 			} catch (Exception e) {
 				logger.info("异常", e);
@@ -262,10 +262,10 @@ public class CovertTools extends Dialog {
 	 * API文档分类转换方法--传入参数为接口列表文档的地址
 	 * 
 	 */
-	public ArrayList<ApiList> CovertApilist(String indexPath) {
+	public ArrayList<ApiMod> CovertApilist(String indexPath) {
 		// 接口定义
 		logger.info("开始解析文件" + indexPath);
-		ArrayList<ApiList> apiList = new ArrayList<ApiList>();
+		ArrayList<ApiMod> apiList = new ArrayList<ApiMod>();
 		try {
 			// 获取文档
 			Document document = Jsoup.parse(new File(indexPath), "UTF-8");
@@ -274,7 +274,7 @@ public class CovertTools extends Dialog {
 			for (int i = 0; i < div_ul.size(); i++) {
 				// 获取分类
 				if (div_ul.get(i).tagName().equals("div")) {
-					ApiList thisTypeApiList = new ApiList();
+					ApiMod thisTypeApiList = new ApiMod();
 					ArrayList<String> apiHTMLPath = new ArrayList<String>();
 					thisTypeApiList.setName(div_ul.get(i).text());
 					// 获取此分类下的接口列表
@@ -286,9 +286,9 @@ public class CovertTools extends Dialog {
 					}
 					if (versionSelectint == 4) {
 						logger.info("API4.0方案解析");
-						thisTypeApiList.setApi(CovertApi4(apiHTMLPath));
+						thisTypeApiList.setItem(CovertApi4(apiHTMLPath));
 					}
-					if (thisTypeApiList.getApi().size() > 0) {
+					if (thisTypeApiList.getItem().size() > 0) {
 						apiList.add(thisTypeApiList);
 					}
 				}
@@ -322,10 +322,10 @@ public class CovertTools extends Dialog {
 				// 地址
 				try {
 					// 需要去除空格和空格里的内容
-					apiItem.setAddress(tables.get(1).child(0).child(1).child(1).text().substring(23)
+					apiItem.setPath(tables.get(1).child(0).child(1).child(1).text().substring(23)
 							.replaceAll("\\(.*?\\)|\\{.*?}|\\[.*?]|（.*?）", "").trim());
 				} catch (StringIndexOutOfBoundsException e) {
-					apiItem.setAddress("接口地址未知，请手动订正");
+					apiItem.setPath("接口地址未知，请手动订正");
 					logger.error("异常", e);
 				}
 				// 开始处理参数，获取所有的信息接口参数在第二个table
