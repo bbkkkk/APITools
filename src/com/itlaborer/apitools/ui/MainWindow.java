@@ -1736,37 +1736,9 @@ public class MainWindow {
 		try {
 			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
 			// 检查接口文档是老版本的文档没有，需要补正
-			// 1.0------>1.1
-			if (apiDoc.getDecodeversion() == 1.0) {
-				logger.debug("加载了低版本的api文档，开始更新");
-				/////////////////////// 1.0升级到1.1////////////////////////////////////
-				logger.debug("开始将接口文档从1.0升级到1.1");
-				// 补正uuid
-				for (int i = 0; i < apiDoc.getItem().size(); i++) {
-					// 判断空模块
-					if (null != apiDoc.getItem().get(i).getItem()) {
-						for (int b = 0; b < apiDoc.getItem().get(i).getItem().size(); b++) {
-							apiDoc.getItem().get(i).getItem().get(b).setUuid(ApiUtils.getUUID());
-						}
-					}
-				}
-				// 更新解析版本
-				apiDoc.setDecodeversion(1.1);
-				///////////////////////// 1.0升级到1.1
-				///////////////////////// END////////////////////////////////
-				// 更新地址到接口文档
-				if (StringUtils.isEmpty(properties.getProperty("apiaddress"))) {
-					apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
-				} else {
-					apiDoc.setServerlist(properties.getProperty("apiaddress"));
-				}
-				// 保存
-				ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-						JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
-			}
 			// 加载前判断版本
 			if (apiDoc.getDecodeversion().equals(1.1)) {
-				logger.debug("加载的api版本为" + apiDoc.getApiversion());
+				logger.debug("加载的api版本为" + apiDoc.getVersion());
 				// 初始化历史记录
 				initServerList(apiDoc.getServerlist());
 				initHistory();
@@ -1777,6 +1749,7 @@ public class MainWindow {
 			}
 		} catch (Exception e) {
 			logger.error("异常:", e);
+			statusBar.setText("您加载的接口文件有误，请核对");
 		}
 	}
 
@@ -1843,8 +1816,7 @@ public class MainWindow {
 	private void initSelectMod(int modindex) {
 		clearParameters();
 		interfaceCombo.removeAll();
-		if (null == apiDoc.getItem().get(modindex).getItem()
-				|| apiDoc.getItem().get(modindex).getItem().size() == 0) {
+		if (null == apiDoc.getItem().get(modindex).getItem() || apiDoc.getItem().get(modindex).getItem().size() == 0) {
 			logger.debug("当前分类下无接口信息，跳过加载");
 			return;
 		}
@@ -1878,7 +1850,8 @@ public class MainWindow {
 		} else {
 			interfaceContextPath = apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath();
 			urlText.setText(serverAdress + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath());
-			interfaceCombo.setToolTipText(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getDescription());
+			interfaceCombo
+					.setToolTipText(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getDescription());
 			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
 			methodChoice(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getMethod());
 			initParameters(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getParameters());

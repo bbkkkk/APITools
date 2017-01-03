@@ -20,6 +20,8 @@ public class ApiMod {
 	@JSONField(ordinal = 1)
 	private String name;
 	@JSONField(ordinal = 2)
+	private String description;
+	@JSONField(ordinal = 3)
 	private ArrayList<ApiItem> item;
 
 	public ApiMod() {
@@ -32,6 +34,14 @@ public class ApiMod {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public ArrayList<ApiItem> getItem() {

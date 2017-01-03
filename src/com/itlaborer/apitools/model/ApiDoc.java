@@ -19,9 +19,9 @@ public class ApiDoc {
 	@JSONField(ordinal = 1)
 	private Double decodeversion;
 	@JSONField(ordinal = 2)
-	private String apiname;
+	private String name;
 	@JSONField(ordinal = 3)
-	private String apiversion;
+	private String version;
 	@JSONField(ordinal = 4)
 	private String serverlist;
 	@JSONField(ordinal = 5)
@@ -39,20 +39,20 @@ public class ApiDoc {
 		this.decodeversion = decode_version;
 	}
 
-	public String getApiname() {
-		return apiname;
+	public String getName() {
+		return name;
 	}
 
-	public void setApiname(String api_name) {
-		this.apiname = api_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getApiversion() {
-		return apiversion;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setApiversion(String api_version) {
-		this.apiversion = api_version;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getServerlist() {

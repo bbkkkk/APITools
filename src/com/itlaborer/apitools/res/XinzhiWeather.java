@@ -53,6 +53,7 @@ public class XinzhiWeather {
 		// 心知分组
 		ApiMod xinzhi = new ApiMod();
 		xinzhi.setName("心知天气");
+		xinzhi.setDescription("心知天气V3-一个天气接口");
 		xinzhi.setItem(apiItems);
 
 		// 加入分组列表
@@ -63,8 +64,8 @@ public class XinzhiWeather {
 		this.apidoc = new ApiDoc();
 		// 加入接口文档
 		apidoc.setItem(apiList);
-		apidoc.setApiname("心知天气");
-		apidoc.setApiversion("V3");
+		apidoc.setName("心知天气");
+		apidoc.setVersion("V3");
 		apidoc.setDecodeversion(1.1);
 		apidoc.setServerlist("https://api.thinkpage.cn/v3/weather/|https://api.thinkpage.cn/v3/weather/");
 	}

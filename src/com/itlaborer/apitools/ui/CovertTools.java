@@ -210,7 +210,7 @@ public class CovertTools extends Dialog {
 	public String CovertApiDoc(String apiDocVersion) {
 		// 新建一个ApiDoc对象
 		ApiDoc apiDoc = new ApiDoc();
-		apiDoc.setApiversion(apiDocVersion);
+		apiDoc.setVersion(apiDocVersion);
 		apiDoc.setDecodeversion(1.1);
 		apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
 		// 判断读取的是什么文件
