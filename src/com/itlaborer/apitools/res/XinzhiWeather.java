@@ -53,7 +53,7 @@ public class XinzhiWeather {
 		// 心知分组
 		ApiMod xinzhi = new ApiMod();
 		xinzhi.setName("心知天气");
-		xinzhi.setDescription("心知天气V3-一个天气接口");
+		xinzhi.setDescription("心知天气V3接口");
 		xinzhi.setItem(apiItems);
 
 		// 加入分组列表
