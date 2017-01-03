@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
- * API列表类
+ * API模块类
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
@@ -14,7 +14,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class ApiMod {
 
 	/*
-	 * 分类名字和api列表
+	 * 模块名字和api列表
 	 * 
 	 */
 	@JSONField(ordinal = 1)
