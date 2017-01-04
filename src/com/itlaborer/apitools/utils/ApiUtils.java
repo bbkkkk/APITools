@@ -12,8 +12,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,6 +20,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -61,31 +61,207 @@ public class ApiUtils {
 
 	private static Logger logger = Logger.getLogger(ApiUtils.class.getName());
 
-	public ApiUtils() {
+	// 设置程序窗口居中
+	public static void SetCenter(Shell shell) {
+		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
+		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int shellH = shell.getBounds().height;
+		int shellW = shell.getBounds().width;
+		if (shellH > screenH) {
+			shellH = screenH;
+		}
+		if (shellW > screenW) {
+			shellW = screenW;
+		}
+		shell.setLocation(((screenW - shellW) / 2), ((screenH - shellH) / 2));
 	}
 
-	// MD5字符串算法
-	public final static String MD5(String s) {
-
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-		try {
-			byte[] btInput = s.getBytes();
-			MessageDigest mdInst = MessageDigest.getInstance("MD5");
-			mdInst.update(btInput);
-			byte[] md = mdInst.digest();
-			int j = md.length;
-			char str[] = new char[j * 2];
-			int k = 0;
-			for (int i = 0; i < j; i++) {
-				byte byte0 = md[i];
-				str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-				str[k++] = hexDigits[byte0 & 0xf];
-			}
-			return new String(str);
-		} catch (Exception e) {
-			logger.error("异常", e);
-			return null;
+	// 设置程序窗口居中于父窗口
+	public static void SetCenterinParent(Shell parentshell, Shell shell) {
+		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
+		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int shellH = shell.getBounds().height;
+		int shellW = shell.getBounds().width;
+		// 如果窗口大小超过屏幕大小，调整为屏幕大小
+		if (shellH > screenH) {
+			shellH = screenH;
 		}
+		if (shellW > screenW) {
+			shellW = screenW;
+		}
+		int targetx = parentshell.getLocation().x + parentshell.getBounds().width / 2 - shell.getBounds().width / 2;
+		int targety = parentshell.getLocation().y + parentshell.getBounds().height / 2 - shell.getBounds().height / 2;
+		if (targetx + shellW > screenW) {
+			targetx = screenW - shellW;
+		}
+		if (targety + shellH > screenH) {
+			targety = screenH - shellH;
+		}
+		shell.setLocation(targetx, targety);
+	}
+
+	// 给不支持右键菜单的StyledText添加右键菜单
+	public static void StyledTextAddContextMenu(final StyledText styledText) {
+		Menu popupMenu = new Menu(styledText);
+		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
+		cut.setText("剪切");
+		MenuItem copy = new MenuItem(popupMenu, SWT.NONE);
+		copy.setText("复制");
+		MenuItem paste = new MenuItem(popupMenu, SWT.NONE);
+		paste.setText("粘贴");
+		MenuItem allSelect = new MenuItem(popupMenu, SWT.NONE);
+		allSelect.setText("全选");
+		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
+		clear.setText("清空");
+		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
+		warp.setText("自动换行");
+		styledText.setMenu(popupMenu);
+
+		// 判断初始自动换行状态
+		if (styledText.getWordWrap()) {
+			warp.setText("关闭自动换行");
+		} else {
+			warp.setText("打开自动换行");
+		}
+		styledText.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+					styledText.selectAll();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+		// 剪切菜单的点击事件
+		cut.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getSelectionCount() == 0) {
+					return;
+				}
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				String plainText = styledText.getSelectionText();
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				// 将已经剪切走的部分删除,并将插入符移动到剪切位置
+				int caretOffset = styledText.getSelection().x;
+				styledText.setText(new StringBuffer(styledText.getText())
+						.replace(styledText.getSelection().x, styledText.getSelection().y, "").toString());
+				styledText.setCaretOffset(caretOffset);
+			}
+		});
+
+		// 粘贴菜单的点击事件
+		paste.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				// 获取剪切板上的文本
+				String cliptext = (clipboard.getContents(textTransfer) != null
+						? clipboard.getContents(textTransfer).toString() : "");
+				clipboard.dispose();
+				int caretOffset = styledText.getSelection().x;
+				styledText.setText(new StringBuffer(styledText.getText())
+						.replace(styledText.getSelection().x, styledText.getSelection().y, cliptext).toString());
+				styledText.setCaretOffset(caretOffset + cliptext.length());
+			}
+		});
+
+		// 复制上下文菜单的点击事件
+		copy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getSelectionCount() == 0) {
+					return;
+				}
+				Clipboard clipboard = new Clipboard(styledText.getDisplay());
+				String plainText = styledText.getSelectionText();
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+			}
+		});
+
+		// 全选上下文菜单的点击事件
+		allSelect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				styledText.selectAll();
+			}
+		});
+
+		// 清空上下文菜单的点击事件
+		clear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				styledText.setText("");
+			}
+		});
+
+		// 更改是否自动换行
+		warp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (styledText.getWordWrap()) {
+					styledText.setWordWrap(false);
+					warp.setText("打开自动换行");
+				} else {
+					styledText.setWordWrap(true);
+					warp.setText("关闭自动换行");
+				}
+			}
+		});
+	}
+
+	// 拖拽支持
+	public static void DropTargetSupport(Shell shell) {
+
+		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
+		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
+		dropTarget.setTransfer(transfer);
+		// 拖拽监听
+		dropTarget.addDropListener(new DropTargetListener() {
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragLeave(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOperationChanged(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOver(DropTargetEvent event) {
+			}
+
+			// 获取拖放进来的文件
+			@Override
+			public void drop(DropTargetEvent event) {
+				String[] files = (String[]) event.data;
+				for (int i = 0; i < files.length; i++) {
+					@SuppressWarnings("unused")
+					File file = new File(files[i]);
+				}
+			}
+
+			@Override
+			public void dropAccept(DropTargetEvent event) {
+			}
+		});
+	}
+
+	// MD5字符串加密
+	public static String MD5(String s) {
+		return DigestUtils.md5Hex(s).toUpperCase();
 	}
 
 	// HTTP GET 忽略证书安全
@@ -140,45 +316,6 @@ public class ApiUtils {
 		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).forms(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
-	}
-
-	// 设置程序窗口居中
-	public static void SetCenter(Shell shell) {
-		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
-		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
-		int shellH = shell.getBounds().height;
-		int shellW = shell.getBounds().width;
-		if (shellH > screenH) {
-			shellH = screenH;
-		}
-		if (shellW > screenW) {
-			shellW = screenW;
-		}
-		shell.setLocation(((screenW - shellW) / 2), ((screenH - shellH) / 2));
-	}
-
-	// 设置程序窗口居中于父窗口
-	public static void SetCenterinParent(Shell parentshell, Shell shell) {
-		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
-		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
-		int shellH = shell.getBounds().height;
-		int shellW = shell.getBounds().width;
-		// 如果窗口大小超过屏幕大小，调整为屏幕大小
-		if (shellH > screenH) {
-			shellH = screenH;
-		}
-		if (shellW > screenW) {
-			shellW = screenW;
-		}
-		int targetx = parentshell.getLocation().x + parentshell.getBounds().width / 2 - shell.getBounds().width / 2;
-		int targety = parentshell.getLocation().y + parentshell.getBounds().height / 2 - shell.getBounds().height / 2;
-		if (targetx + shellW > screenW) {
-			targetx = screenW - shellW;
-		}
-		if (targety + shellH > screenH) {
-			targety = screenH - shellH;
-		}
-		shell.setLocation(targetx, targety);
 	}
 
 	// 读取文件到String字符串
@@ -376,165 +513,6 @@ public class ApiUtils {
 		return false;
 	}
 
-	// 给不支持右键菜单的StyledText添加右键菜单
-	public static void StyledTextAddContextMenu(final StyledText styledText) {
-		Menu popupMenu = new Menu(styledText);
-		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
-		cut.setText("剪切");
-		MenuItem copy = new MenuItem(popupMenu, SWT.NONE);
-		copy.setText("复制");
-		MenuItem paste = new MenuItem(popupMenu, SWT.NONE);
-		paste.setText("粘贴");
-		MenuItem allSelect = new MenuItem(popupMenu, SWT.NONE);
-		allSelect.setText("全选");
-		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
-		clear.setText("清空");
-		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
-		warp.setText("自动换行");
-		styledText.setMenu(popupMenu);
-
-		// 判断初始自动换行状态
-		if (styledText.getWordWrap()) {
-			warp.setText("关闭自动换行");
-		} else {
-			warp.setText("打开自动换行");
-		}
-		styledText.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
-					styledText.selectAll();
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
-		// 剪切菜单的点击事件
-		cut.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (styledText.getSelectionCount() == 0) {
-					return;
-				}
-				Clipboard clipboard = new Clipboard(styledText.getDisplay());
-				String plainText = styledText.getSelectionText();
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
-				clipboard.dispose();
-				// 将已经剪切走的部分删除,并将插入符移动到剪切位置
-				int caretOffset = styledText.getSelection().x;
-				styledText.setText(new StringBuffer(styledText.getText())
-						.replace(styledText.getSelection().x, styledText.getSelection().y, "").toString());
-				styledText.setCaretOffset(caretOffset);
-			}
-		});
-
-		// 粘贴菜单的点击事件
-		paste.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Clipboard clipboard = new Clipboard(styledText.getDisplay());
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				// 获取剪切板上的文本
-				String cliptext = (clipboard.getContents(textTransfer) != null
-						? clipboard.getContents(textTransfer).toString() : "");
-				clipboard.dispose();
-				int caretOffset = styledText.getSelection().x;
-				styledText.setText(new StringBuffer(styledText.getText())
-						.replace(styledText.getSelection().x, styledText.getSelection().y, cliptext).toString());
-				styledText.setCaretOffset(caretOffset + cliptext.length());
-			}
-		});
-
-		// 复制上下文菜单的点击事件
-		copy.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (styledText.getSelectionCount() == 0) {
-					return;
-				}
-				Clipboard clipboard = new Clipboard(styledText.getDisplay());
-				String plainText = styledText.getSelectionText();
-				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents(new String[] { plainText }, new Transfer[] { textTransfer });
-				clipboard.dispose();
-			}
-		});
-
-		// 全选上下文菜单的点击事件
-		allSelect.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				styledText.selectAll();
-			}
-		});
-
-		// 清空上下文菜单的点击事件
-		clear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				styledText.setText("");
-			}
-		});
-
-		// 更改是否自动换行
-		warp.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (styledText.getWordWrap()) {
-					styledText.setWordWrap(false);
-					warp.setText("打开自动换行");
-				} else {
-					styledText.setWordWrap(true);
-					warp.setText("关闭自动换行");
-				}
-			}
-		});
-	}
-
-	// 拖拽支持
-	public static void DropTargetSupport(Shell shell) {
-
-		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
-		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
-		dropTarget.setTransfer(transfer);
-		// 拖拽监听
-		dropTarget.addDropListener(new DropTargetListener() {
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragLeave(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragOver(DropTargetEvent event) {
-			}
-
-			// 获取拖放进来的文件
-			@Override
-			public void drop(DropTargetEvent event) {
-				String[] files = (String[]) event.data;
-				for (int i = 0; i < files.length; i++) {
-					@SuppressWarnings("unused")
-					File file = new File(files[i]);
-				}
-			}
-
-			@Override
-			public void dropAccept(DropTargetEvent event) {
-			}
-		});
-	}
-
 	// UUID生成器
 	public static String getUUID() {
 		UUID uuid = UUID.randomUUID();
@@ -563,30 +541,26 @@ public class ApiUtils {
 		return properties;
 	}
 
-	// 使用jdk8自带的base64工具类编码
+	// base64工具类编码
+	// 如果空，返回""
 	public static String base64EncodeString(String string) {
 		if (StringUtils.isEmpty(string)) {
 			return "";
 		} else {
-			try {
-				return Base64.getEncoder().encodeToString(string.getBytes("utf-8"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				return "";
-			}
+			return Base64.encodeBase64String(string.getBytes());
 		}
 	}
 
-	// 使用jdk8自带的base64工具类解码
+	// base64工具类解码
+	// 如果空，返回"",如果不是base64，返回原文
 	public static String base64DecodeString(String string) {
 		if (StringUtils.isEmpty(string)) {
 			return "";
 		} else {
-			try {
-				return new String(Base64.getDecoder().decode(string), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				return "";
+			if (Base64.isBase64(string)) {
+				return new String(Base64.decodeBase64(string));
+			} else {
+				return string;
 			}
 		}
 	}
