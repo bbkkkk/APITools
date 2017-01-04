@@ -72,6 +72,6 @@ public class ApiDoc {
 	}
 
 	public String toString() {
-		return ApiUtils.Format(JSON.toJSONString(this));
+		return ApiUtils.jsonFormat(JSON.toJSONString(this));
 	}
 }

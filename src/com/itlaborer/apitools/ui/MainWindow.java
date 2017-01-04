@@ -70,9 +70,7 @@ import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
-import com.itlaborer.apitools.utils.Base64Utils;
 import com.itlaborer.apitools.utils.ParamUtils;
-import com.itlaborer.apitools.utils.PropertiesUtils;
 
 import net.dongliu.requests.RawResponse;
 
@@ -374,7 +372,7 @@ public class MainWindow {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 						statusBar.setText("模块名被修改为:" + nameFromDialog);
 					}
 				}
@@ -397,7 +395,7 @@ public class MainWindow {
 						apiDoc.getItem().remove(modindex);
 						// 保存
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
 						modSelectCombo.remove(modindex);
 						if (modSelectCombo.getItemCount() == 0) {
@@ -463,7 +461,7 @@ public class MainWindow {
 							apiDoc.getItem().add(apiList);
 							try {
 								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-										ApiUtils.Format(JSON.toJSONString(apiDoc)));
+										ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
 							} catch (Exception e2) {
@@ -530,7 +528,7 @@ public class MainWindow {
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 						statusBar.setText("接口名被修改为:" + nameFromDialog);
 					}
 				}
@@ -554,7 +552,7 @@ public class MainWindow {
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
 						interfaceCombo.remove(interfaceindex);
 						if (interfaceCombo.getItemCount() == 0) {
@@ -774,7 +772,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(Base64Utils.encodeString(form[b][0].getText()));
+						form[b][0].setText(ApiUtils.base64EncodeString(form[b][0].getText()));
 					}
 				}
 
@@ -789,7 +787,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(Base64Utils.decodeString(form[b][0].getText()));
+						form[b][0].setText(ApiUtils.base64DecodeString(form[b][0].getText()));
 					}
 				}
 
@@ -893,7 +891,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(Base64Utils.encodeString(form[b][1].getText()));
+						form[b][1].setText(ApiUtils.base64EncodeString(form[b][1].getText()));
 					}
 				}
 
@@ -908,7 +906,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(Base64Utils.decodeString(form[b][1].getText()));
+						form[b][1].setText(ApiUtils.base64DecodeString(form[b][1].getText()));
 					}
 				}
 
@@ -1535,7 +1533,7 @@ public class MainWindow {
 				httpend = System.currentTimeMillis();
 				httpTime = httpend - sumbegintime;
 				bodyReturnStr = "";
-				bodyReturnStr = ApiUtils.Format(result.readToText());
+				bodyReturnStr = ApiUtils.jsonFormat(result.readToText());
 				headerReturnStr = "";
 				List<Entry<String, String>> header = result.getHeaders();
 				for (int i = 0; i < header.size(); i++) {
@@ -1606,7 +1604,7 @@ public class MainWindow {
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-					ApiUtils.Format(JSON.toJSONString(apiDoc)))) {
+					ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)))) {
 				statusBar.setText("保存成功，已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败，请重试");
@@ -1650,7 +1648,7 @@ public class MainWindow {
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
 				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"),
-						ApiUtils.Format(JSON.toJSONString(new XinzhiWeather().getApidoc())));
+						ApiUtils.jsonFormat(JSON.toJSONString(new XinzhiWeather().getApidoc())));
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
@@ -1666,7 +1664,7 @@ public class MainWindow {
 		// 此处开始加载配置文件内容
 		try {
 			// 加载配置
-			properties = PropertiesUtils.ReadProperties(configFile);
+			properties = ApiUtils.ReadProperties(configFile);
 
 			// 配置历史记录条数
 			if ((null != properties.getProperty("hsitorysum"))
@@ -1712,7 +1710,7 @@ public class MainWindow {
 		// 此处开始加载返回码列表文件
 		File reader = new File("./config/" + loadReturnCodeFile);
 		if (reader.exists()) {
-			apiReturnCode = PropertiesUtils.ReadProperties(reader);
+			apiReturnCode = ApiUtils.ReadProperties(reader);
 			logger.debug("加载返回码配置文件" + "./config/" + loadReturnCodeFile);
 		} else {
 			logger.debug("没有读到返回码配置,跳过加载");
@@ -2117,7 +2115,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				Pattern p = Pattern.compile("\\s*|\t|\r|\n");
 				Matcher m = p.matcher(styledText.getText());
-				styledText.setText(ApiUtils.Format(m.replaceAll("")));
+				styledText.setText(ApiUtils.jsonFormat(m.replaceAll("")));
 			}
 		});
 

@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
-import com.itlaborer.apitools.utils.Base64Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -70,7 +69,7 @@ public class Base64Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isNotEmpty(styledText.getText())) {
 					logger.debug("编码串:" + styledText.getText());
-					styledText.setText(Base64Utils.encodeString(styledText.getText()));
+					styledText.setText(ApiUtils.base64EncodeString(styledText.getText()));
 				}
 			}
 		});
@@ -82,7 +81,7 @@ public class Base64Tools extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Base64解码-----
-				styledText.setText(Base64Utils.decodeString(styledText.getText()));
+				styledText.setText(ApiUtils.base64DecodeString(styledText.getText()));
 			}
 		});
 	}

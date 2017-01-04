@@ -3,6 +3,7 @@ package com.itlaborer.apitools.utils;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,13 +13,16 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -537,9 +541,53 @@ public class ApiUtils {
 		return uuid.toString();
 	}
 
-	public static String Format(String jsonStr) {
+	// JSon格式化工具
+	public static String jsonFormat(String jsonStr) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
 		return prettyJsonString;
+	}
+
+	// 读取Properties
+	public static Properties ReadProperties(File file) {
+		Properties properties = new Properties();
+		try {
+			properties.load(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+		} catch (FileNotFoundException e) {
+			logger.error("异常", e);
+			return null;
+		} catch (IOException e) {
+			logger.error("异常", e);
+			return null;
+		}
+		return properties;
+	}
+
+	// 使用jdk8自带的base64工具类编码
+	public static String base64EncodeString(String string) {
+		if (StringUtils.isEmpty(string)) {
+			return "";
+		} else {
+			try {
+				return Base64.getEncoder().encodeToString(string.getBytes("utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return "";
+			}
+		}
+	}
+
+	// 使用jdk8自带的base64工具类解码
+	public static String base64DecodeString(String string) {
+		if (StringUtils.isEmpty(string)) {
+			return "";
+		} else {
+			try {
+				return new String(Base64.getDecoder().decode(string), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return "";
+			}
+		}
 	}
 }

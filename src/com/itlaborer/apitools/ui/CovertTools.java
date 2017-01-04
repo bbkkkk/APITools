@@ -254,7 +254,7 @@ public class CovertTools extends Dialog {
 		else {
 			logger.info("无法接受的格式");
 		}
-		return (ApiUtils.Format(JSON.toJSONString(apiDoc)));
+		return (ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 	}
 
 	/**
