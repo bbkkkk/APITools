@@ -211,7 +211,7 @@ public class CovertTools extends Dialog {
 		ApiDoc apiDoc = new ApiDoc();
 		apiDoc.setVersion(apiDocVersion);
 		apiDoc.setDecodeversion(1.1);
-		apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里");
+		apiDoc.setServerlist("服务器地址列表请维护在接口文档的serverlist参数里|服务器地址列表请维护在接口文档的serverlist参数里");
 		// 判断读取的是什么文件
 		// html版本
 		if (path.getPath().substring(path.getPath().lastIndexOf(".") + 1).equals("html")
@@ -264,7 +264,7 @@ public class CovertTools extends Dialog {
 	public ArrayList<ApiMod> CovertApilist(String indexPath) {
 		// 接口定义
 		logger.info("开始解析文件" + indexPath);
-		ArrayList<ApiMod> apiList = new ArrayList<ApiMod>();
+		ArrayList<ApiMod> modList = new ArrayList<ApiMod>();
 		try {
 			// 获取文档
 			Document document = Jsoup.parse(new File(indexPath), "UTF-8");
@@ -288,14 +288,14 @@ public class CovertTools extends Dialog {
 						thisTypeApiList.setItem(CovertApi4(apiHTMLPath));
 					}
 					if (thisTypeApiList.getItem().size() > 0) {
-						apiList.add(thisTypeApiList);
+						modList.add(thisTypeApiList);
 					}
 				}
 			}
 		} catch (IOException e) {
 			logger.error("异常", e);
 		}
-		return apiList;
+		return modList;
 	}
 
 	/**
@@ -303,7 +303,7 @@ public class CovertTools extends Dialog {
 	 */
 	public ArrayList<ApiItem> CovertApi4(ArrayList<String> apiHTMLPath) {
 		// 创建这个分类下的接口列表信息
-		ArrayList<ApiItem> apiItems = new ArrayList<ApiItem>();
+		ArrayList<ApiItem> apiItemList = new ArrayList<ApiItem>();
 		// 循环读取每一个接口的定义文件
 		for (int i = 0; i < apiHTMLPath.size(); i++) {
 			logger.info("解析到" + apiHTMLPath.get(i));
@@ -377,8 +377,8 @@ public class CovertTools extends Dialog {
 				continue;
 			}
 			// 加入列表
-			apiItems.add(apiItem);
+			apiItemList.add(apiItem);
 		}
-		return apiItems;
+		return apiItemList;
 	}
 }

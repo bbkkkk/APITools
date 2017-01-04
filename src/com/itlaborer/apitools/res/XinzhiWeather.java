@@ -12,7 +12,7 @@ import com.itlaborer.apitools.utils.ApiUtils;
  * 心知天气API，作为示例接口文档
  * 
  * @author liudewei
- * @version 1.1
+ * @version 1.2
  * @since 1.6
  */
 
@@ -34,21 +34,21 @@ public class XinzhiWeather {
 		nowWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "北京"));
 		nowWeather.setParameters(nowWeatherPars);
 		// 第二个接口
-		ApiItem daily = new ApiItem();
-		daily.setUuid(ApiUtils.getUUID());
-		daily.setPath("daily.json");
-		daily.setName("逐日预报和历史");
-		daily.setDescription("可以通过此接口获取到全国的城市的近七日天气信息");
-		daily.setMethod("GET");
-		ArrayList<ApiPar> hourly_historyPars = new ArrayList<ApiPar>();
-		hourly_historyPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
-		hourly_historyPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
-		daily.setParameters(hourly_historyPars);
+		ApiItem dailyWeather = new ApiItem();
+		dailyWeather.setUuid(ApiUtils.getUUID());
+		dailyWeather.setPath("daily.json");
+		dailyWeather.setName("逐日预报和历史");
+		dailyWeather.setDescription("可以通过此接口获取到全国的城市的近七日天气信息");
+		dailyWeather.setMethod("GET");
+		ArrayList<ApiPar> dailyWeatherPars = new ArrayList<ApiPar>();
+		dailyWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
+		dailyWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
+		dailyWeather.setParameters(dailyWeatherPars);
 
 		// 加入接口列表
 		ArrayList<ApiItem> apiItems = new ArrayList<ApiItem>();
 		apiItems.add(nowWeather);
-		apiItems.add(daily);
+		apiItems.add(dailyWeather);
 
 		// 心知分组
 		ApiMod xinzhi = new ApiMod();
@@ -56,7 +56,7 @@ public class XinzhiWeather {
 		xinzhi.setDescription("心知天气V3接口");
 		xinzhi.setItem(apiItems);
 
-		// 加入分组列表
+		// 加入模块列表
 		ArrayList<ApiMod> apiList = new ArrayList<ApiMod>();
 		apiList.add(xinzhi);
 

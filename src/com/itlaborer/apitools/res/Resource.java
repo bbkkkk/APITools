@@ -13,7 +13,7 @@ public class Resource {
 	public static String VERSION = "V1.8.4";
 	public static String AUTHOR = "作者:恒生电子/刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
-	public static String CONFIG = "#主配置文件\r\n#请按照参数名进行相关配置\r\n#服务器地址,此参数已不生效，请将服务器地址配置到接口文档json文件中的baseurl,多个服务器请以|分割"
+	public static String CONFIG = "#主配置文件\r\n#请按照参数名进行相关配置\r\n#服务器地址,此参数已不生效，请将服务器地址配置到接口文档json文件中的serverlist,多个服务器请以|分割"
 			+ "\r\n#自动装载的API列表文件\r\napilist=api-xinzhiweather.json\r\n#自动装载的错误码列表文件-仅支持恒生FUNDAPI\r\nreturncodefile"
 			+ "=xxx.properties\r\n#历史记录条数\r\nhsitorysum=30";
 	public static String EXPLAIN = "这是一个适合HTTP服务的请求工具，可以快速的填充参数，拉取接口返回的结果,如果你"
