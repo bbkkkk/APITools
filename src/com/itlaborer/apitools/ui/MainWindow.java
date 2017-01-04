@@ -71,7 +71,6 @@ import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
 import com.itlaborer.apitools.utils.Base64Utils;
-import com.itlaborer.apitools.utils.JsonFormatUtils;
 import com.itlaborer.apitools.utils.ParamUtils;
 import com.itlaborer.apitools.utils.PropertiesUtils;
 
@@ -375,7 +374,7 @@ public class MainWindow {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.Format(JSON.toJSONString(apiDoc)));
 						statusBar.setText("模块名被修改为:" + nameFromDialog);
 					}
 				}
@@ -398,7 +397,7 @@ public class MainWindow {
 						apiDoc.getItem().remove(modindex);
 						// 保存
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.Format(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
 						modSelectCombo.remove(modindex);
 						if (modSelectCombo.getItemCount() == 0) {
@@ -464,7 +463,7 @@ public class MainWindow {
 							apiDoc.getItem().add(apiList);
 							try {
 								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-										JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+										ApiUtils.Format(JSON.toJSONString(apiDoc)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
 							} catch (Exception e2) {
@@ -531,7 +530,7 @@ public class MainWindow {
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.Format(JSON.toJSONString(apiDoc)));
 						statusBar.setText("接口名被修改为:" + nameFromDialog);
 					}
 				}
@@ -555,7 +554,7 @@ public class MainWindow {
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+								ApiUtils.Format(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
 						interfaceCombo.remove(interfaceindex);
 						if (interfaceCombo.getItemCount() == 0) {
@@ -1536,7 +1535,7 @@ public class MainWindow {
 				httpend = System.currentTimeMillis();
 				httpTime = httpend - sumbegintime;
 				bodyReturnStr = "";
-				bodyReturnStr = JsonFormatUtils.Format(result.readToText());
+				bodyReturnStr = ApiUtils.Format(result.readToText());
 				headerReturnStr = "";
 				List<Entry<String, String>> header = result.getHeaders();
 				for (int i = 0; i < header.size(); i++) {
@@ -1607,7 +1606,7 @@ public class MainWindow {
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-					JsonFormatUtils.Format(JSON.toJSONString(apiDoc)))) {
+					ApiUtils.Format(JSON.toJSONString(apiDoc)))) {
 				statusBar.setText("保存成功，已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败，请重试");
@@ -1651,7 +1650,7 @@ public class MainWindow {
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
 				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"),
-						JsonFormatUtils.Format(JSON.toJSONString(new XinzhiWeather().getApidoc())));
+						ApiUtils.Format(JSON.toJSONString(new XinzhiWeather().getApidoc())));
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
@@ -2118,7 +2117,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				Pattern p = Pattern.compile("\\s*|\t|\r|\n");
 				Matcher m = p.matcher(styledText.getText());
-				styledText.setText(JsonFormatUtils.Format(m.replaceAll("")));
+				styledText.setText(ApiUtils.Format(m.replaceAll("")));
 			}
 		});
 

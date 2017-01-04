@@ -29,7 +29,6 @@ import com.itlaborer.apitools.model.ApiPar;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
-import com.itlaborer.apitools.utils.JsonFormatUtils;
 
 /**
  * API文档转换工具界面
@@ -255,7 +254,7 @@ public class CovertTools extends Dialog {
 		else {
 			logger.info("无法接受的格式");
 		}
-		return (JsonFormatUtils.Format(JSON.toJSONString(apiDoc)));
+		return (ApiUtils.Format(JSON.toJSONString(apiDoc)));
 	}
 
 	/**

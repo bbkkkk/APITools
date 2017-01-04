@@ -38,6 +38,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+
 import net.dongliu.requests.RawResponse;
 import net.dongliu.requests.Requests;
 
@@ -531,5 +535,11 @@ public class ApiUtils {
 	public static String getUUID() {
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString();
+	}
+
+	public static String Format(String jsonStr) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
+		return prettyJsonString;
 	}
 }
