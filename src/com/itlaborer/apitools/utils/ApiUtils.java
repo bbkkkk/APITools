@@ -513,6 +513,34 @@ public class ApiUtils {
 		return false;
 	}
 
+	// 判断是否乱码
+	public static boolean isMessyCode(String strName) {
+		Pattern p = Pattern.compile("\\s*|\t*|\r*|\n*");
+		Matcher m = p.matcher(strName);
+		String after = m.replaceAll("");
+		String temp = after.replaceAll("\\p{P}", "");
+		char[] ch = temp.trim().toCharArray();
+		float chLength = ch.length;
+		float count = 0;
+		for (int i = 0; i < ch.length; i++) {
+			char c = ch[i];
+			if (!Character.isLetterOrDigit(c)) {
+
+				if (!isChinese(c)) {
+					count = count + 1;
+					System.out.print(c);
+				}
+			}
+		}
+		float result = count / chLength;
+		if (result > 0.4) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
 	// UUID生成器
 	public static String getUUID() {
 		UUID uuid = UUID.randomUUID();
@@ -554,14 +582,20 @@ public class ApiUtils {
 	// base64工具类解码
 	// 如果空，返回"",如果不是base64，返回原文
 	public static String base64DecodeString(String string) {
-		if (StringUtils.isEmpty(string)) {
-			return "";
-		} else {
+		String base64String = string;
+		if (StringUtils.isNotEmpty(string)) {
 			if (Base64.isBase64(string)) {
-				return new String(Base64.decodeBase64(string));
-			} else {
-				return string;
+				try {
+					base64String = new String(Base64.decodeBase64(string), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					logger.debug(e);
+				}
 			}
 		}
+		if (isMessyCode(base64String)) {
+			logger.debug("侦测到base64解码后乱码,返回原始信息");
+			base64String = string;
+		}
+		return base64String;
 	}
 }
