@@ -528,7 +528,6 @@ public class ApiUtils {
 
 				if (!isChinese(c)) {
 					count = count + 1;
-					System.out.print(c);
 				}
 			}
 		}
