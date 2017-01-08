@@ -1,5 +1,7 @@
 package com.itlaborer.apitools.res;
 
+import com.itlaborer.apitools.utils.ApiUtils;
+
 /**
  * 程序中使用到的一些静态字符串资源，放在此处方便统一管理
  * 
@@ -10,12 +12,11 @@ package com.itlaborer.apitools.res;
 
 public class Resource {
 
-	public static String VERSION = "V1.8.4";
+	public static String VERSION = "V1.8.5";
 	public static String AUTHOR = "作者:恒生电子/刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
-	public static String CONFIG = "#主配置文件\r\n#请按照参数名进行相关配置\r\n#服务器地址,此参数已不生效，请将服务器地址配置到接口文档json文件中的serverlist,多个服务器请以|分割"
-			+ "\r\n#自动装载的API列表文件\r\napilist=api-xinzhiweather.json\r\n#自动装载的错误码列表文件-仅支持恒生FUNDAPI\r\nreturncodefile"
-			+ "=xxx.properties\r\n#历史记录条数\r\nhistorysum=30";
+	public static String CONFIG = ApiUtils.base64DecodeString(
+			"I+S4u+mFjee9ruaWh+S7tgoj6K+35oyJ54Wn5Y+C5pWw5ZCN6L+b6KGM55u45YWz6YWN572uCiPoh6rliqjoo4Xovb3nmoRBUEnliJfooajmlofku7YKYXBpbGlzdD1hcGkteGluemhpd2VhdGhlci5qc29uCiPoh6rliqjoo4Xovb3nmoTplJnor6/noIHliJfooajmlofku7Yt5LuF5pSv5oyB5oGS55SfRlVOREFQSQpyZXR1cm5jb2RlZmlsZT14eHgucHJvcGVydGllcwoj5Y6G5Y+y6K6w5b2V5p2h5pWwCmhpc3RvcnlzdW09MzA=");
 	public static String EXPLAIN = "这是一个适合HTTP服务的请求工具，可以快速的填充参数，拉取接口返回的结果,如果你"
 			+ "不想每次测试接口的时候都手动输入大量的参数,可以预先编辑好接口和参数列表,这样工具启动的时候" + "可以自动加载预先定义好的接口信息,这一切都是如此的简单,你只需要掌握"
 			+ "简单的JSON格式书写规则即可";
