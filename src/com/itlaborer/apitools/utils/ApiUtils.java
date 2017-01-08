@@ -548,9 +548,14 @@ public class ApiUtils {
 
 	// JSon格式化工具
 	public static String jsonFormat(String jsonStr) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
-		return prettyJsonString;
+		// 优先使用gson格式化，gson的规范更好，如果格式化失败则调用本地实现方法
+		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
+			return prettyJsonString;
+		} catch (Exception e) {
+			return JsonFormatUtils.Format(jsonStr);
+		}
 	}
 
 	// 读取Properties
