@@ -554,6 +554,7 @@ public class ApiUtils {
 			String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
 			return prettyJsonString;
 		} catch (Exception e) {
+			logger.debug("使用备用方案格式化");
 			return JsonFormatUtils.Format(jsonStr);
 		}
 	}
