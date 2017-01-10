@@ -1140,6 +1140,11 @@ public class MainWindow {
 						keyDownFlag = true;
 						initNewWindow(false, true);
 					}
+					// Ctrl+Q执行提交
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_Q)) {
+						keyDownFlag = true;
+						sentRequest();
+					}
 					// Ctrl+Enter执行提交
 					if ((e.stateMask == SWT.CTRL)
 							&& ((e.keyCode == KeyCode.ENTER) || (e.keyCode == KeyCode.SMALL_KEY_BOARD_ENTER))) {
