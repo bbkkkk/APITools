@@ -13,7 +13,7 @@ import com.itlaborer.apitools.utils.ApiUtils;
 public class Resource {
 
 	public static String VERSION = "V1.8.5";
-	public static String AUTHOR = "作者:恒生电子/刘德位(793554262@qq.com)";
+	public static String AUTHOR = "作者:恒生电子-刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
 	public static String CONFIG = ApiUtils.base64DecodeString(
 			"I+S4u+mFjee9ruaWh+S7tgoj6K+35oyJ54Wn5Y+C5pWw5ZCN6L+b6KGM55u45YWz6YWN572uCiPoh6rliqjoo4Xovb3nmoRBUEnliJfooajmlofku7YKYXBpbGlzdD1hcGkteGluemhpd2VhdGhlci5qc29uCiPoh6rliqjoo4Xovb3nmoTplJnor6/noIHliJfooajmlofku7Yt5LuF5pSv5oyB5oGS55SfRlVOREFQSQpyZXR1cm5jb2RlZmlsZT14eHgucHJvcGVydGllcwoj5Y6G5Y+y6K6w5b2V5p2h5pWwCmhpc3RvcnlzdW09MzA=");

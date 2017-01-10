@@ -149,7 +149,7 @@ public class MainWindow {
 		PropertyConfigurator.configure("config/log4j.properties ");
 		logger.info("程序启动, 程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
-		this.parsSum = 196;
+		this.parsSum = 128;
 		this.loadHistorySum = 30;
 		this.serverAdress = "";
 		this.cookies = new LinkedHashMap<String, String>();

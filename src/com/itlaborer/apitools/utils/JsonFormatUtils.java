@@ -63,7 +63,7 @@ public class JsonFormatUtils {
     private static String GetLevelStr(int tablevel) {
         StringBuffer tablevelStr = new StringBuffer();
         for (int level = 0; level < tablevel; level++) {
-            tablevelStr.append("\t");
+            tablevelStr.append("  ");
         }
         return tablevelStr.toString();
     }

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * API参数类
  * @author liudewei[793554262@qq.com]
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 

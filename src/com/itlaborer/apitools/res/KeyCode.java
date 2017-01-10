@@ -4,8 +4,8 @@ package com.itlaborer.apitools.res;
  * SWT键盘常量
  * 
  * @author liudewei[793554262@qq.com]
- * @version 1.8
- * @since 1.0
+ * @version 1.0
+ * @since 1.8
  */
 
 public class KeyCode {
