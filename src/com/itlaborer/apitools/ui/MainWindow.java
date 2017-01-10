@@ -150,7 +150,7 @@ public class MainWindow {
 		logger.info("程序启动, 程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 128;
-		this.loadHistorySum = 30;
+		this.loadHistorySum = 50;
 		this.serverAdress = "";
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
@@ -1670,14 +1670,8 @@ public class MainWindow {
 		try {
 			// 加载配置
 			properties = ApiUtils.ReadProperties(configFile);
-
-			// 配置历史记录条数
-			if ((null != properties.getProperty("hsitorysum"))
-					&& Integer.parseInt(properties.getProperty("hsitorysum")) > 0) {
-				this.loadHistorySum = Integer.parseInt(properties.getProperty("hsitorysum"));
-			}
 			// 加载API列表
-			loadApiJsonFileArray = properties.getProperty("apilist").split(",");
+			loadApiJsonFileArray = properties.getProperty("apilist").split("\\|");
 			if (null != loadApiJsonFileArray && loadApiJsonFileArray.length > 0) {
 				if (StringUtils.isNotEmpty(loadApiJsonFileArray[0])) {
 					this.apiJsonFile = loadApiJsonFileArray[0];
