@@ -65,7 +65,7 @@ public class ShortcutKeyExplain extends Dialog {
 		StyledText readMeTextLabel = new StyledText(aboutToolsShell,
 				SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		readMeTextLabel.setBounds(3, 33, 389, 297);
-		readMeTextLabel.setText("Ctrl+Q：提交请求\r\nCtrl+Enter：提交请求\r\nCtrl+L：清空结果\r\nCtrl+S：临时保存参数");
+		readMeTextLabel.setText("Ctrl+Q：提交请求\r\nCtrl+Enter：提交请求\r\nCtrl+L：清空结果\r\nCtrl+S：临时保存参数\r\nCtrl+N：打开一个新窗口");
 
 		Label label_2 = new Label(aboutToolsShell, SWT.NONE);
 		label_2.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
