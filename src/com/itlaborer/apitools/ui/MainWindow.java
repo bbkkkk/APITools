@@ -319,12 +319,13 @@ public class MainWindow {
 
 		MenuItem menuItemFeedBack = new MenuItem(menu_3, SWT.NONE);
 		menuItemFeedBack.setText("报告问题");
-		//快捷键说明
+		// 快捷键说明
 		MenuItem menuItemShortcutKey = new MenuItem(menu_3, SWT.NONE);
 		menuItemShortcutKey.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ShortcutKeyExplain shortcutKeyExplain=new ShortcutKeyExplain(mainWindowShell,SWT.CLOSE | SWT.SYSTEM_MODAL);
+				ShortcutKeyExplain shortcutKeyExplain = new ShortcutKeyExplain(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL);
 				shortcutKeyExplain.open();
 			}
 		});
@@ -346,7 +347,9 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				Clipboard clipboard = new Clipboard(modSelectCombo.getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents(new String[] { modSelectCombo.getText() }, new Transfer[] { textTransfer });
+				if (StringUtils.isNotEmpty(modSelectCombo.getText())) {
+					clipboard.setContents(new String[] { modSelectCombo.getText() }, new Transfer[] { textTransfer });
+				}
 				clipboard.dispose();
 				statusBar.setText("已复制到剪切板:" + modSelectCombo.getText());
 			}
@@ -357,6 +360,10 @@ public class MainWindow {
 		menuItem_4.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(modSelectCombo.getText())) {
+					statusBar.setText("不能重命名不存在的模块");
+					return;
+				}
 				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
 						"重命名模块", modSelectCombo.getText());
 				String nameFromDialog = reNameModDialog.open();
@@ -394,6 +401,10 @@ public class MainWindow {
 		menuItem_5.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(modSelectCombo.getText())) {
+					statusBar.setText("不能删除不存在的模块");
+					return;
+				}
 				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此模块吗？删除后此模块下的接口也将删除，并且将无法恢复");
 				boolean flag = mySelectionDialog.open();
@@ -485,6 +496,7 @@ public class MainWindow {
 			}
 		});
 		menuItem_7.setText("新增一个模块");
+		menuItem_7.setEnabled(false);
 
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
@@ -500,7 +512,9 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				Clipboard clipboard = new Clipboard(interfaceCombo.getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
-				clipboard.setContents(new String[] { interfaceCombo.getText() }, new Transfer[] { textTransfer });
+				if (StringUtils.isNotEmpty(interfaceCombo.getText())) {
+					clipboard.setContents(new String[] { interfaceCombo.getText() }, new Transfer[] { textTransfer });
+				}
 				clipboard.dispose();
 				statusBar.setText("已复制到剪切板:" + interfaceCombo.getText());
 			}
@@ -511,6 +525,10 @@ public class MainWindow {
 		menuItem_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(modSelectCombo.getText())) {
+					statusBar.setText("不能重命名不存在的接口");
+					return;
+				}
 				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
 						"重命名接口", interfaceCombo.getText());
 				String nameFromDialog = reNameModDialog.open();
@@ -550,6 +568,10 @@ public class MainWindow {
 		menuItem_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(modSelectCombo.getText())) {
+					statusBar.setText("不能删除不存在的接口");
+					return;
+				}
 				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此接口吗？删除后将无法恢复");
 				boolean flag = mySelectionDialog.open();
