@@ -18,10 +18,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -60,7 +56,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiMod;
@@ -87,7 +82,6 @@ public class MainWindow {
 	private static Logger logger = Logger.getLogger(MainWindow.class.getName());
 	// 加载的配置文件项
 	private int loadHistorySum;
-	private String loadReturnCodeFile;
 	private String[] loadServerAdressArray;
 	private String[] loadApiJsonFileArray;
 
@@ -106,7 +100,6 @@ public class MainWindow {
 	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
 	private ApiMod history;
-	private Properties apiReturnCode;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
 	private HashMap<String, ApiItem> tempSavePars;
@@ -118,7 +111,7 @@ public class MainWindow {
 	private Button parsCovertButton;
 	private Button parsClearButton;
 	private Button toBrower;
-	private Button apiStatusButton;
+	private Button responseCheck;
 	private Combo methodSelectCombo;
 	private Combo modSelectCombo;
 	private Combo interfaceCombo;
@@ -689,12 +682,18 @@ public class MainWindow {
 			}
 		});
 
-		// api状态码
-		apiStatusButton = new Button(mainWindowShell, SWT.NONE);
-		apiStatusButton.setToolTipText("解析Response里的code值");
-		apiStatusButton.setText("返回码解读");
-		apiStatusButton.setBounds(882, 31, 83, 27);
-		formToolkit.adapt(apiStatusButton, true, true);
+		// 结果校验器
+		responseCheck = new Button(mainWindowShell, SWT.NONE);
+		responseCheck.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("此功能暂未实现");
+			}
+		});
+		responseCheck.setToolTipText("校验Response");
+		responseCheck.setText("结果校验器");
+		responseCheck.setBounds(882, 31, 83, 27);
+		formToolkit.adapt(responseCheck, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setToolTipText("清空结果内容");
@@ -1386,75 +1385,6 @@ public class MainWindow {
 			}
 		});
 
-		// 状态码按钮的点击事件
-		apiStatusButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String text = resultBodyStyledText.getText();
-				if (isJson(text) && !isXml(text) && !text.isEmpty()) {
-					logger.debug("返回的信息为JSON格式，开始尝试解析返回码");
-					try {
-						JSONObject jsonObject = (JSONObject) JSONObject.parse(text);
-						JSONObject resultJson = jsonObject;
-						String returnText = apiReturnCode.getProperty(resultJson.get("code") + "");
-						if (returnText == null) {
-							logger.warn("返回码是:" + resultJson.get("code") + ",未找到该返回码的描述信息");
-							statusBar.setText("返回码是:" + resultJson.get("code") + ",未找到该返回码的描述信息");
-						} else {
-							logger.debug("返回码是:" + resultJson.get("code") + ":" + returnText);
-							statusBar.setText("返回码是:" + resultJson.get("code") + ":" + returnText);
-						}
-					} catch (Exception e2) {
-						logger.error("异常", e2);
-						statusBar.setText("异常:解析API返回码错误");
-					}
-
-				} else if (!isJson(text) && isXml(text) && !text.isEmpty()) {
-					logger.debug("返回的信息为XML格式，开始尝试解析返回码");
-					try {
-						Document document = DocumentHelper.parseText(text);
-						Element root = document.getRootElement();
-						String returnText = apiReturnCode.getProperty(root.element("code").getText());
-						if (returnText == null) {
-							logger.warn("返回码是:" + root.element("code").getText() + ",未找到该返回码的描述信息");
-							statusBar.setText("返回码是:" + root.element("code").getText() + ",未找到该返回码的描述信息");
-						} else {
-							statusBar.setText("返回码是:" + root.element("code").getText() + ":" + returnText);
-						}
-					} catch (DocumentException e1) {
-						statusBar.setText("异常:解析API返回码错误");
-						logger.error("异常", e1);
-					} catch (NullPointerException e2) {
-						logger.error("异常", e2);
-						statusBar.setText("异常:解析API返回码错误");
-					}
-				} else if (!(isJson(text) && isXml(text))) {
-					statusBar.setText("解析API返回码错误--貌似结果里不包含状态码");
-					logger.debug("解析API返回码错误--貌似结果里不包含状态码");
-				}
-			}
-
-			// 判断是否是json
-			boolean isJson(String text) {
-				try {
-					JSONObject.parse(text);
-					return true;
-				} catch (Exception e1) {
-					return false;
-				}
-			}
-
-			// 判断是否是xml
-			boolean isXml(String text) {
-				try {
-					DocumentHelper.parseText(text);
-					return true;
-				} catch (Exception e1) {
-					return false;
-				}
-			}
-		});
-
 		// 此为为提交按钮添加点击事件
 		submitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1731,20 +1661,9 @@ public class MainWindow {
 					this.apiJsonFile = null;
 				}
 			}
-			this.loadReturnCodeFile = properties.getProperty("returncodefile");
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			statusBar.setText("读取配置失败，请检查");
 			logger.warn("读取配置失败，请检查", e);
-		}
-		// 此处开始加载返回码列表文件
-		File reader = new File("./config/" + loadReturnCodeFile);
-		if (reader.exists()) {
-			apiReturnCode = ApiUtils.ReadProperties(reader);
-			logger.debug("加载返回码配置文件" + "./config/" + loadReturnCodeFile);
-		} else {
-			logger.debug("没有读到返回码配置,跳过加载");
 		}
 		// 配置文件加载完毕后开始加载API列表
 		if (null == apiJsonFile) {
