@@ -319,6 +319,16 @@ public class MainWindow {
 
 		MenuItem menuItemFeedBack = new MenuItem(menu_3, SWT.NONE);
 		menuItemFeedBack.setText("报告问题");
+		//快捷键说明
+		MenuItem menuItemShortcutKey = new MenuItem(menu_3, SWT.NONE);
+		menuItemShortcutKey.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ShortcutKeyExplain shortcutKeyExplain=new ShortcutKeyExplain(mainWindowShell,SWT.CLOSE | SWT.SYSTEM_MODAL);
+				shortcutKeyExplain.open();
+			}
+		});
+		menuItemShortcutKey.setText("快捷键");
 		// 菜单项-关于
 		MenuItem menuItemAbout = new MenuItem(menu_3, SWT.NONE);
 		menuItemAbout.setText("关于");
