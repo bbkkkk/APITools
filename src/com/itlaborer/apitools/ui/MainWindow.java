@@ -1502,7 +1502,7 @@ public class MainWindow {
 				httpend = System.currentTimeMillis();
 				httpTime = httpend - sumbegintime;
 				bodyReturnStr = "";
-				bodyReturnStr = ApiUtils.jsonFormat(result.readToText());
+				bodyReturnStr = ApiUtils.jsonFormat(result.readToText() + "");
 				headerReturnStr = "";
 				List<Entry<String, String>> header = result.getHeaders();
 				for (int i = 0; i < header.size(); i++) {
@@ -1523,6 +1523,7 @@ public class MainWindow {
 				});
 			}
 		};
+		httpThread.setName("httpRequest");
 		httpThread.start();
 	}
 
