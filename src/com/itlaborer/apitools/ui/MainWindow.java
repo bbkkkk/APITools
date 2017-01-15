@@ -1431,6 +1431,8 @@ public class MainWindow {
 			statusBar.setText("地址为空");
 			return;
 		}
+		resultBodyStyledText.setText("");
+		resultHeaderStyledText.setText("");
 		statusBar.setText("请求中······");
 		final HashMap<String, String> pars = getParameters();
 		parsText.setText(ParamUtils.mapToQuery(pars));
