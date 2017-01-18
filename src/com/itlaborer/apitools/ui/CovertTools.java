@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiMod;
@@ -167,11 +168,11 @@ public class CovertTools extends Dialog {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (setNameText.getText() == "") {
+				if (StringUtils.isEmpty(setNameText.getText())) {
 					statusText.setText("请填写要保存的文件名");
 					return;
 				}
-				if (apiDocJson.equals("")) {
+				if (StringUtils.isEmpty(apiDocJson)) {
 					logger.info("没有什么可以保存，请先进行转换");
 					statusText.setText("没有什么可以保存，请先进行转换");
 					return;
@@ -254,7 +255,7 @@ public class CovertTools extends Dialog {
 		else {
 			logger.info("无法接受的格式");
 		}
-		return (ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+		return (ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 	}
 
 	/**
@@ -276,6 +277,7 @@ public class CovertTools extends Dialog {
 					ApiMod thisTypeApiList = new ApiMod();
 					ArrayList<String> apiHTMLPath = new ArrayList<String>();
 					thisTypeApiList.setName(div_ul.get(i).text());
+					thisTypeApiList.setDescription("");
 					// 获取此分类下的接口列表
 					for (int r = 0; r < div_ul.get(i + 1).children().size(); r++) {
 						String path = new File(indexPath).getParent() + "/"

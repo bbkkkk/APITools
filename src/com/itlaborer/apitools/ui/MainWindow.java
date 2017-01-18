@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiMod;
@@ -366,9 +367,9 @@ public class MainWindow {
 					statusBar.setText("不能重命名不存在的模块");
 					return;
 				}
-				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
+				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
 						"重命名模块", modSelectCombo.getText());
-				String nameFromDialog = reNameModDialog.open();
+				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
 					logger.debug("模块名没有发生变化");
 				} else if (StringUtils.isEmpty(nameFromDialog)) {
@@ -390,8 +391,8 @@ public class MainWindow {
 					} else {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						statusBar.setText("模块名被修改为:" + nameFromDialog);
 					}
 				}
@@ -417,8 +418,8 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().remove(modindex);
 						// 保存
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						modSelectCombo.remove(modindex);
 						if (modSelectCombo.getItemCount() == 0) {
@@ -457,10 +458,12 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String modname;
+				String description;
 				CreateModDialog createModDialog = new CreateModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] res = createModDialog.open();
 				if ((boolean) res[0]) {
 					modname = (String) res[1];
+					description = (String) res[2];
 					if (StringUtils.isEmpty(modname)) {
 						logger.debug("模块名为空,放弃添加");
 						statusBar.setText("不能创建名字为空的模块");
@@ -481,10 +484,11 @@ public class MainWindow {
 							modSelectCombo.add(modname);
 							ApiMod apiList = new ApiMod();
 							apiList.setName(modname);
+							apiList.setDescription(description);
 							apiDoc.getItem().add(apiList);
 							try {
-								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-										ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils.jsonFormat(
+										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
 							} catch (Exception e2) {
@@ -530,9 +534,9 @@ public class MainWindow {
 					statusBar.setText("不能重命名不存在的接口");
 					return;
 				}
-				ReNameModDialog reNameModDialog = new ReNameModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
+				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
 						"重命名接口", interfaceCombo.getText());
-				String nameFromDialog = reNameModDialog.open();
+				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
 					logger.debug("接口名没有发生变化");
 				} else if (StringUtils.isEmpty(nameFromDialog)) {
@@ -556,8 +560,8 @@ public class MainWindow {
 						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						statusBar.setText("接口名被修改为:" + nameFromDialog);
 					}
 				}
@@ -584,8 +588,8 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意,保存时会把之前保存到内存中的参数也更新到文档---
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
+						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						interfaceCombo.remove(interfaceindex);
 						if (interfaceCombo.getItemCount() == 0) {
@@ -1607,7 +1611,7 @@ public class MainWindow {
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险,保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-					ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)))) {
+					ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 				statusBar.setText("保存成功,已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败,请重试");
@@ -1650,8 +1654,8 @@ public class MainWindow {
 				logger.warn("警告:参数配置文件丢失,已创建默认配置");
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
-				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"),
-						ApiUtils.jsonFormat(JSON.toJSONString(new XinzhiWeather().getApidoc())));
+				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"), ApiUtils.jsonFormat(
+						JSON.toJSONString(new XinzhiWeather().getApidoc(), SerializerFeature.WriteNullStringAsEmpty)));
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}

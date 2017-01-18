@@ -13,7 +13,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
 
-public class ReNameModDialog extends Dialog {
+public class ReNameDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -27,7 +27,7 @@ public class ReNameModDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public ReNameModDialog(Shell parent, int style, String title, String text) {
+	public ReNameDialog(Shell parent, int style, String title, String text) {
 		super(parent, style);
 		this.title = title;
 		this.text = text;
@@ -57,7 +57,7 @@ public class ReNameModDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setImage(SWTResourceManager.getImage(ReNameModDialog.class, Resource.IMAGE_ICON));
+		shell.setImage(SWTResourceManager.getImage(ReNameDialog.class, Resource.IMAGE_ICON));
 		shell.setText(this.title);
 		shell.setSize(400, 180);
 		ApiUtils.SetCenterinParent(getParent(), shell);
