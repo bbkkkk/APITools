@@ -38,7 +38,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -137,10 +136,16 @@ public class MainWindow {
 	private Listener shortcutListenerRecover;
 	private Display display;
 
+	// 颜色
+	private Color parBackgroundnormalColor;
+	private Color parBackgroundselectedColor;
+	private Color parFontsFrozenColor;
+	private Color parFOntsnormalColor;
+
 	// 主窗口
 	public MainWindow() {
 		PropertyConfigurator.configure("config/log4j.properties ");
-		logger.info("程序启动, 程序版本为:" + Resource.VERSION);
+		logger.info("程序启动,程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
 		this.parsSum = 128;
 		this.loadHistorySum = 50;
@@ -151,9 +156,13 @@ public class MainWindow {
 		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
 		this.header.put("SocksTimeout", "30000");
 		this.header.put("ConnectTimeout", "30000");
+		this.parBackgroundnormalColor = SWTResourceManager.getColor(SWT.COLOR_WHITE);;
+		this.parBackgroundselectedColor = new Color(Display.getCurrent(), 227, 247, 255);
+		this.parFontsFrozenColor = SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY);
+		this.parFOntsnormalColor = SWTResourceManager.getColor(SWT.COLOR_BLACK);
 	}
 
-	// 从这里开始，不是么？小桥流水人家~
+	// 从这里开始,不是么？小桥流水人家~
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
@@ -259,7 +268,7 @@ public class MainWindow {
 		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
 		menuItemConvertDoc.setText("恒生FUNDAPI转换工具");
 
-		// 菜单，转换工具的点击事件
+		// 菜单,转换工具的点击事件
 		menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -377,7 +386,7 @@ public class MainWindow {
 					}
 					if (flag) {
 						logger.debug("重命名模块时发生重名");
-						statusBar.setText("重命名时发现重名模块，放弃重命名");
+						statusBar.setText("重命名时发现重名模块,放弃重命名");
 					} else {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
@@ -399,7 +408,7 @@ public class MainWindow {
 					return;
 				}
 				MySelectionDialog mySelectionDialog = new MySelectionDialog(mainWindowShell,
-						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此模块吗？删除后此模块下的接口也将删除，并且将无法恢复");
+						SWT.CLOSE | SWT.SYSTEM_MODAL, "确定要删除此模块吗？删除后此模块下的接口也将删除,并且将无法恢复");
 				boolean flag = mySelectionDialog.open();
 				if (flag && (modSelectCombo.getSelectionIndex() != -1)) {
 					try {
@@ -419,7 +428,7 @@ public class MainWindow {
 							urlText.setText("");
 							interfaceCombo.removeAll();
 						}
-						// 删除的是最后一个，则初始化倒数第二个
+						// 删除的是最后一个,则初始化倒数第二个
 						else if (modindex == modSelectCombo.getItemCount()) {
 							modSelectCombo.select(modindex - 1);
 							initSelectMod(modindex - 1);
@@ -453,7 +462,7 @@ public class MainWindow {
 				if ((boolean) res[0]) {
 					modname = (String) res[1];
 					if (StringUtils.isEmpty(modname)) {
-						logger.debug("模块名为空，放弃添加");
+						logger.debug("模块名为空,放弃添加");
 						statusBar.setText("不能创建名字为空的模块");
 					} else {
 						// 重名判断
@@ -543,7 +552,7 @@ public class MainWindow {
 					}
 					if (flag) {
 						logger.debug("重命名接口时发生重名");
-						statusBar.setText("重命名时发现重名接口，放弃重命名");
+						statusBar.setText("重命名时发现重名接口,放弃重命名");
 					} else {
 						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
 						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
@@ -575,7 +584,7 @@ public class MainWindow {
 						logger.debug("开始删除接口:" + modSelectCombo.getText() + "模块下的" + interfaceCombo.getText());
 						// 移除
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
-						// 保存--请注意，保存时会把之前保存到内存中的参数也更新到文档---
+						// 保存--请注意,保存时会把之前保存到内存中的参数也更新到文档---
 						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 								ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)));
 						// 重新初始化界面
@@ -586,7 +595,7 @@ public class MainWindow {
 							clearParameters();
 							urlText.setText("");
 						}
-						// 删除的是最后一个，则初始化倒数第二个
+						// 删除的是最后一个,则初始化倒数第二个
 						else if (interfaceindex == interfaceCombo.getItemCount()) {
 							interfaceCombo.select(interfaceindex - 1);
 							initSelectInterface(modindex, interfaceindex - 1);
@@ -750,7 +759,7 @@ public class MainWindow {
 			// 第一列--编号和操作列
 			TableEditor editor0 = new TableEditor(formTable);
 			label[i] = new Label(formTable, SWT.NONE | SWT.CENTER);
-			label[i].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+			label[i].setBackground(parBackgroundnormalColor);
 			label[i].setText(new DecimalFormat("000").format(i + 1));
 			editor0.grabHorizontal = true;
 			editor0.setEditor(label[i], items[i], 0);
@@ -1004,24 +1013,22 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isEmpty(form[b][1].getText())) {
-						statusBar.setText("空的输入框，放弃冻结");
+						statusBar.setText("空的输入框,放弃冻结");
 					} else {
 						if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "冻结此参数")) {
 							// 冻结标志
 							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-							form[b][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+							form[b][0].setForeground(parFontsFrozenColor);
+							form[b][1].setForeground(parFontsFrozenColor);
+							form[b][2].setForeground(parFontsFrozenColor);
 							menuItem1SubFrozen[b].setText("解冻此参数");
 							statusBar.setText("冻结参数完毕");
 						} else if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "解冻此参数")) {
 							// 解冻标志
 							label[b].setToolTipText("");
-							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-							form[b][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+							form[b][0].setForeground(parFOntsnormalColor);
+							form[b][1].setForeground(parFOntsnormalColor);
+							form[b][2].setForeground(parFOntsnormalColor);
 							menuItem1SubFrozen[b].setText("冻结此参数");
 							statusBar.setText("解冻参数完毕");
 						}
@@ -1042,18 +1049,18 @@ public class MainWindow {
 
 				@Override
 				public void mouseExit(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void mouseEnter(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 			//////////////////////////////////////////////////////////////////////////////////////////
@@ -1078,52 +1085,52 @@ public class MainWindow {
 			form[i][0].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void focusGained(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 			form[i][1].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void focusGained(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 			form[i][2].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void focusGained(FocusEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 			// 鼠标监听
@@ -1135,18 +1142,18 @@ public class MainWindow {
 
 				@Override
 				public void mouseExit(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void mouseEnter(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 
@@ -1158,18 +1165,18 @@ public class MainWindow {
 
 				@Override
 				public void mouseExit(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void mouseEnter(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 			form[i][2].addMouseTrackListener(new MouseTrackListener() {
@@ -1180,18 +1187,18 @@ public class MainWindow {
 
 				@Override
 				public void mouseExit(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					label[b].setBackground(parBackgroundnormalColor);
+					form[b][0].setBackground(parBackgroundnormalColor);
+					form[b][1].setBackground(parBackgroundnormalColor);
+					form[b][2].setBackground(parBackgroundnormalColor);
 				}
 
 				@Override
 				public void mouseEnter(MouseEvent e) {
-					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
-					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					label[b].setBackground(parBackgroundselectedColor);
+					form[b][0].setBackground(parBackgroundselectedColor);
+					form[b][1].setBackground(parBackgroundselectedColor);
+					form[b][2].setBackground(parBackgroundselectedColor);
 				}
 			});
 		}
@@ -1229,7 +1236,7 @@ public class MainWindow {
 		// 按键按下时执行快捷键操作
 		shortcutListener = new Listener() {
 			public void handleEvent(Event e) {
-				// 只有窗口是激活状态，并且按键是第一次按下时才执行快捷键操作，避免重复不停的执行
+				// 只有窗口是激活状态,并且按键是第一次按下时才执行快捷键操作,避免重复不停的执行
 				if ((openByShortcutFlag == false) && (windowFocusFlag == true) && (keyDownFlag == false)) {
 					// Ctrl+n开启新的窗口
 					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_N)) {
@@ -1374,18 +1381,18 @@ public class MainWindow {
 		parsClearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// 在别的ToolTipText更新时，鼠标点击所在的Button的ToolTipText会不停地闪烁，需要纠正
+				// 在别的ToolTipText更新时,鼠标点击所在的Button的ToolTipText会不停地闪烁,需要纠正
 				parsClearButton.setToolTipText(null);
 				try {
 					urlText.setText(serverAdress + apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getPath());
 					initParameters(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getParameters());
-					// 重置参数时，删除内存中临时保存的数据
+					// 重置参数时,删除内存中临时保存的数据
 					tempSavePars.remove(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid());
 				} catch (Exception e2) {
-					logger.error("当前选择的接口并不包含参数信息，无法完成重新初始化，默认留空");
+					logger.error("当前选择的接口并不包含参数信息,无法完成重新初始化,默认留空");
 				}
 			}
 		});
@@ -1399,7 +1406,7 @@ public class MainWindow {
 		clearSpaceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// 遍历参数框，找到参数里多余的空格
+				// 遍历参数框,找到参数里多余的空格
 				for (int i = 0; i < parsSum; i++) {
 					form[i][0].setText(form[i][0].getText().trim());
 					form[i][1].setText(form[i][1].getText().trim());
@@ -1615,7 +1622,7 @@ public class MainWindow {
 		item.setParameters(new ArrayList<ApiPar>());
 		// 从form框初始化
 		for (int i = 0; i < form.length; i++) {
-			// 判断参数名和参数值，不判断备注
+			// 判断参数名和参数值,不判断备注
 			if (StringUtils.isNotEmpty(form[i][1].getText()) || StringUtils.isNotEmpty(form[i][2].getText())) {
 				item.getParameters().add(
 						new ApiPar(form[i][1].getText() + "", form[i][0].getText() + "", form[i][2].getText() + ""));
@@ -1624,11 +1631,11 @@ public class MainWindow {
 		// 做个标识临时存起来
 		tempSavePars.put(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 				.get(interfaceCombo.getSelectionIndex()).getUuid(), item);
-		statusBar.setText("保存成功，程序关闭前有效");
+		statusBar.setText("保存成功,程序关闭前有效");
 	}
 
 	// 保存参数到文件
-	// 新读取一份文档保存，因为内存中的那份可能在其他接口处做了临时保存
+	// 新读取一份文档保存,因为内存中的那份可能在其他接口处做了临时保存
 	private void SavePars2File() {
 		logger.debug("调用了永久保存参数");
 		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
@@ -1639,12 +1646,12 @@ public class MainWindow {
 			apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().set(interfaceCombo.getSelectionIndex(),
 					tempSavePars.get(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
-			// 保存到文件--潜在的风险，保存时间过长程序界面卡死
+			// 保存到文件--潜在的风险,保存时间过长程序界面卡死
 			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
 					ApiUtils.jsonFormat(JSON.toJSONString(apiDoc)))) {
-				statusBar.setText("保存成功，已写入接口配置文件");
+				statusBar.setText("保存成功,已写入接口配置文件");
 			} else {
-				statusBar.setText("保存失败，请重试");
+				statusBar.setText("保存失败,请重试");
 			}
 		} catch (Exception e) {
 			logger.error("异常:" + e);
@@ -1681,7 +1688,7 @@ public class MainWindow {
 		if (!configFile.exists()) {
 			try {
 				ApiUtils.SaveToFile(configFile, Resource.CONFIG);
-				logger.warn("警告:参数配置文件丢失，已创建默认配置");
+				logger.warn("警告:参数配置文件丢失,已创建默认配置");
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
 				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"),
@@ -1693,7 +1700,7 @@ public class MainWindow {
 		if (!log4jFile.exists()) {
 			try {
 				ApiUtils.SaveToFile(log4jFile, Resource.LOG4J);
-				logger.warn("警告:日志配置文件丢失，已创建默认配置");
+				logger.warn("警告:日志配置文件丢失,已创建默认配置");
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
@@ -1732,12 +1739,12 @@ public class MainWindow {
 				}
 			}
 		} catch (Exception e) {
-			statusBar.setText("读取配置失败，请检查");
-			logger.warn("读取配置失败，请检查", e);
+			statusBar.setText("读取配置失败,请检查");
+			logger.warn("读取配置失败,请检查", e);
 		}
 		// 配置文件加载完毕后开始加载API列表
 		if (null == apiJsonFile) {
-			logger.debug("API列表为空，跳过加载");
+			logger.debug("API列表为空,跳过加载");
 		} else {
 			InitApiList();
 		}
@@ -1747,12 +1754,12 @@ public class MainWindow {
 	private void InitApiList() {
 		File apilistfile = new File("./config/" + apiJsonFile);
 		if (!apilistfile.exists()) {
-			logger.warn("警告:您加载的API文档不存在，程序将跳过加载API列表，请检查配置");
+			logger.warn("警告:您加载的API文档不存在,程序将跳过加载API列表,请检查配置");
 			return;
 		}
 		try {
 			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
-			// 检查接口文档是老版本的文档没有，需要补正
+			// 检查接口文档是老版本的文档没有,需要补正
 			// 加载前判断版本
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
@@ -1761,12 +1768,12 @@ public class MainWindow {
 				initHistory();
 				initMod();
 			} else {
-				logger.warn("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
-				statusBar.setText("警告:您加载的API列表可能是老版本的，请重新生成列表配置");
+				logger.warn("警告:您加载的API列表可能是老版本的,请重新生成列表配置");
+				statusBar.setText("警告:您加载的API列表可能是老版本的,请重新生成列表配置");
 			}
 		} catch (Exception e) {
 			logger.error("异常:", e);
-			statusBar.setText("您加载的接口文件有误，请核对");
+			statusBar.setText("您加载的接口文件有误,请核对");
 		}
 	}
 
@@ -1778,7 +1785,7 @@ public class MainWindow {
 		}
 		// 加载地址列表
 		if (null == serverlist) {
-			logger.info("没有读取到服务器信息，调过加载");
+			logger.info("没有读取到服务器信息,调过加载");
 			return;
 		}
 		logger.info("加载到的服务器列表:" + serverlist);
@@ -1834,7 +1841,7 @@ public class MainWindow {
 		clearParameters();
 		interfaceCombo.removeAll();
 		if (null == apiDoc.getItem().get(modindex).getItem() || apiDoc.getItem().get(modindex).getItem().size() == 0) {
-			logger.debug("当前分类下无接口信息，跳过加载");
+			logger.debug("当前分类下无接口信息,跳过加载");
 			return;
 		}
 		for (int i = 0; i < apiDoc.getItem().get(modindex).getItem().size(); i++) {
@@ -1853,10 +1860,10 @@ public class MainWindow {
 
 	// 初始化选择的接口
 	private void initSelectInterface(int modindex, int interfaceindex) {
-		// 初始化前要判断是否之前有保存过，如果有保存过，则初始化保存的那份数据
+		// 初始化前要判断是否之前有保存过,如果有保存过,则初始化保存的那份数据
 		ApiItem apiItem = tempSavePars.get(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getUuid());
 		if (null != apiItem) {
-			logger.debug("此接口有之前保存的数据，读取保存的数据");
+			logger.debug("此接口有之前保存的数据,读取保存的数据");
 			interfaceContextPath = apiItem.getPath();
 			urlText.setText(serverAdress + apiItem.getPath());
 			interfaceCombo.setToolTipText(apiItem.getDescription());
@@ -1887,7 +1894,6 @@ public class MainWindow {
 					break;
 				}
 				// 将参数初始化一下
-				form[i][0].setToolTipText(pars.get(i).getTip() + "");
 				form[i][0].setText(pars.get(i).getTip() + "");
 				form[i][1].setText(pars.get(i).getName());
 				form[i][2].setText(pars.get(i).getValue());
@@ -1941,7 +1947,7 @@ public class MainWindow {
 		HashMap<String, String> par = new HashMap<String, String>();
 		for (int i = 0; i < parsSum; i++) {
 			if (!(form[i][1].getText().isEmpty() || form[i][2].getText().isEmpty())
-					&& !(form[i][1].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
+					&& !(form[i][1].getForeground().equals(parFontsFrozenColor))) {
 				par.put(form[i][1].getText(), form[i][2].getText());
 			}
 		}
@@ -1963,13 +1969,11 @@ public class MainWindow {
 		for (int i = 0; i < parsSum; i++) {
 			menuItem1SubFrozen[i].setText("冻结此参数");
 			form[i][0].setText("");
-			form[i][0].setToolTipText("");
 			form[i][1].setText("");
 			form[i][2].setText("");
-			// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-			form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-			form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-			form[i][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+			form[i][0].setForeground(parFOntsnormalColor);
+			form[i][1].setForeground(parFOntsnormalColor);
+			form[i][2].setForeground(parFOntsnormalColor);
 		}
 	}
 
@@ -1992,19 +1996,16 @@ public class MainWindow {
 							form[j][0].setToolTipText("");
 							form[j][1].setText("");
 							form[j][2].setText("");
-							// 判断是否做过冻结，如果是，则需要移动锁定标志位
-							if ((form[j][0].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
+							// 判断是否做过冻结,如果是,则需要移动锁定标志位
+							if ((form[j][0].getForeground().equals(parFontsFrozenColor))) {
 								label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-								form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-								form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-								form[i][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+								form[i][0].setForeground(parFontsFrozenColor);
+								form[i][1].setForeground(parFontsFrozenColor);
+								form[i][2].setForeground(parFontsFrozenColor);
 								menuItem1SubFrozen[i].setText("解冻此参数");
-								label[j].setToolTipText("");
-								// label[j].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-								form[j][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-								form[j][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-								form[j][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+								form[j][0].setForeground(parFOntsnormalColor);
+								form[j][1].setForeground(parFOntsnormalColor);
+								form[j][2].setForeground(parFOntsnormalColor);
 								menuItem1SubFrozen[j].setText("冻结此参数");
 							}
 							break;
@@ -2179,6 +2180,7 @@ public class MainWindow {
 	private void RenderingColor(StyledText styledText) {
 		StyleRange styleRange = new StyleRange();
 		styledText.setStyleRange(styleRange);
+		@SuppressWarnings("unused")
 		int startIndex = 0;
 		int endIndex = styledText.getText().length();
 		if (endIndex == -1) {
@@ -2189,7 +2191,7 @@ public class MainWindow {
 	}
 
 	// TODO 历史记录器
-	// 触发更新历史记录，只有在点击请求的时候才触发
+	// 触发更新历史记录,只有在点击请求的时候才触发
 	private void notifyHistory() {
 		ArrayList<ApiItem> historyList = history.getItem();
 		if (historyList.size() < this.loadHistorySum) {
