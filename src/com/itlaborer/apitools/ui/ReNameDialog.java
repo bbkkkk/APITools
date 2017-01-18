@@ -18,7 +18,7 @@ public class ReNameDialog extends Dialog {
 	protected Object result;
 	protected Shell shell;
 	private String title;
-	private String text;
+	private String newname;
 	private Text nameText;
 
 	/**
@@ -27,10 +27,10 @@ public class ReNameDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public ReNameDialog(Shell parent, int style, String title, String text) {
+	public ReNameDialog(Shell parent, int style, String title, String nametext) {
 		super(parent, style);
 		this.title = title;
-		this.text = text;
+		this.newname = nametext;
 
 	}
 
@@ -49,7 +49,7 @@ public class ReNameDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return text;
+		return newname;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ReNameDialog extends Dialog {
 		buttonYes.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				text = nameText.getText();
+				newname = nameText.getText();
 				shell.dispose();
 			}
 		});
@@ -79,7 +79,7 @@ public class ReNameDialog extends Dialog {
 
 		nameText = new Text(shell, SWT.BORDER);
 		nameText.setBounds(10, 52, 374, 23);
-		nameText.setText(text);
+		nameText.setText(newname);
 		buttonNo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
