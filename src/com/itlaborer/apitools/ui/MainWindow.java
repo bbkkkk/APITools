@@ -720,26 +720,34 @@ public class MainWindow {
 		tblclmnNewColumn.setResizable(false);
 		tblclmnNewColumn.setText("编号");
 
+		TableColumn tblclmnNewColumn2 = new TableColumn(formTable, SWT.BORDER);
+		tblclmnNewColumn2.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+				- formTable.getVerticalBar().getSize().x - 4) * 0.24));
+		tblclmnNewColumn2.setResizable(false);
+		tblclmnNewColumn2.setText("备注");
+
 		TableColumn nameColumn = new TableColumn(formTable, SWT.BORDER);
 		nameColumn.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
-				- formTable.getVerticalBar().getSize().x - 4) * 0.46));
+				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		nameColumn.setText("参数名");
 		nameColumn.setResizable(false);
 
 		TableColumn valueColumn_1 = new TableColumn(formTable, SWT.BORDER);
 		valueColumn_1.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
-				- formTable.getVerticalBar().getSize().x - 4) * 0.54));
+				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
 
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
-		form = new Text[parsSum][2];
+		form = new Text[parsSum][3];
 		menuItem1SubFrozen = new MenuItem[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
 			final int b = i;
-			// 第一列
+			//////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////////////
+			// 第一列--编号和操作列
 			TableEditor editor0 = new TableEditor(formTable);
 			label[i] = new Label(formTable, SWT.NONE | SWT.CENTER);
 			label[i].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
@@ -764,9 +772,9 @@ public class MainWindow {
 			menuItemKeyUrlEncode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
 						try {
-							form[b][0].setText(URLEncoder.encode(form[b][0].getText(), "UTF-8"));
+							form[b][1].setText(URLEncoder.encode(form[b][1].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("转码异常", e1);
 						}
@@ -783,9 +791,9 @@ public class MainWindow {
 			menuItemKeyUrlDecode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
 						try {
-							form[b][0].setText(URLDecoder.decode(form[b][0].getText(), "UTF-8"));
+							form[b][1].setText(URLDecoder.decode(form[b][1].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("解码异常", e1);
 						}
@@ -802,8 +810,8 @@ public class MainWindow {
 			menuItemKeyBase64.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(ApiUtils.base64EncodeString(form[b][0].getText()));
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.base64EncodeString(form[b][1].getText()));
 					}
 				}
 
@@ -817,8 +825,8 @@ public class MainWindow {
 			menuItemKeyBase64D.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(ApiUtils.base64DecodeString(form[b][0].getText()));
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.base64DecodeString(form[b][1].getText()));
 					}
 				}
 
@@ -832,8 +840,8 @@ public class MainWindow {
 			menuItemKeyMD5Cap.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(ApiUtils.MD5(form[b][0].getText()));
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()));
 					}
 				}
 
@@ -847,8 +855,8 @@ public class MainWindow {
 			menuItemKeyMD5Low.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(ApiUtils.MD5(form[b][0].getText()).toLowerCase());
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()).toLowerCase());
 					}
 				}
 
@@ -862,8 +870,8 @@ public class MainWindow {
 			menuItemKeyTrim.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][0].getText())) {
-						form[b][0].setText(form[b][0].getText().trim());
+					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+						form[b][1].setText(form[b][1].getText().trim());
 					}
 				}
 
@@ -883,9 +891,9 @@ public class MainWindow {
 			menuItemValueUrlEncode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
 						try {
-							form[b][1].setText(URLEncoder.encode(form[b][1].getText(), "UTF-8"));
+							form[b][2].setText(URLEncoder.encode(form[b][2].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("转码异常", e1);
 						}
@@ -902,9 +910,9 @@ public class MainWindow {
 			menuItemValueUrlDecode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
 						try {
-							form[b][1].setText(URLDecoder.decode(form[b][1].getText(), "UTF-8"));
+							form[b][2].setText(URLDecoder.decode(form[b][2].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("解码异常", e1);
 						}
@@ -921,8 +929,8 @@ public class MainWindow {
 			menuItemValueBase64.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.base64EncodeString(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+						form[b][2].setText(ApiUtils.base64EncodeString(form[b][2].getText()));
 					}
 				}
 
@@ -936,8 +944,8 @@ public class MainWindow {
 			menuItemValueBase64D.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.base64DecodeString(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+						form[b][2].setText(ApiUtils.base64DecodeString(form[b][2].getText()));
 					}
 				}
 
@@ -951,8 +959,8 @@ public class MainWindow {
 			menuItemValueMD5Cap.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+						form[b][2].setText(ApiUtils.MD5(form[b][2].getText()));
 					}
 				}
 
@@ -966,8 +974,8 @@ public class MainWindow {
 			menuItemValueMD5Low.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()).toLowerCase());
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+						form[b][2].setText(ApiUtils.MD5(form[b][2].getText()).toLowerCase());
 					}
 				}
 
@@ -981,8 +989,8 @@ public class MainWindow {
 			menuItemValueTrim.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(form[b][1].getText().trim());
+					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+						form[b][2].setText(form[b][2].getText().trim());
 					}
 				}
 
@@ -995,7 +1003,7 @@ public class MainWindow {
 			menuItem1SubFrozen[i].addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isEmpty(form[b][0].getText())) {
+					if (StringUtils.isEmpty(form[b][1].getText())) {
 						statusBar.setText("空的输入框，放弃冻结");
 					} else {
 						if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "冻结此参数")) {
@@ -1004,6 +1012,7 @@ public class MainWindow {
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+							form[b][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 							menuItem1SubFrozen[b].setText("解冻此参数");
 							statusBar.setText("冻结参数完毕");
 						} else if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "解冻此参数")) {
@@ -1012,6 +1021,7 @@ public class MainWindow {
 							// label[b].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							form[b][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							form[b][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+							form[b][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 							menuItem1SubFrozen[b].setText("冻结此参数");
 							statusBar.setText("解冻参数完毕");
 						}
@@ -1035,6 +1045,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
 
 				@Override
@@ -1042,21 +1053,27 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
-
+			//////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////////////
 			// 第二列
 			TableEditor editor1 = new TableEditor(formTable);
 			form[i][0] = new Text(formTable, SWT.NONE);
-			form[i][0].setText(items[i].getText(1));
 			editor1.grabHorizontal = true;
 			editor1.setEditor(form[i][0], items[i], 1);
 			// 第三列
 			TableEditor editor2 = new TableEditor(formTable);
 			form[i][1] = new Text(formTable, SWT.NONE);
-			form[i][1].setText(items[i].getText(2));
 			editor2.grabHorizontal = true;
 			editor2.setEditor(form[i][1], items[i], 2);
+
+			// 第四列
+			TableEditor editor3 = new TableEditor(formTable);
+			form[i][2] = new Text(formTable, SWT.NONE);
+			editor3.grabHorizontal = true;
+			editor3.setEditor(form[i][2], items[i], 3);
 			// 设置焦点变色--鼠标和焦点
 			form[i][0].addFocusListener(new FocusListener() {
 				@Override
@@ -1064,6 +1081,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
 
 				@Override
@@ -1071,6 +1089,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
 			form[i][1].addFocusListener(new FocusListener() {
@@ -1079,6 +1098,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
 
 				@Override
@@ -1086,8 +1106,27 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
+			form[i][2].addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void focusGained(FocusEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
+			// 鼠标监听
 			form[i][0].addMouseTrackListener(new MouseTrackListener() {
 
 				@Override
@@ -1099,6 +1138,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
 
 				@Override
@@ -1106,6 +1146,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
 
@@ -1120,6 +1161,7 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 				}
 
 				@Override
@@ -1127,6 +1169,29 @@ public class MainWindow {
 					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+				}
+			});
+			form[i][2].addMouseTrackListener(new MouseTrackListener() {
+
+				@Override
+				public void mouseHover(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+				}
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					label[b].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][0].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][1].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
+					form[b][2].setBackground(new Color(Display.getCurrent(), 227, 247, 255));
 				}
 			});
 		}
@@ -1338,6 +1403,7 @@ public class MainWindow {
 				for (int i = 0; i < parsSum; i++) {
 					form[i][0].setText(form[i][0].getText().trim());
 					form[i][1].setText(form[i][1].getText().trim());
+					form[i][2].setText(form[i][2].getText().trim());
 				}
 				logger.debug("寻找参数里的多余的空格完毕");
 			}
@@ -1549,9 +1615,10 @@ public class MainWindow {
 		item.setParameters(new ArrayList<ApiPar>());
 		// 从form框初始化
 		for (int i = 0; i < form.length; i++) {
-			if (StringUtils.isNotEmpty(form[i][0].getText()) || StringUtils.isNotEmpty(form[i][1].getText())) {
-				item.getParameters().add(new ApiPar(form[i][0].getText() + "", form[i][0].getToolTipText() + "",
-						form[i][1].getText() + ""));
+			// 判断参数名和参数值，不判断备注
+			if (StringUtils.isNotEmpty(form[i][1].getText()) || StringUtils.isNotEmpty(form[i][2].getText())) {
+				item.getParameters().add(
+						new ApiPar(form[i][1].getText() + "", form[i][0].getText() + "", form[i][2].getText() + ""));
 			}
 		}
 		// 做个标识临时存起来
@@ -1815,14 +1882,15 @@ public class MainWindow {
 		if (null != pars) {
 			for (int i = 0; i < pars.size(); i++) {
 				if (i > (this.parsSum - 1)) {
-					logger.info("使用的参数竟然超过了" + parsSum + "个");
+					logger.info("使用的参数超过了" + parsSum + "个");
 					statusBar.setText("暂不支持" + parsSum + "个以上参数");
 					break;
 				}
 				// 将参数初始化一下
-				form[i][0].setText(pars.get(i).getName());
-				form[i][0].setToolTipText(pars.get(i).getTip());
-				form[i][1].setText(pars.get(i).getValue());
+				form[i][0].setToolTipText(pars.get(i).getTip() + "");
+				form[i][0].setText(pars.get(i).getTip() + "");
+				form[i][1].setText(pars.get(i).getName());
+				form[i][2].setText(pars.get(i).getValue());
 			}
 		}
 	}
@@ -1863,7 +1931,7 @@ public class MainWindow {
 		}
 		ArrayList<ApiPar> apiPars = new ArrayList<ApiPar>();
 		for (Entry<String, String> entry : queryMap.entrySet()) {
-			apiPars.add(new ApiPar(entry.getKey(), entry.getValue()));
+			apiPars.add(new ApiPar(entry.getKey(), "", entry.getValue()));
 		}
 		return apiPars;
 	}
@@ -1872,9 +1940,9 @@ public class MainWindow {
 	private HashMap<String, String> getParameters() {
 		HashMap<String, String> par = new HashMap<String, String>();
 		for (int i = 0; i < parsSum; i++) {
-			if (!(form[i][0].getText().isEmpty() || form[i][1].getText().isEmpty())
-					&& !(form[i][0].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
-				par.put(form[i][0].getText(), form[i][1].getText());
+			if (!(form[i][1].getText().isEmpty() || form[i][2].getText().isEmpty())
+					&& !(form[i][1].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
+				par.put(form[i][1].getText(), form[i][2].getText());
 			}
 		}
 		return par;
@@ -1897,40 +1965,46 @@ public class MainWindow {
 			form[i][0].setText("");
 			form[i][0].setToolTipText("");
 			form[i][1].setText("");
-			form[i][1].setToolTipText("");
-			label[i].setToolTipText("");
+			form[i][2].setText("");
 			// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 			form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 			form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+			form[i][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		}
 	}
 
 	// 参数重排
 	private void compressParameters() {
 		for (int i = 0; i < parsSum; i++) {
-			if (form[i][0].getText().trim().isEmpty() && form[i][1].getText().trim().isEmpty()) {
+			if (form[i][0].getText().trim().isEmpty() && form[i][1].getText().trim().isEmpty()
+					&& form[i][2].getText().trim().isEmpty()) {
 				if (i == parsSum - 1) {
 					break;
 				} else {
 					for (int j = i + 1; j < parsSum; j++) {
-						if (!form[j][0].getText().trim().isEmpty() || !form[j][1].getText().trim().isEmpty()) {
+						if (!form[j][0].getText().trim().isEmpty() || !form[j][1].getText().trim().isEmpty()
+								|| !form[j][2].getText().trim().isEmpty()) {
 							form[i][0].setText(form[j][0].getText());
 							form[i][0].setToolTipText((form[j][0].getToolTipText()));
 							form[i][1].setText(form[j][1].getText());
+							form[i][2].setText(form[j][2].getText());
 							form[j][0].setText("");
 							form[j][0].setToolTipText("");
 							form[j][1].setText("");
+							form[j][2].setText("");
 							// 判断是否做过冻结，如果是，则需要移动锁定标志位
 							if ((form[j][0].getForeground().getRGB().equals(new RGB(128, 128, 128)))) {
 								label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 								// label[i].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 								form[i][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 								form[i][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+								form[i][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 								menuItem1SubFrozen[i].setText("解冻此参数");
 								label[j].setToolTipText("");
 								// label[j].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 								form[j][0].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 								form[j][1].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+								form[j][2].setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 								menuItem1SubFrozen[j].setText("冻结此参数");
 							}
 							break;
