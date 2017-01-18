@@ -658,7 +658,7 @@ public class MainWindow {
 		parsCovertButton.setMenu(menu_5);
 
 		MenuItem menuItem_3 = new MenuItem(menu_5, SWT.NONE);
-		menuItem_3.setText("切换分隔符");
+		menuItem_3.setText("导入设置");
 
 		// 重置参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
