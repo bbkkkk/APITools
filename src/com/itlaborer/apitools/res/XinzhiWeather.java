@@ -31,7 +31,7 @@ public class XinzhiWeather {
 		nowWeather.setMethod("GET");
 		ArrayList<ApiPar> nowWeatherPars = new ArrayList<ApiPar>();
 		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
-		nowWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "北京"));
+		nowWeatherPars.add(new ApiPar("location", "城市中文名", "北京"));
 		nowWeather.setParameters(nowWeatherPars);
 		// 第二个接口
 		ApiItem dailyWeather = new ApiItem();
@@ -42,7 +42,7 @@ public class XinzhiWeather {
 		dailyWeather.setMethod("GET");
 		ArrayList<ApiPar> dailyWeatherPars = new ArrayList<ApiPar>();
 		dailyWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
-		dailyWeatherPars.add(new ApiPar("location", "城市中文名 例如：location=北京", "上海"));
+		dailyWeatherPars.add(new ApiPar("location", "城市中文名", "上海"));
 		dailyWeather.setParameters(dailyWeatherPars);
 
 		// 加入接口列表
