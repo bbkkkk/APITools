@@ -367,8 +367,8 @@ public class MainWindow {
 					statusBar.setText("不能重命名不存在的模块");
 					return;
 				}
-				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
-						"重命名模块", modSelectCombo.getText());
+				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "重命名模块",
+						modSelectCombo.getText());
 				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
 					logger.debug("模块名没有发生变化");
@@ -534,8 +534,8 @@ public class MainWindow {
 					statusBar.setText("不能重命名不存在的接口");
 					return;
 				}
-				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL,
-						"重命名接口", interfaceCombo.getText());
+				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "重命名接口",
+						interfaceCombo.getText());
 				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
 					logger.debug("接口名没有发生变化");
@@ -623,7 +623,69 @@ public class MainWindow {
 		menuItem_2.setText("删除此接口");
 
 		MenuItem menuItem_6 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_6.setEnabled(false);
+		menuItem_6.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String collectionName;
+				String description;
+				String path;
+				CreateCollectionDialog createModDialog = new CreateCollectionDialog(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL);
+				Object[] res = createModDialog.open(serverAdress);
+				if ((boolean) res[0]) {
+					collectionName = (String) res[1];
+					description = (String) res[2];
+					path = (String) res[3];
+					if (StringUtils.isEmpty(collectionName)) {
+						logger.debug("接口名为空,放弃添加");
+						statusBar.setText("不能创建名字为空的接口");
+					} else {
+						// 重名判断以及此模块是否为空
+						boolean flag = false;
+						ArrayList<ApiItem> items = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem();
+						if (null != items) {
+							for (int i = 0; i < items.size(); i++) {
+								if (StringUtils.equals(items.get(i).getName(), collectionName)
+										&& (i != interfaceCombo.getSelectionIndex())) {
+									flag = true;
+									break;
+								}
+							}
+						}
+						// 如果模块为空,则创建接口list对象
+						else {
+							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setItem(new ArrayList<ApiItem>());
+						}
+						// 如果重名则提示,否则创建接口
+						if (flag) {
+							logger.debug("新增接口时发生重名");
+							statusBar.setText("新增时发现重名接口,放弃新增,请重新添加");
+						} else {
+							// 新增接口项目
+							ApiItem apiItem = new ApiItem();
+							apiItem.setName(collectionName);
+							apiItem.setDescription(description);
+							apiItem.setPath(path);
+							apiItem.setMethod("GET");
+							apiItem.setUuid(ApiUtils.getUUID());
+							apiItem.setParameters(new ArrayList<ApiPar>());
+							// 加入当前组
+							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().add(apiItem);
+							interfaceCombo.add(collectionName);
+							// 保存
+							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+							// 切换到这个接口
+							interfaceCombo.select(interfaceCombo.getItemCount() - 1);
+							initSelectInterface(modSelectCombo.getSelectionIndex(),
+									apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().size() - 1);
+						}
+					}
+				} else {
+					logger.debug("放弃新增接口");
+				}
+			}
+		});
 		menuItem_6.setText("新增一个接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
@@ -688,6 +750,7 @@ public class MainWindow {
 		btnAuthorization.setBounds(787, 31, 92, 27);
 		formToolkit.adapt(btnAuthorization, true, true);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("此功能暂未实现");
@@ -1887,7 +1950,8 @@ public class MainWindow {
 				methodSelectCombo.select(5);
 				break;
 			default:
-				logger.info("未找到合适的请求方法,忽略");
+				logger.info("未找到合适的请求方法,默认使用GET");
+				methodSelectCombo.select(0);
 				break;
 			}
 		}
