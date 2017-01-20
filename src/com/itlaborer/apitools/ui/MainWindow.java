@@ -457,6 +457,11 @@ public class MainWindow {
 		menuItem_7.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (null == apiDoc) {
+					logger.info("不能在空的接口文档上创建模块,请先创建接口文档");
+					statusBar.setText("不能在空的接口文档上创建模块,请先创建接口文档");
+					return;
+				}
 				String modname;
 				String description;
 				CreateModDialog createModDialog = new CreateModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
@@ -626,6 +631,11 @@ public class MainWindow {
 		menuItem_6.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (modSelectCombo.getItemCount() == 0) {
+					logger.info("不能在空的模块上创建接口,请先创建模块");
+					statusBar.setText("不能在空的模块上创建接口,请先创建模块");
+					return;
+				}
 				String collectionName;
 				String description;
 				String path;
