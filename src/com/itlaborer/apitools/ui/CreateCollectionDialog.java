@@ -93,7 +93,7 @@ public class CreateCollectionDialog extends Dialog {
 		Label label = new Label(shell, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label.setBounds(10, 18, 61, 17);
-		label.setText("接口名");
+		label.setText("接口名:");
 
 		descriptionText = new Text(shell, SWT.BORDER);
 		descriptionText.setBounds(10, 81, 454, 23);
@@ -101,10 +101,10 @@ public class CreateCollectionDialog extends Dialog {
 		Label label_1 = new Label(shell, SWT.NONE);
 		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_1.setBounds(10, 64, 61, 17);
-		label_1.setText("备注");
+		label_1.setText("备注:");
 
 		Label label_2 = new Label(shell, SWT.NONE);
-		label_2.setText("路径");
+		label_2.setText("路径:");
 		label_2.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_2.setBounds(10, 109, 61, 17);
 

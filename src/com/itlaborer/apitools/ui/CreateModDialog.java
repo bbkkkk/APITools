@@ -85,7 +85,7 @@ public class CreateModDialog extends Dialog {
 		Label label = new Label(shell, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label.setBounds(10, 20, 61, 17);
-		label.setText("模块名");
+		label.setText("模块名:");
 
 		descriptionText = new Text(shell, SWT.BORDER);
 		descriptionText.setBounds(10, 87, 374, 23);
@@ -93,7 +93,7 @@ public class CreateModDialog extends Dialog {
 		Label label_1 = new Label(shell, SWT.NONE);
 		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_1.setBounds(10, 70, 61, 17);
-		label_1.setText("备注");
+		label_1.setText("备注:");
 		buttonNo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
