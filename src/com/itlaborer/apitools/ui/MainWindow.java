@@ -721,7 +721,7 @@ public class MainWindow {
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
-		parsCovertButton.setToolTipText("导入形如a=1&&b=2的参数串到表单");
+		parsCovertButton.setToolTipText("导入参数串到表单");
 		parsCovertButton.setText("导入参数");
 		parsCovertButton.setBounds(487, 31, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
