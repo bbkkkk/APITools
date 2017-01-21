@@ -1456,7 +1456,6 @@ public class MainWindow {
 		modSelectCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				clearParameters();
 				initSelectMod(modSelectCombo.getSelectionIndex());
 				logger.debug("切换到分组:" + apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getName());
 			}
@@ -1874,10 +1873,13 @@ public class MainWindow {
 
 	// 初始化选择的模块
 	private void initSelectMod(int modindex) {
-		clearParameters();
 		interfaceCombo.removeAll();
 		if (null == apiDoc.getItem().get(modindex).getItem() || apiDoc.getItem().get(modindex).getItem().size() == 0) {
+			// 如果此模块下没有接口,则不再加载接口信息
 			logger.debug("当前分类下无接口信息,跳过加载");
+			clearParameters();
+			interfaceContextPath = "";
+			urlText.setText(serverAdress);
 			return;
 		}
 		for (int i = 0; i < apiDoc.getItem().get(modindex).getItem().size(); i++) {
@@ -1897,6 +1899,7 @@ public class MainWindow {
 	// 初始化选择的接口
 	private void initSelectInterface(int modindex, int interfaceindex) {
 		// 初始化前要判断是否之前有保存过,如果有保存过,则初始化保存的那份数据
+		interfaceContextPath = "";
 		ApiItem apiItem = tempSavePars.get(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getUuid());
 		if (null != apiItem) {
 			logger.debug("此接口有之前保存的数据,读取保存的数据");
@@ -1909,7 +1912,7 @@ public class MainWindow {
 			logger.debug("切换到接口:" + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getName());
 		} else {
 			interfaceContextPath = apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath();
-			urlText.setText(serverAdress + apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getPath());
+			urlText.setText(serverAdress + interfaceContextPath);
 			interfaceCombo
 					.setToolTipText(apiDoc.getItem().get(modindex).getItem().get(interfaceindex).getDescription());
 			mainWindowShell.setText(applicationName + "-" + interfaceCombo.getText());
