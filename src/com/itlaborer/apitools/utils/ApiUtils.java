@@ -552,7 +552,7 @@ public class ApiUtils {
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
-			return prettyJsonString;
+			return (prettyJsonString.equals("null")) ? "" : prettyJsonString;
 		} catch (Exception e) {
 			logger.debug("使用备用方案格式化");
 			return JsonFormatUtils.Format(jsonStr);
