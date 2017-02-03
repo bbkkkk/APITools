@@ -21,7 +21,6 @@ import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.Clipboard;
@@ -1539,96 +1538,80 @@ public class MainWindow {
 			statusBar.setText("地址为空");
 			return;
 		}
+		// 获取请求要素
+		final HashMap<String, String> pars = getParameters();
+		final String url = urlText.getText();
+		final String method = methodSelectCombo.getText();
+		// 更新界面显示
 		resultBodyStyledText.setText("");
 		resultHeaderStyledText.setText("");
 		statusBar.setText("请求中······");
-		final HashMap<String, String> pars = getParameters();
 		parsText.setText(ParamUtils.mapToQuery(pars));
-		final String url = urlText.getText();
-		final String method = methodSelectCombo.getText();
 		// 通知更新历史
 		notifyHistory();
+		// 开始发起请求
 		Thread httpThread = new Thread() {
 			public void run() {
+				logger.debug("请求方法:" + method);
 				logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
 				final long sumbegintime = System.currentTimeMillis();
-				long httpend = System.currentTimeMillis();
 				RawResponse result = null;
-				switch (method) {
-				case "GET":
-					logger.debug("使用GET方式发起请求");
-					try {
+				try {
+					switch (method) {
+					case "GET":
 						result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
-					}
-					break;
-				case "POST":
-					logger.debug("使用POST方式发起请求");
-					try {
+						break;
+					case "POST":
 						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
-					}
-					break;
-				case "HEAD":
-					logger.debug("使用HEAD方式发起请求");
-					try {
+						break;
+					case "HEAD":
 						result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
-					}
-					break;
-				case "PUT":
-					logger.debug("使用PUT方式发起请求");
-					try {
+						break;
+					case "PUT":
 						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
-					}
-					break;
-				case "PATCH":
-					logger.debug("使用PATCH方式发起请求");
-					try {
+						break;
+					case "PATCH":
 						result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
-					}
-					break;
-				case "DELETE":
-					logger.debug("使用DELETE方式发起请求");
-					try {
+						break;
+					case "DELETE":
 						result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
-					} catch (Exception e) {
-						logger.error("异常", e);
+						break;
+					default:
+						logger.debug("HTTP请求时未找到可用的方法");
+						break;
 					}
-					break;
-				default:
-					logger.debug("HTTP请求时未找到可用的方法");
-					break;
-				}
-				httpend = System.currentTimeMillis();
-				httpTime = httpend - sumbegintime;
-				bodyReturnStr = "";
-				bodyReturnStr = ApiUtils.jsonFormat(result.readToText() + "");
-				headerReturnStr = "";
-				List<Entry<String, String>> header = result.getHeaders();
-				for (int i = 0; i < header.size(); i++) {
-					headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
-				}
-				httpCode = result.getStatusCode();
-				logger.info("响应头部:" + result.getHeaders().toString());
-				// 标记请求结束时间
-				final long sumendtime = System.currentTimeMillis();
-				display.syncExec(new Thread() {
-					public void run() {
-						resultBodyStyledText.setText(bodyReturnStr);
-						resultHeaderStyledText.setText(headerReturnStr);
-						RenderingColor(resultBodyStyledText);
-						statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
-								+ (sumendtime - sumbegintime) + "ms");
+					// 获取http请求时间
+					httpTime = System.currentTimeMillis() - sumbegintime;
+					// 获取httpcode
+					httpCode = result.getStatusCode();
+					// 获取头部信息
+					headerReturnStr = "";
+					List<Entry<String, String>> header = result.getHeaders();
+					for (int i = 0; i < header.size(); i++) {
+						headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
 					}
-				});
+					// 这里后期要添加更丰富的返回类型判断,比如侦测返回的是图像则显示图像等
+					if (true) {
+						bodyReturnStr = ApiUtils.jsonFormat(result.readToText());
+						display.syncExec(new Thread() {
+							public void run() {
+								resultBodyStyledText
+										.setText(StringUtils.isNotEmpty(bodyReturnStr) ? bodyReturnStr : "");
+								resultHeaderStyledText
+										.setText(StringUtils.isNotEmpty(headerReturnStr) ? headerReturnStr : "");
+								statusBar.setText("请求结束/HTTP状态码:" + httpCode + "/HTTP请求耗时:" + httpTime + "ms" + "/总耗时:"
+										+ (System.currentTimeMillis() - sumbegintime) + "ms");
+							}
+						});
+					}
+				} catch (final Exception e) {
+					logger.error("异常", e);
+					display.syncExec(new Thread() {
+						public void run() {
+							statusBar.setText("HTTP请求异常,请重试,异常信息为:" + e.toString());
+						}
+					});
+				}
 			}
 		};
 		httpThread.setName("httpRequest");
@@ -2230,20 +2213,6 @@ public class MainWindow {
 		history = new ApiMod();
 		history.setName("历史记录");
 		history.setItem(new ArrayList<ApiItem>());
-	}
-
-	// TODO 待实现的JSON着色器
-	private void RenderingColor(StyledText styledText) {
-		StyleRange styleRange = new StyleRange();
-		styledText.setStyleRange(styleRange);
-		@SuppressWarnings("unused")
-		int startIndex = 0;
-		int endIndex = styledText.getText().length();
-		if (endIndex == -1) {
-			return;
-		} else {
-
-		}
 	}
 
 	// TODO 历史记录器
