@@ -8,6 +8,10 @@ import org.eclipse.swt.widgets.Shell;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ApiUtils;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class DesignTools {
 
@@ -44,5 +48,24 @@ public class DesignTools {
 		shell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		shell.setText("APIDesignTools-" + Resource.VERSION);
 		ApiUtils.SetCenter(shell);
+
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+
+		MenuItem menuItem = new MenuItem(menu, SWT.CASCADE);
+		menuItem.setText("文件");
+
+		Menu menu_1 = new Menu(menuItem);
+		menuItem.setMenu(menu_1);
+
+		MenuItem menuItem_1 = new MenuItem(menu_1, SWT.NONE);
+		menuItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CreateFileDialog createFileDialog = new CreateFileDialog(shell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				createFileDialog.open();
+			}
+		});
+		menuItem_1.setText("新建接口文档");
 	}
 }
