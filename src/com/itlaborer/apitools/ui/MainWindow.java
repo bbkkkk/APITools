@@ -144,6 +144,17 @@ public class MainWindow {
 
 	// 主窗口
 	public MainWindow() {
+		/////////////////////////////////////////////////////////
+		// 判断日志配置是否存在,不存在则创建默认日志配置
+		File log4jFile = new File("./config/log4j.properties");
+		if (!log4jFile.exists()) {
+			try {
+				ApiUtils.SaveToFile(log4jFile, Resource.LOG4J);
+			} catch (Exception e) {
+				logger.warn("异常", e);
+			}
+		}
+		/////////////////////////////////////////////////////////
 		PropertyConfigurator.configure("config/log4j.properties ");
 		logger.info("程序启动,程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
@@ -1701,7 +1712,6 @@ public class MainWindow {
 		}
 		// 读取并加载配置文件
 		File configFile = new File("./config/config.properties");
-		File log4jFile = new File("./config/log4j.properties");
 		if (!configFile.exists()) {
 			try {
 				ApiUtils.SaveToFile(configFile, Resource.CONFIG);
@@ -1710,14 +1720,6 @@ public class MainWindow {
 				/////////////////////////// 示例接口//////////////////////////////////////
 				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"), ApiUtils.jsonFormat(
 						JSON.toJSONString(new XinzhiWeather().getApidoc(), SerializerFeature.WriteNullStringAsEmpty)));
-			} catch (Exception e) {
-				logger.warn("异常", e);
-			}
-		}
-		if (!log4jFile.exists()) {
-			try {
-				ApiUtils.SaveToFile(log4jFile, Resource.LOG4J);
-				logger.warn("警告:日志配置文件丢失,已创建默认配置");
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
