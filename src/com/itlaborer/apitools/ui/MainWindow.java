@@ -1282,7 +1282,7 @@ public class MainWindow {
 		shortcutListener = new Listener() {
 			public void handleEvent(Event e) {
 				// 只有窗口是激活状态,并且按键是第一次按下时才执行快捷键操作,避免重复不停的执行
-				if ((openByShortcutFlag == false) && (windowFocusFlag == true) && (keyDownFlag == false)) {
+				if ((!openByShortcutFlag) && windowFocusFlag && (!keyDownFlag)) {
 					// Ctrl+n开启新的窗口
 					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_N)) {
 						keyDownFlag = true;
