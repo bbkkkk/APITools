@@ -91,14 +91,14 @@
 		</dependency>
 		<!-- SWT的jar包是平台相关性的,需要根据平台配置 -->
 		<!-- Windows系统-64位 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
 			<version>4.3</version>
-		</dependency>
+		</dependency>-->
 		<!-- Windows系统-32位 -->
-		<!--<dependency> <groupId>org.eclipse.swt</groupId> <artifactId>org.eclipse.swt.win32.win32.x86</artifactId> 
-			<version>4.3</version> </dependency> -->
+		<dependency> <groupId>org.eclipse.swt</groupId> <artifactId>org.eclipse.swt.win32.win32.x86</artifactId> 
+			<version>4.3</version> </dependency> 
 		<!-- macOS系统-64位 -->
 		<!-- <dependency> <groupId>org.eclipse.swt</groupId> <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId> 
 			<version>4.3</version> </dependency> -->
