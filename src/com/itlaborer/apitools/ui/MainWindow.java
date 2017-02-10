@@ -222,6 +222,36 @@ public class MainWindow {
 		Menu menuSave = new Menu(menuEdit);
 		menuEdit.setMenu(menuSave);
 
+		MenuItem menuItem_10 = new MenuItem(menuSave, SWT.NONE);
+		menuItem_10.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CreateFileDialog createFileDialog = new CreateFileDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				Object[] fileInfo = createFileDialog.open();
+				if ((boolean) fileInfo[0]) {
+					String name = (String) fileInfo[1];
+					String version = (String) fileInfo[2];
+					String serverList = (String) fileInfo[3];
+					ApiDoc newDoc = new ApiDoc();
+					newDoc.setDecodeversion(1.1);
+					newDoc.setVersion(version);
+					newDoc.setName(name);
+					newDoc.setServerlist(serverList);
+					newDoc.setItem(new ArrayList<ApiMod>());
+					if (ApiUtils.SaveToFile(new File("./config/" + name + "-" + version + ".json"),
+							ApiUtils.jsonFormat(JSON.toJSONString(newDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+						statusBar.setText("保存成功,请重新配置程序配置文件后重启加载接口文档");
+					} else {
+						statusBar.setText("保存失败,请重试");
+					}
+
+				} else {
+					logger.debug("放弃新增接口文档");
+				}
+			}
+		});
+		menuItem_10.setText("新增接口文档（空接口文档）");
+
 		MenuItem menuItemSave = new MenuItem(menuSave, SWT.NONE);
 		menuItemSave.setText("保存当前接口参数（程序关闭前有效）");
 
@@ -1787,8 +1817,8 @@ public class MainWindow {
 				initHistory();
 				initMod();
 			} else {
-				logger.warn("警告:您加载的API列表可能是老版本的,请重新生成列表配置");
-				statusBar.setText("警告:您加载的API列表可能是老版本的,请重新生成列表配置");
+				logger.warn("警告:您加载的API列表是不兼容的版本,请重新生成接口文档");
+				statusBar.setText("警告:您加载的API列表是不兼容的版本,请重新生成接口文档");
 			}
 		} catch (Exception e) {
 			logger.error("异常:", e);
@@ -1842,6 +1872,7 @@ public class MainWindow {
 	// 初始化接口模块
 	private void initMod() {
 		modSelectCombo.removeAll();
+		interfaceCombo.removeAll();
 		if (null == apiDoc.getItem()) {
 			return;
 		}
