@@ -582,14 +582,12 @@ public class MainWindow {
 						SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] result = editCollectionDialog.open(interfaceCombo.getText(), interfaceCombo.getToolTipText(),
 						serverAdress, interfaceContextPath);
+				StringBuffer stringBuffer = null;
 				if ((boolean) result[0]) {
 					String nameFromDialog = (String) result[1];
 					// 处理接口名变化
 					if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
 						logger.debug("接口名没有发生变化");
-					} else if (StringUtils.isEmpty(nameFromDialog)) {
-						logger.debug("新接口名为空");
-						statusBar.setText("接口名不准为空");
 					} else {
 						// 重名判断
 						boolean flag = false;
@@ -614,7 +612,7 @@ public class MainWindow {
 						}
 					}
 					// 处理接口提示变化
-					
+
 					// 处理接口路径变化
 
 				} else {

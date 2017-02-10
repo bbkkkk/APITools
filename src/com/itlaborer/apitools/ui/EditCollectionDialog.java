@@ -1,6 +1,9 @@
 package com.itlaborer.apitools.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -29,6 +32,7 @@ public class EditCollectionDialog extends Dialog {
 	private Text descriptionText;
 	private Text serverText;
 	private Text pathText;
+	private Button buttonYes;
 
 	/**
 	 * Create the dialog.
@@ -72,7 +76,7 @@ public class EditCollectionDialog extends Dialog {
 		shell.setSize(480, 220);
 		ApiUtils.SetCenterinParent(getParent(), shell);
 
-		Button buttonYes = new Button(shell, SWT.NONE);
+		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.setBounds(293, 155, 80, 27);
 		buttonYes.setText("保存");
 		buttonYes.addSelectionListener(new SelectionAdapter() {
@@ -92,7 +96,20 @@ public class EditCollectionDialog extends Dialog {
 
 		nameText = new Text(shell, SWT.BORDER);
 		nameText.setBounds(10, 35, 454, 23);
-		nameText.setText(name + "");
+		if (StringUtils.isEmpty(name)) {
+			buttonYes.setEnabled(false);
+		} else {
+			nameText.setText(name);
+		}
+		nameText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (StringUtils.isEmpty(nameText.getText())) {
+					buttonYes.setEnabled(false);
+				} else {
+					buttonYes.setEnabled(true);
+				}
+			}
+		});
 
 		Label label = new Label(shell, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
