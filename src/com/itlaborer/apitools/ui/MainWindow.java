@@ -403,10 +403,10 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(modSelectCombo.getText())) {
-					statusBar.setText("不能重命名不存在的模块");
+					statusBar.setText("不能编辑不存在的模块");
 					return;
 				}
-				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "重命名模块",
+				EditDialog reNameDialog = new EditDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "编辑模块",
 						modSelectCombo.getText());
 				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
@@ -437,7 +437,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_4.setText("重命名此模块");
+		menuItem_4.setText("编辑此模块");
 
 		MenuItem menuItem_5 = new MenuItem(menu_6, SWT.NONE);
 		menuItem_5.addSelectionListener(new SelectionAdapter() {
@@ -575,10 +575,10 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(interfaceCombo.getText())) {
-					statusBar.setText("不能重命名不存在的接口");
+					statusBar.setText("不能编辑不存在的接口");
 					return;
 				}
-				ReNameDialog reNameDialog = new ReNameDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "重命名接口",
+				EditDialog reNameDialog = new EditDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "编辑接口",
 						interfaceCombo.getText());
 				String nameFromDialog = reNameDialog.open();
 				if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
@@ -611,7 +611,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_1.setText("重命名此接口");
+		menuItem_1.setText("编辑此接口");
 
 		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
 		menuItem_2.addSelectionListener(new SelectionAdapter() {
