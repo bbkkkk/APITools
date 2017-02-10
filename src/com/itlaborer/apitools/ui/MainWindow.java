@@ -578,36 +578,47 @@ public class MainWindow {
 					statusBar.setText("不能编辑不存在的接口");
 					return;
 				}
-				EditDialog reNameDialog = new EditDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "编辑接口",
-						interfaceCombo.getText());
-				String nameFromDialog = reNameDialog.open();
-				if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
-					logger.debug("接口名没有发生变化");
-				} else if (StringUtils.isEmpty(nameFromDialog)) {
-					logger.debug("新接口名为空");
-					statusBar.setText("接口名不准为空");
-				} else {
-					// 重名判断
-					boolean flag = false;
-					ArrayList<ApiItem> items = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem();
-					for (int i = 0; i < items.size(); i++) {
-						if (StringUtils.equals(items.get(i).getName(), nameFromDialog)
-								&& (i != interfaceCombo.getSelectionIndex())) {
-							flag = true;
-							break;
+				EditCollectionDialog editCollectionDialog = new EditCollectionDialog(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL);
+				Object[] result = editCollectionDialog.open(interfaceCombo.getText(), interfaceCombo.getToolTipText(),
+						serverAdress, interfaceContextPath);
+				if ((boolean) result[0]) {
+					String nameFromDialog = (String) result[1];
+					// 处理接口名变化
+					if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
+						logger.debug("接口名没有发生变化");
+					} else if (StringUtils.isEmpty(nameFromDialog)) {
+						logger.debug("新接口名为空");
+						statusBar.setText("接口名不准为空");
+					} else {
+						// 重名判断
+						boolean flag = false;
+						ArrayList<ApiItem> items = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem();
+						for (int i = 0; i < items.size(); i++) {
+							if (StringUtils.equals(items.get(i).getName(), nameFromDialog)
+									&& (i != interfaceCombo.getSelectionIndex())) {
+								flag = true;
+								break;
+							}
+						}
+						if (flag) {
+							logger.debug("重命名接口时发生重名");
+							statusBar.setText("重命名时发现重名接口,放弃重命名");
+						} else {
+							interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
+							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+									.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
+							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+							statusBar.setText("接口名被修改为:" + nameFromDialog);
 						}
 					}
-					if (flag) {
-						logger.debug("重命名接口时发生重名");
-						statusBar.setText("重命名时发现重名接口,放弃重命名");
-					} else {
-						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
-						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
-								.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
-								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
-						statusBar.setText("接口名被修改为:" + nameFromDialog);
-					}
+					// 处理接口提示变化
+					
+					// 处理接口路径变化
+
+				} else {
+					logger.debug("放弃编辑接口");
 				}
 			}
 		});
