@@ -409,13 +409,11 @@ public class MainWindow {
 				EditModDialog editModDialog = new EditModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] result = editModDialog.open(modSelectCombo.getText(), modSelectCombo.getToolTipText());
 				if ((boolean) result[0]) {
+					// 更新模块名
 					String nameFromDialog = (String) result[1];
-					if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
-						logger.debug("模块名没有发生变化");
-					} else if (StringUtils.isEmpty(nameFromDialog)) {
-						logger.debug("新模块名为空");
-						statusBar.setText("模块名不准为空");
-					} else {
+					StringBuffer stringBuffer = new StringBuffer();
+					if ((!StringUtils.equals(nameFromDialog, modSelectCombo.getText()))
+							&& StringUtils.isNotEmpty(nameFromDialog)) {
 						// 重名判断
 						boolean flag = false;
 						for (int i = 0; i < apiDoc.getItem().size(); i++) {
@@ -427,14 +425,31 @@ public class MainWindow {
 						}
 						if (flag) {
 							logger.debug("重命名模块时发生重名");
-							statusBar.setText("重命名时发现重名模块,放弃重命名");
+							stringBuffer.append("重命名时发现重名模块,放弃重命名");
 						} else {
-							modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
 							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
-							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
-									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
-							statusBar.setText("模块名被修改为:" + nameFromDialog);
+							stringBuffer.append("模块名被修改为:" + nameFromDialog);
 						}
+					}
+					// 更新备注
+					String desFromDialog = (String) result[2];
+					if (!StringUtils.equals(nameFromDialog, modSelectCombo.getToolTipText())) {
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setDescription(desFromDialog);
+						if (StringUtils.isNotEmpty(stringBuffer)) {
+							stringBuffer.append("/模块备注被修改为:" + desFromDialog);
+						} else {
+							stringBuffer.append("模块备注被修改为:" + desFromDialog);
+						}
+					}
+					// 保存更新
+					if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+							ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(),
+								apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getName() + "");
+						modSelectCombo.setToolTipText(
+								apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getDescription() + "");
+					} else {
+						statusBar.setText("编辑失败,请重试");
 					}
 				} else {
 					logger.debug("放弃编辑");
