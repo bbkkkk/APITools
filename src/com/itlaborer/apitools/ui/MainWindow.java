@@ -581,14 +581,13 @@ public class MainWindow {
 				EditCollectionDialog editCollectionDialog = new EditCollectionDialog(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] result = editCollectionDialog.open(interfaceCombo.getText(), interfaceCombo.getToolTipText(),
-						serverAdress, interfaceContextPath);
-				StringBuffer stringBuffer = null;
+						serverAdress, interfaceContextPath, methodSelectCombo.getText());
+				StringBuffer stringBuffer = new StringBuffer();
 				if ((boolean) result[0]) {
 					String nameFromDialog = (String) result[1];
 					// 处理接口名变化
-					if (StringUtils.equals(nameFromDialog, interfaceCombo.getText())) {
-						logger.debug("接口名没有发生变化");
-					} else {
+					if (StringUtils.isNotEmpty(nameFromDialog)
+							&& (!StringUtils.equals(nameFromDialog, interfaceCombo.getText()))) {
 						// 重名判断
 						boolean flag = false;
 						ArrayList<ApiItem> items = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem();
@@ -600,21 +599,61 @@ public class MainWindow {
 							}
 						}
 						if (flag) {
-							logger.debug("重命名接口时发生重名");
-							statusBar.setText("重命名时发现重名接口,放弃重命名");
+							logger.debug("本模块下有重名接口名,放弃重命名");
+							stringBuffer.append("本模块下有重名接口名,放弃重命名");
 						} else {
-							interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), nameFromDialog);
 							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 									.get(interfaceCombo.getSelectionIndex()).setName(nameFromDialog);
-							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
-									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
-							statusBar.setText("接口名被修改为:" + nameFromDialog);
+							stringBuffer.append("接口名被修改为:" + nameFromDialog);
 						}
 					}
 					// 处理接口提示变化
-
+					String desFromDialog = (String) result[2];
+					if (!StringUtils.equals(desFromDialog, interfaceCombo.getToolTipText())) {
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+								.get(interfaceCombo.getSelectionIndex()).setDescription(desFromDialog);
+						if (StringUtils.isEmpty(stringBuffer)) {
+							stringBuffer.append("接口提示修改为:" + desFromDialog);
+						} else {
+							stringBuffer.append("/接口提示修改为:" + desFromDialog);
+						}
+					}
 					// 处理接口路径变化
-
+					String pathFromDialog = (String) result[3];
+					if (!StringUtils.equals(pathFromDialog, interfaceContextPath)) {
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+								.get(interfaceCombo.getSelectionIndex()).setPath(pathFromDialog);
+						if (StringUtils.isEmpty(stringBuffer)) {
+							stringBuffer.append("接口路径修改为:" + pathFromDialog);
+						} else {
+							stringBuffer.append("/接口路径修改为:" + pathFromDialog);
+						}
+					}
+					// 处理接口方法变化
+					String methodFromDialog = (String) result[4];
+					if (!StringUtils.equals(methodFromDialog, methodSelectCombo.getText())) {
+						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+								.get(interfaceCombo.getSelectionIndex()).setMethod(methodFromDialog);
+						if (StringUtils.isEmpty(stringBuffer)) {
+							stringBuffer.append("接口方法修改为:" + methodFromDialog);
+						} else {
+							stringBuffer.append("/接口方法修改为:" + methodFromDialog);
+						}
+					}
+					// 保存变化--并更新UI
+					if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
+							ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+						ApiItem apiItem = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
+								.get(interfaceCombo.getSelectionIndex());
+						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), apiItem.getName());
+						interfaceCombo.setToolTipText(apiItem.getDescription());
+						interfaceContextPath = apiItem.getPath();
+						urlText.setText(serverAdress + interfaceContextPath);
+						methodChoice(methodFromDialog);
+						statusBar.setText(stringBuffer.toString());
+					} else {
+						statusBar.setText("编辑保存失败,请重试");
+					}
 				} else {
 					logger.debug("放弃编辑接口");
 				}
@@ -1665,6 +1704,7 @@ public class MainWindow {
 		};
 		httpThread.setName("httpRequest");
 		httpThread.start();
+
 	}
 
 	// 保存参数到内存
