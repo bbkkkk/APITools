@@ -1956,7 +1956,11 @@ public class MainWindow {
 
 	// 初始化选择的模块
 	private void initSelectMod(int modindex) {
-		modSelectCombo.setToolTipText(apiDoc.getItem().get(modindex).getDescription()+"");
+		if (StringUtils.isNotEmpty(apiDoc.getItem().get(modindex).getDescription())) {
+			modSelectCombo.setToolTipText(apiDoc.getItem().get(modindex).getDescription());
+		} else {
+			modSelectCombo.setToolTipText("");
+		}
 		interfaceCombo.removeAll();
 		if (null == apiDoc.getItem().get(modindex).getItem() || apiDoc.getItem().get(modindex).getItem().size() == 0) {
 			// 如果此模块下没有接口,则不再加载接口信息
