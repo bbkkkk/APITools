@@ -406,34 +406,38 @@ public class MainWindow {
 					statusBar.setText("不能编辑不存在的模块");
 					return;
 				}
-				EditDialog reNameDialog = new EditDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL, "编辑模块",
-						modSelectCombo.getText());
-				String nameFromDialog = reNameDialog.open();
-				if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
-					logger.debug("模块名没有发生变化");
-				} else if (StringUtils.isEmpty(nameFromDialog)) {
-					logger.debug("新模块名为空");
-					statusBar.setText("模块名不准为空");
-				} else {
-					// 重名判断
-					boolean flag = false;
-					for (int i = 0; i < apiDoc.getItem().size(); i++) {
-						if (StringUtils.equals(apiDoc.getItem().get(i).getName(), nameFromDialog)
-								&& (i != modSelectCombo.getSelectionIndex())) {
-							flag = true;
-							break;
+				EditModDialog editModDialog = new EditModDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				Object[] result = editModDialog.open(modSelectCombo.getText(), modSelectCombo.getToolTipText());
+				if ((boolean) result[0]) {
+					String nameFromDialog = (String) result[1];
+					if (StringUtils.equals(nameFromDialog, modSelectCombo.getText())) {
+						logger.debug("模块名没有发生变化");
+					} else if (StringUtils.isEmpty(nameFromDialog)) {
+						logger.debug("新模块名为空");
+						statusBar.setText("模块名不准为空");
+					} else {
+						// 重名判断
+						boolean flag = false;
+						for (int i = 0; i < apiDoc.getItem().size(); i++) {
+							if (StringUtils.equals(apiDoc.getItem().get(i).getName(), nameFromDialog)
+									&& (i != modSelectCombo.getSelectionIndex())) {
+								flag = true;
+								break;
+							}
+						}
+						if (flag) {
+							logger.debug("重命名模块时发生重名");
+							statusBar.setText("重命名时发现重名模块,放弃重命名");
+						} else {
+							modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
+							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
+							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+							statusBar.setText("模块名被修改为:" + nameFromDialog);
 						}
 					}
-					if (flag) {
-						logger.debug("重命名模块时发生重名");
-						statusBar.setText("重命名时发现重名模块,放弃重命名");
-					} else {
-						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(), nameFromDialog);
-						apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).setName(nameFromDialog);
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
-								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
-						statusBar.setText("模块名被修改为:" + nameFromDialog);
-					}
+				} else {
+					logger.debug("放弃编辑");
 				}
 			}
 		});
