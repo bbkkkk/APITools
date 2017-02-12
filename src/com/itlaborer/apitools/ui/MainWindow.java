@@ -863,7 +863,7 @@ public class MainWindow {
 		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
 		
-		// 结果校验器
+		// 字符集设置
 		charSetButton = new Button(mainWindowShell, SWT.NONE);
 		charSetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
