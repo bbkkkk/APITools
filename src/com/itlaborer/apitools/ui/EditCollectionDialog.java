@@ -129,8 +129,9 @@ public class EditCollectionDialog extends Dialog {
 
 		descriptionText = new Text(shell, SWT.BORDER);
 		descriptionText.setBounds(10, 81, 454, 23);
-		descriptionText.setText(description + "");
-
+		if (StringUtils.isNotEmpty(description)) {
+			descriptionText.setText(description);
+		}
 		Label label_1 = new Label(shell, SWT.NONE);
 		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_1.setBounds(10, 64, 61, 17);

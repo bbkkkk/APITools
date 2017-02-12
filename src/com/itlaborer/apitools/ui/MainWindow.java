@@ -110,7 +110,7 @@ public class MainWindow {
 	private Button parsCovertButton;
 	private Button parsClearButton;
 	private Button toBrower;
-	private Button responseCheck;
+	private Button charSetButton;
 	private Combo methodSelectCombo;
 	private Combo modSelectCombo;
 	private Combo interfaceCombo;
@@ -665,7 +665,11 @@ public class MainWindow {
 						ApiItem apiItem = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex());
 						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), apiItem.getName());
-						interfaceCombo.setToolTipText(apiItem.getDescription());
+						if (StringUtils.isEmpty(desFromDialog)) {
+							interfaceCombo.setToolTipText("");
+						} else {
+							interfaceCombo.setToolTipText(apiItem.getDescription());
+						}
 						interfaceContextPath = apiItem.getPath();
 						urlText.setText(serverAdress + interfaceContextPath);
 						methodChoice(methodFromDialog);
@@ -858,12 +862,25 @@ public class MainWindow {
 		button.setText("重排参数");
 		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
-
+		
+		// 结果校验器
+		charSetButton = new Button(mainWindowShell, SWT.NONE);
+		charSetButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("此功能暂未实现");
+			}
+		});
+		charSetButton.setToolTipText("设置请求和响应的编码");
+		charSetButton.setText("字符集设置");
+		charSetButton.setBounds(787, 31, 83, 27);
+		formToolkit.adapt(charSetButton, true, true);
+		
 		// auth
 		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.setToolTipText("授权管理");
 		btnAuthorization.setText("Authorization");
-		btnAuthorization.setBounds(787, 31, 92, 27);
+		btnAuthorization.setBounds(873, 31, 92, 27);
 		formToolkit.adapt(btnAuthorization, true, true);
 		btnAuthorization.addSelectionListener(new SelectionAdapter() {
 
@@ -872,19 +889,6 @@ public class MainWindow {
 				statusBar.setText("此功能暂未实现");
 			}
 		});
-
-		// 结果校验器
-		responseCheck = new Button(mainWindowShell, SWT.NONE);
-		responseCheck.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("此功能暂未实现");
-			}
-		});
-		responseCheck.setToolTipText("校验Response");
-		responseCheck.setText("结果校验器");
-		responseCheck.setBounds(882, 31, 83, 27);
-		formToolkit.adapt(responseCheck, true, true);
 		// 点击清除结果
 		textClearButton = new Button(mainWindowShell, SWT.NONE);
 		textClearButton.setToolTipText("清空结果内容");
