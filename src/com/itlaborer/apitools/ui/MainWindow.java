@@ -836,12 +836,6 @@ public class MainWindow {
 		parsCovertButton.setBounds(487, 31, 72, 27);
 		formToolkit.adapt(parsCovertButton, true, true);
 
-		Menu menu_5 = new Menu(parsCovertButton);
-		parsCovertButton.setMenu(menu_5);
-
-		MenuItem menuItem_3 = new MenuItem(menu_5, SWT.NONE);
-		menuItem_3.setText("导入设置");
-
 		// 重置参数
 		parsClearButton = new Button(mainWindowShell, SWT.NONE);
 		parsClearButton.setToolTipText("重置参数为接口文档中定义的参数");
