@@ -250,7 +250,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_10.setText("新增接口文档（空接口文档）");
+		menuItem_10.setText("新建接口文档（空接口文档）");
 
 		MenuItem menuItemSave = new MenuItem(menuSave, SWT.NONE);
 		menuItemSave.setText("保存当前接口参数（程序关闭前有效）");
@@ -926,7 +926,7 @@ public class MainWindow {
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
-
+		
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
 		form = new Text[parsSum][3];
