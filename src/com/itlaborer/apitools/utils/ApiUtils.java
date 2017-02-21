@@ -381,7 +381,7 @@ public class ApiUtils {
 		}
 	}
 
-	// String编码转换方法
+	// String编码转换方法--GBK到UTF-8
 	public static String GetUTF8StringFromGBKString(String gbkStr) {
 		try {
 			return new String(GetUTF8BytesFromGBKString(gbkStr), "UTF-8");
@@ -390,7 +390,7 @@ public class ApiUtils {
 		}
 	}
 
-	// GBK字符串转换到UTF-8
+	// GBK字符串转换到UTF-8byte数组
 	public static byte[] GetUTF8BytesFromGBKString(String gbkStr) {
 		int n = gbkStr.length();
 		byte[] utfBytes = new byte[3 * n];

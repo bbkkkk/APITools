@@ -2165,6 +2165,27 @@ public class MainWindow {
 		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
 		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
+		
+		MenuItem mntmCharsetSelect = new MenuItem(popupMenu, SWT.CASCADE);
+		mntmCharsetSelect.setText("字符编码");
+		
+		Menu menu = new Menu(mntmCharsetSelect);
+		mntmCharsetSelect.setMenu(menu);
+		
+		MenuItem menuItem = new MenuItem(menu, SWT.NONE);
+		menuItem.setText("自动检测");
+		
+		MenuItem mntmUnicodeutf = new MenuItem(menu, SWT.NONE);
+		mntmUnicodeutf.setText("Unicode (UTF-8)");
+		
+		MenuItem mntmChinese = new MenuItem(menu, SWT.NONE);
+		mntmChinese.setText("简体中文 (GBK)");
+		
+		MenuItem mntmgb = new MenuItem(menu, SWT.NONE);
+		mntmgb.setText("简体中文 (GB18030)");
+		
+		MenuItem mntmgb_1 = new MenuItem(menu, SWT.NONE);
+		mntmgb_1.setText("繁体中文 (Big5)");
 
 		// 判断初始自动换行状态
 		if (styledText.getWordWrap()) {
