@@ -1697,7 +1697,7 @@ public class MainWindow {
 					// 获取httpcode
 					httpCode = result.getStatusCode();
 					// 获取头部信息和编码
-					headerReturnStr = null;
+					headerReturnStr = "";
 					autoCheckCharSet = null;
 					List<Entry<String, String>> header = result.getHeaders();
 					for (int i = 0; i < header.size(); i++) {
@@ -1771,14 +1771,14 @@ public class MainWindow {
 				string = new String(bytes, "Big5-HKSCS");
 				break;
 			default:
-				if (StringUtils.isEmpty(autoCheckCharSet)) {
-					string = new String(bytes);
-				} else {
+				if (StringUtils.isNotEmpty(autoCheckCharSet)) {
 					string = new String(bytes, autoCheckCharSet);
+				} else {
+					string = new String(bytes);
 				}
 				break;
 			}
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			logger.debug("异常", e);
 			logger.debug("未找到可用的编码方式，且自动编码失败，使用系统默认编码方式进行编码");
 			string = new String(bytes);
