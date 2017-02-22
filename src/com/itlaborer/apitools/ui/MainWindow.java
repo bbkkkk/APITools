@@ -1755,11 +1755,17 @@ public class MainWindow {
 			case "GBK":
 				string = new String(bytes, "GBK");
 				break;
+			case "GB2312":
+				string = new String(bytes, "GB2312");
+				break;
 			case "GB18030":
 				string = new String(bytes, "GB18030");
 				break;
 			case "BIG5":
-				string = new String(bytes, "BIG5");
+				string = new String(bytes, "Big5");
+				break;
+			case "BIG5-HKSCS":
+				string = new String(bytes, "Big5-HKSCS");
 				break;
 			default:
 				logger.debug("未找到可用的编码方式，使用系统默认编码方式编码");
@@ -2278,6 +2284,16 @@ public class MainWindow {
 		});
 		menucharSetgbk.setText("简体中文 (GBK)");
 
+		MenuItem menuCharsetGb2312 = new MenuItem(menu, SWT.NONE);
+		menuCharsetGb2312.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				settingCharSet = "GB2312";
+				UpdateResultBodyStyledText();
+			}
+		});
+		menuCharsetGb2312.setText("简体中文 (GB2312)");
+
 		MenuItem menucharSetgb18030 = new MenuItem(menu, SWT.NONE);
 		menucharSetgb18030.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -2297,6 +2313,16 @@ public class MainWindow {
 			}
 		});
 		menucharSetbig5.setText("繁体中文 (Big5)");
+
+		MenuItem menucharSetbig5HKSCS = new MenuItem(menu, SWT.NONE);
+		menucharSetbig5HKSCS.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				settingCharSet = "BIG5-HKSCS";
+				UpdateResultBodyStyledText();
+			}
+		});
+		menucharSetbig5HKSCS.setText("繁体中文 (Big5-HKSCS)");
 
 		// 判断初始自动换行状态
 		if (styledText.getWordWrap()) {
