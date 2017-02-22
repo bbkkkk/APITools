@@ -94,15 +94,16 @@ public class MainWindow {
 	private String interfaceContextPath;
 	private String bodyReturnStr;
 	private String headerReturnStr;
-	private String charSet;
+	private String settingCharSet;
+	private String autoCheckCharSet;
 	private boolean keyDownFlag = false;
 	private boolean windowFocusFlag = false;
 	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
 	private ApiMod history;
-	private RawResponse result;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
+	private byte[] resultByte;
 	private HashMap<String, ApiItem> tempSavePars;
 
 	// 界面组件
@@ -163,8 +164,8 @@ public class MainWindow {
 		this.parsSum = 128;
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
-		this.charSet = "auto";
-		this.result = null;
+		this.settingCharSet = "auto";
+		this.resultByte = null;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -1664,7 +1665,7 @@ public class MainWindow {
 				logger.debug("请求方法:" + method);
 				logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
 				final long sumbegintime = System.currentTimeMillis();
-				result = null;
+				RawResponse result = null;
 				try {
 					switch (method) {
 					case "GET":
@@ -1691,6 +1692,8 @@ public class MainWindow {
 					}
 					// 获取http请求时间
 					httpTime = System.currentTimeMillis() - sumbegintime;
+					// 响应正文byte数组
+					resultByte = result.readToBytes();
 					// 获取httpcode
 					httpCode = result.getStatusCode();
 					// 获取头部信息
@@ -1698,11 +1701,22 @@ public class MainWindow {
 					List<Entry<String, String>> header = result.getHeaders();
 					for (int i = 0; i < header.size(); i++) {
 						headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
+						// 自动检测编码
+						if (header.get(i).getKey().toUpperCase().equals("CONTENT-TYPE")) {
+							logger.debug("开始寻找编码信息");
+							autoCheckCharSet = header.get(i).getValue()
+									.substring(header.get(i).getValue().toUpperCase().indexOf("CHARSET=") + 8);
+							logger.debug("从Response Header中读取到编码格式:" + autoCheckCharSet);
+						}
 					}
 					// 这里后期要添加更丰富的返回类型判断,比如侦测返回的是图像则显示图像等
 					if (true) {
 						// 使用指定编码解码
-						bodyReturnStr = DecodeString(result.readToBytes(), charSet);
+						if (StringUtils.equals(settingCharSet, "auto")) {
+							bodyReturnStr = DecodeString(resultByte, autoCheckCharSet);
+						} else {
+							bodyReturnStr = DecodeString(resultByte, settingCharSet);
+						}
 						display.syncExec(new Thread() {
 							public void run() {
 								resultBodyStyledText
@@ -1731,12 +1745,10 @@ public class MainWindow {
 
 	// 按照指定的编码解码字符串
 	private String DecodeString(byte[] bytes, String charSet) {
+		logger.debug("传入的编码方式为:" + charSet);
 		String string = null;
 		try {
-			switch (charSet) {
-			case "auto":
-				string = new String(bytes);
-				break;
+			switch (charSet.toUpperCase()) {
 			case "UTF-8":
 				string = new String(bytes, "UTF-8");
 				break;
@@ -1747,9 +1759,11 @@ public class MainWindow {
 				string = new String(bytes, "GB18030");
 				break;
 			case "Big5":
-				string = new String(bytes, "Big5");
+				string = new String(bytes, "BIG5");
 				break;
 			default:
+				logger.debug("未找到可用的编码方式，使用系统默认编码方式编码");
+				string = new String(bytes);
 				break;
 			}
 		} catch (Exception e) {
@@ -1760,17 +1774,28 @@ public class MainWindow {
 
 	// 按照指定的编码更新resultBodyStyledText
 	private void UpdateResultBodyStyledText() {
-		if (null == result) {
+		if (null == resultByte) {
 			return;
 		}
+		// 异步解码
 		new Thread() {
 			public void run() {
-				final String string = DecodeString(result.readToBytes(), charSet);
-				display.syncExec(new Thread() {
-					public void run() {
-						resultBodyStyledText.setText(string);
-					}
-				});
+				if (StringUtils.equals(settingCharSet, "auto")) {
+					final String string = DecodeString(resultByte, autoCheckCharSet);
+					display.syncExec(new Thread() {
+						public void run() {
+							resultBodyStyledText.setText(string);
+						}
+					});
+				} else {
+					final String string = DecodeString(resultByte, settingCharSet);
+					display.syncExec(new Thread() {
+						public void run() {
+							resultBodyStyledText.setText(string);
+						}
+					});
+				}
+
 			}
 		}.start();
 	}
@@ -2227,7 +2252,7 @@ public class MainWindow {
 		menucharSetAuto.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSet = "auto";
+				settingCharSet = "auto";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2237,8 +2262,7 @@ public class MainWindow {
 		menucharSetutf8.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSet = "UTF-8";
-				logger.info("UTF-8");
+				settingCharSet = "UTF-8";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2248,7 +2272,7 @@ public class MainWindow {
 		menucharSetgbk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSet = "GBK";
+				settingCharSet = "GBK";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2258,7 +2282,7 @@ public class MainWindow {
 		menucharSetgb18030.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSet = "GB18030";
+				settingCharSet = "GB18030";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2268,7 +2292,7 @@ public class MainWindow {
 		menucharSetbig5.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSet = "Big5";
+				settingCharSet = "BIG5";
 				UpdateResultBodyStyledText();
 			}
 		});
