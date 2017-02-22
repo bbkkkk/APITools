@@ -1758,7 +1758,7 @@ public class MainWindow {
 			case "GB18030":
 				string = new String(bytes, "GB18030");
 				break;
-			case "Big5":
+			case "BIG5":
 				string = new String(bytes, "BIG5");
 				break;
 			default:
