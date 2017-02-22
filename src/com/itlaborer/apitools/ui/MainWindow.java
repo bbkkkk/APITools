@@ -1696,8 +1696,9 @@ public class MainWindow {
 					resultByte = result.readToBytes();
 					// 获取httpcode
 					httpCode = result.getStatusCode();
-					// 获取头部信息
-					headerReturnStr = "";
+					// 获取头部信息和编码
+					headerReturnStr = null;
+					autoCheckCharSet = null;
 					List<Entry<String, String>> header = result.getHeaders();
 					for (int i = 0; i < header.size(); i++) {
 						headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
@@ -1743,7 +1744,9 @@ public class MainWindow {
 
 	}
 
-	// 按照指定的编码解码字符串
+	// 按照指定的编码解码字符串,如果传入的编码方式不在列表支持的范围内，
+	// 则尝试自动编码(如果http响应结果中获取自动编码失败则使用系统默认方式编码)，
+	// 尝试自动编码失败后则使用系统默认编码方式编码
 	private String DecodeString(byte[] bytes, String charSet) {
 		logger.debug("传入的编码方式为:" + charSet);
 		String string = null;
@@ -1768,11 +1771,16 @@ public class MainWindow {
 				string = new String(bytes, "Big5-HKSCS");
 				break;
 			default:
-				logger.debug("未找到可用的编码方式，使用系统默认编码方式编码");
-				string = new String(bytes);
+				if (StringUtils.isEmpty(autoCheckCharSet)) {
+					string = new String(bytes);
+				} else {
+					string = new String(bytes, autoCheckCharSet);
+				}
 				break;
 			}
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
+			logger.debug("异常", e);
+			logger.debug("未找到可用的编码方式，且自动编码失败，使用系统默认编码方式进行编码");
 			string = new String(bytes);
 		}
 		return ApiUtils.jsonFormat(string);
