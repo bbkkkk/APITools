@@ -94,6 +94,7 @@ public class MainWindow {
 	private String interfaceContextPath;
 	private String bodyReturnStr;
 	private String headerReturnStr;
+	private String charSet;
 	private boolean keyDownFlag = false;
 	private boolean windowFocusFlag = false;
 	private boolean openByShortcutFlag = false;
@@ -161,6 +162,7 @@ public class MainWindow {
 		this.parsSum = 128;
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
+		this.charSet = "auto";
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -856,7 +858,7 @@ public class MainWindow {
 		button.setText("重排参数");
 		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
-		
+
 		// 字符集设置
 		charSetButton = new Button(mainWindowShell, SWT.NONE);
 		charSetButton.addSelectionListener(new SelectionAdapter() {
@@ -869,7 +871,7 @@ public class MainWindow {
 		charSetButton.setText("字符集设置");
 		charSetButton.setBounds(787, 31, 83, 27);
 		formToolkit.adapt(charSetButton, true, true);
-		
+
 		// auth
 		btnAuthorization = new Button(mainWindowShell, SWT.NONE);
 		btnAuthorization.setToolTipText("授权管理");
@@ -926,7 +928,7 @@ public class MainWindow {
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		valueColumn_1.setText("参数值");
 		valueColumn_1.setResizable(false);
-		
+
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
 		form = new Text[parsSum][3];
@@ -1697,7 +1699,8 @@ public class MainWindow {
 					}
 					// 这里后期要添加更丰富的返回类型判断,比如侦测返回的是图像则显示图像等
 					if (true) {
-						bodyReturnStr = ApiUtils.jsonFormat(result.readToText());
+						// 使用指定编码解码
+						bodyReturnStr = DecodeString(result.readToBytes(), charSet);
 						display.syncExec(new Thread() {
 							public void run() {
 								resultBodyStyledText
@@ -1722,6 +1725,34 @@ public class MainWindow {
 		httpThread.setName("httpRequest");
 		httpThread.start();
 
+	}
+
+	private String DecodeString(byte[] bytes, String charSet) {
+		String string = null;
+		try {
+			switch (charSet) {
+			case "auto":
+				string = new String(bytes);
+				break;
+			case "UTF-8":
+				string = new String(bytes, "UTF-8");
+				break;
+			case "GBK":
+				string = new String(bytes, "GBK");
+				break;
+			case "GB18030":
+				string = new String(bytes, "GB18030");
+				break;
+			case "Big5":
+				string = new String(bytes, "Big5");
+				break;
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			string = new String(bytes);
+		}
+		return ApiUtils.jsonFormat(string);
 	}
 
 	// 保存参数到内存
@@ -2165,27 +2196,57 @@ public class MainWindow {
 		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
 		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
-		
+
 		MenuItem mntmCharsetSelect = new MenuItem(popupMenu, SWT.CASCADE);
 		mntmCharsetSelect.setText("字符编码");
-		
+
 		Menu menu = new Menu(mntmCharsetSelect);
 		mntmCharsetSelect.setMenu(menu);
-		
-		MenuItem menuItem = new MenuItem(menu, SWT.NONE);
-		menuItem.setText("自动检测");
-		
-		MenuItem mntmUnicodeutf = new MenuItem(menu, SWT.NONE);
-		mntmUnicodeutf.setText("Unicode (UTF-8)");
-		
-		MenuItem mntmChinese = new MenuItem(menu, SWT.NONE);
-		mntmChinese.setText("简体中文 (GBK)");
-		
-		MenuItem mntmgb = new MenuItem(menu, SWT.NONE);
-		mntmgb.setText("简体中文 (GB18030)");
-		
-		MenuItem mntmgb_1 = new MenuItem(menu, SWT.NONE);
-		mntmgb_1.setText("繁体中文 (Big5)");
+
+		MenuItem menucharSetAuto = new MenuItem(menu, SWT.NONE);
+		menucharSetAuto.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				charSet = "auto";
+			}
+		});
+		menucharSetAuto.setText("自动检测");
+
+		MenuItem menucharSetutf8 = new MenuItem(menu, SWT.NONE);
+		menucharSetutf8.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				charSet = "UTF-8";
+			}
+		});
+		menucharSetutf8.setText("Unicode (UTF-8)");
+
+		MenuItem menucharSetgbk = new MenuItem(menu, SWT.NONE);
+		menucharSetgbk.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				charSet = "GBK";
+			}
+		});
+		menucharSetgbk.setText("简体中文 (GBK)");
+
+		MenuItem menucharSetgb18030 = new MenuItem(menu, SWT.NONE);
+		menucharSetgb18030.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				charSet = "GB18030";
+			}
+		});
+		menucharSetgb18030.setText("简体中文 (GB18030)");
+
+		MenuItem menucharSetbig5 = new MenuItem(menu, SWT.NONE);
+		menucharSetbig5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				charSet = "Big5";
+			}
+		});
+		menucharSetbig5.setText("繁体中文 (Big5)");
 
 		// 判断初始自动换行状态
 		if (styledText.getWordWrap()) {
