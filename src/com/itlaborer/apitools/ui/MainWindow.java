@@ -100,6 +100,7 @@ public class MainWindow {
 	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
 	private ApiMod history;
+	private RawResponse result;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
 	private HashMap<String, ApiItem> tempSavePars;
@@ -163,6 +164,7 @@ public class MainWindow {
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
 		this.charSet = "auto";
+		this.result = null;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -1662,7 +1664,7 @@ public class MainWindow {
 				logger.debug("请求方法:" + method);
 				logger.debug("请求信息:" + url + "?" + ParamUtils.mapToQuery(pars));
 				final long sumbegintime = System.currentTimeMillis();
-				RawResponse result = null;
+				result = null;
 				try {
 					switch (method) {
 					case "GET":
@@ -1727,6 +1729,7 @@ public class MainWindow {
 
 	}
 
+	// 按照指定的编码解码字符串
 	private String DecodeString(byte[] bytes, String charSet) {
 		String string = null;
 		try {
@@ -1753,6 +1756,23 @@ public class MainWindow {
 			string = new String(bytes);
 		}
 		return ApiUtils.jsonFormat(string);
+	}
+
+	// 按照指定的编码更新resultBodyStyledText
+	private void UpdateResultBodyStyledText() {
+		if (null == result) {
+			return;
+		}
+		new Thread() {
+			public void run() {
+				final String string = DecodeString(result.readToBytes(), charSet);
+				display.syncExec(new Thread() {
+					public void run() {
+						resultBodyStyledText.setText(string);
+					}
+				});
+			}
+		}.start();
 	}
 
 	// 保存参数到内存
@@ -2208,6 +2228,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				charSet = "auto";
+				UpdateResultBodyStyledText();
 			}
 		});
 		menucharSetAuto.setText("自动检测");
@@ -2217,6 +2238,8 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				charSet = "UTF-8";
+				logger.info("UTF-8");
+				UpdateResultBodyStyledText();
 			}
 		});
 		menucharSetutf8.setText("Unicode (UTF-8)");
@@ -2226,6 +2249,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				charSet = "GBK";
+				UpdateResultBodyStyledText();
 			}
 		});
 		menucharSetgbk.setText("简体中文 (GBK)");
@@ -2235,6 +2259,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				charSet = "GB18030";
+				UpdateResultBodyStyledText();
 			}
 		});
 		menucharSetgb18030.setText("简体中文 (GB18030)");
@@ -2244,6 +2269,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				charSet = "Big5";
+				UpdateResultBodyStyledText();
 			}
 		});
 		menucharSetbig5.setText("繁体中文 (Big5)");
