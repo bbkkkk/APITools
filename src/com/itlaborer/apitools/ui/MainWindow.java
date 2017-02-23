@@ -863,7 +863,6 @@ public class MainWindow {
 		button.setText("重排参数");
 		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
-
 		// 字符集设置
 		charSetButton = new Button(mainWindowShell, SWT.NONE);
 		charSetButton.addSelectionListener(new SelectionAdapter() {
@@ -872,7 +871,12 @@ public class MainWindow {
 				CharSetDialog charSetDialog = new CharSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] objects = charSetDialog.open(settingReqCharSet, settingResCharSet);
 				if ((boolean) objects[0] == true) {
-					logger.debug("设置编码方式,请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
+					logger.debug("请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
+					if (((String) objects[2]).equals("auto")) {
+						statusBar.setText("请求编码设置为:" + (String) objects[1] + ",响应编码设置为:自动检测");
+					} else {
+						statusBar.setText("请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
+					}
 					settingReqCharSet = (String) objects[1];
 					settingResCharSet = (String) objects[2];
 				}
