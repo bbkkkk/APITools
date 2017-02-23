@@ -867,7 +867,8 @@ public class MainWindow {
 		charSetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("此功能暂未实现");
+				CharSetDialog charSetDialog = new CharSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				charSetDialog.open();
 			}
 		});
 		charSetButton.setToolTipText("设置请求和响应的编码");
