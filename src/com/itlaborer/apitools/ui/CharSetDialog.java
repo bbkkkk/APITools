@@ -11,6 +11,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.ApiUtils;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class CharSetDialog extends Dialog {
 
@@ -18,6 +20,10 @@ public class CharSetDialog extends Dialog {
 	protected Shell shell;
 	private boolean saveFlag = false;
 	private Button buttonYes;
+	private String requestCharSet;
+	private String responseCharSet;
+	private Combo comboRes;
+	private Combo comboReq;
 
 	/**
 	 * Create the dialog.
@@ -34,7 +40,9 @@ public class CharSetDialog extends Dialog {
 	 * 
 	 * @return the result
 	 */
-	public Object[] open() {
+	public Object[] open(String requestCharset, String responseCharSet) {
+		this.requestCharSet = requestCharset;
+		this.responseCharSet = responseCharSet;
 		createContents();
 		shell.open();
 		shell.layout();
@@ -44,7 +52,7 @@ public class CharSetDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return (new Object[] { saveFlag });
+		return (new Object[] { saveFlag, this.requestCharSet, this.responseCharSet });
 	}
 
 	/**
@@ -58,32 +66,142 @@ public class CharSetDialog extends Dialog {
 		ApiUtils.SetCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
+		buttonYes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				switch (comboReq.getSelectionIndex()) {
+				case 0:
+					requestCharSet = "UTF-8";
+					break;
+				case 1:
+					requestCharSet = "GBK";
+					break;
+				case 2:
+					requestCharSet = "GB2312";
+					break;
+				case 3:
+					requestCharSet = "GB18030";
+					break;
+				case 4:
+					requestCharSet = "Big5";
+					break;
+				case 5:
+					requestCharSet = "Big5-HKSCS";
+					break;
+
+				default:
+					break;
+				}
+				switch (comboRes.getSelectionIndex()) {
+				case 0:
+					responseCharSet = "auto";
+					break;
+				case 1:
+					responseCharSet = "UTF-8";
+					break;
+				case 2:
+					responseCharSet = "GBK";
+					break;
+				case 3:
+					responseCharSet = "GB2312";
+					break;
+				case 4:
+					responseCharSet = "GB18030";
+					break;
+				case 5:
+					responseCharSet = "Big5";
+					break;
+				case 6:
+					responseCharSet = "Big5-HKSCS";
+					break;
+				default:
+					break;
+				}
+				saveFlag = true;
+				shell.dispose();
+			}
+		});
 		buttonYes.setBounds(213, 135, 80, 27);
 		buttonYes.setText("保存");
 
 		Button buttonNo = new Button(shell, SWT.NONE);
+		buttonNo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveFlag = false;
+				shell.dispose();
+			}
+		});
 		buttonNo.setBounds(304, 135, 80, 27);
 		buttonNo.setText("放弃");
 
-		Combo combo = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
-		combo.setBounds(10, 59, 170, 25);
-		combo.add("Unicode (UTF-8)");
-		combo.add("简体中文 (GBK)");
-		combo.add("简体中文 (GB2312)");
-		combo.add("简体中文 (GB18030)");
-		combo.add("繁体中文 (Big5)");
-		combo.add("繁体中文 (Big5-HKSCS)");
-		combo.select(0);
+		comboReq = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
+		comboReq.setBounds(10, 59, 170, 25);
+		comboReq.add("Unicode (UTF-8)");
+		comboReq.add("简体中文 (GBK)");
+		comboReq.add("简体中文 (GB2312)");
+		comboReq.add("简体中文 (GB18030)");
+		comboReq.add("繁体中文 (Big5)");
+		comboReq.add("繁体中文 (Big5-HKSCS)");
+		switch (requestCharSet.toUpperCase()) {
+		case "UTF-8":
+			comboReq.select(0);
+			break;
+		case "GBK":
+			comboReq.select(1);
+			break;
+		case "GB2312":
+			comboReq.select(2);
+			break;
+		case "GB18030":
+			comboReq.select(3);
+			break;
+		case "BIG5":
+			comboReq.select(4);
+			break;
+		case "BIG5-HKSCS)":
+			comboReq.select(5);
+			break;
+		default:
+			comboReq.select(0);
+			break;
+		}
 
-		Combo combo_1 = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
-		combo_1.setBounds(201, 59, 170, 25);
-		combo_1.add("Unicode (UTF-8)");
-		combo_1.add("简体中文 (GBK)");
-		combo_1.add("简体中文 (GB2312)");
-		combo_1.add("简体中文 (GB18030)");
-		combo_1.add("繁体中文 (Big5)");
-		combo_1.add("繁体中文 (Big5-HKSCS)");
-		combo_1.select(0);
+		comboRes = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
+		comboRes.setBounds(201, 59, 170, 25);
+		comboRes.add("自动检测");
+		comboRes.add("Unicode (UTF-8)");
+		comboRes.add("简体中文 (GBK)");
+		comboRes.add("简体中文 (GB2312)");
+		comboRes.add("简体中文 (GB18030)");
+		comboRes.add("繁体中文 (Big5)");
+		comboRes.add("繁体中文 (Big5-HKSCS)");
+		switch (responseCharSet.toUpperCase()) {
+		case "AUTO":
+			comboRes.select(0);
+			break;
+		case "UTF-8":
+			comboRes.select(1);
+			break;
+		case "GBK":
+			comboRes.select(2);
+			break;
+		case "GB2312":
+			comboRes.select(3);
+			break;
+		case "GB18030":
+			comboRes.select(4);
+			break;
+		case "BIG5":
+			comboRes.select(5);
+			break;
+		case "BIG5-HKSCS)":
+			comboRes.select(6);
+			break;
+		default:
+			comboRes.select(0);
+			break;
+		}
 
 		Label label = new Label(shell, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));

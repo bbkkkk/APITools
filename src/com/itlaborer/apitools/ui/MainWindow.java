@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,8 +94,9 @@ public class MainWindow {
 	private String interfaceContextPath;
 	private String bodyReturnStr;
 	private String headerReturnStr;
-	private String settingCharSet;
-	private String autoCheckCharSet;
+	private String settingReqCharSet;
+	private String settingResCharSet;
+	private String autoCheckResCharSet;
 	private boolean keyDownFlag = false;
 	private boolean windowFocusFlag = false;
 	private boolean openByShortcutFlag = false;
@@ -164,7 +165,8 @@ public class MainWindow {
 		this.parsSum = 128;
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
-		this.settingCharSet = "auto";
+		this.settingResCharSet = "auto";
+		this.settingReqCharSet = "UTF-8";
 		this.resultByte = null;
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
@@ -868,7 +870,12 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CharSetDialog charSetDialog = new CharSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				charSetDialog.open();
+				Object[] objects = charSetDialog.open(settingReqCharSet, settingResCharSet);
+				if ((boolean) objects[0] == true) {
+					logger.debug("设置编码方式,请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
+					settingReqCharSet = (String) objects[1];
+					settingResCharSet = (String) objects[2];
+				}
 			}
 		});
 		charSetButton.setToolTipText("设置请求和响应的编码");
@@ -1670,22 +1677,22 @@ public class MainWindow {
 				try {
 					switch (method) {
 					case "GET":
-						result = ApiUtils.HttpGet(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpGet(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "POST":
-						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "HEAD":
-						result = ApiUtils.HttpHead(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpHead(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PUT":
-						result = ApiUtils.HttpPost(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PATCH":
-						result = ApiUtils.HttpPatch(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpPatch(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "DELETE":
-						result = ApiUtils.HttpDelete(url, pars, header, cookies, StandardCharsets.UTF_8);
+						result = ApiUtils.HttpDelete(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					default:
 						logger.debug("HTTP请求时未找到可用的方法");
@@ -1699,25 +1706,25 @@ public class MainWindow {
 					httpCode = result.getStatusCode();
 					// 获取头部信息和编码
 					headerReturnStr = "";
-					autoCheckCharSet = null;
+					autoCheckResCharSet = null;
 					List<Entry<String, String>> header = result.getHeaders();
 					for (int i = 0; i < header.size(); i++) {
 						headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
 						// 自动检测编码
 						if (header.get(i).getKey().toUpperCase().equals("CONTENT-TYPE")) {
 							logger.debug("开始寻找编码信息");
-							autoCheckCharSet = header.get(i).getValue()
+							autoCheckResCharSet = header.get(i).getValue()
 									.substring(header.get(i).getValue().toUpperCase().indexOf("CHARSET=") + 8);
-							logger.debug("从Response Header中读取到编码格式:" + autoCheckCharSet);
+							logger.debug("从Response Header中读取到编码格式:" + autoCheckResCharSet);
 						}
 					}
 					// 这里后期要添加更丰富的返回类型判断,比如侦测返回的是图像则显示图像等
 					if (true) {
 						// 使用指定编码解码
-						if (StringUtils.equals(settingCharSet, "auto")) {
-							bodyReturnStr = DecodeString(resultByte, autoCheckCharSet);
+						if (StringUtils.equals(settingResCharSet, "auto")) {
+							bodyReturnStr = DecodeString(resultByte, autoCheckResCharSet);
 						} else {
-							bodyReturnStr = DecodeString(resultByte, settingCharSet);
+							bodyReturnStr = DecodeString(resultByte, settingResCharSet);
 						}
 						display.syncExec(new Thread() {
 							public void run() {
@@ -1772,8 +1779,8 @@ public class MainWindow {
 				string = new String(bytes, "Big5-HKSCS");
 				break;
 			default:
-				if (StringUtils.isNotEmpty(autoCheckCharSet)) {
-					string = new String(bytes, autoCheckCharSet);
+				if (StringUtils.isNotEmpty(autoCheckResCharSet)) {
+					string = new String(bytes, autoCheckResCharSet);
 				} else {
 					string = new String(bytes);
 				}
@@ -1795,15 +1802,15 @@ public class MainWindow {
 		// 异步解码
 		new Thread() {
 			public void run() {
-				if (StringUtils.equals(settingCharSet, "auto")) {
-					final String string = DecodeString(resultByte, autoCheckCharSet);
+				if (StringUtils.equals(settingResCharSet, "auto")) {
+					final String string = DecodeString(resultByte, autoCheckResCharSet);
 					display.syncExec(new Thread() {
 						public void run() {
 							resultBodyStyledText.setText(string);
 						}
 					});
 				} else {
-					final String string = DecodeString(resultByte, settingCharSet);
+					final String string = DecodeString(resultByte, settingResCharSet);
 					display.syncExec(new Thread() {
 						public void run() {
 							resultBodyStyledText.setText(string);
@@ -2267,7 +2274,7 @@ public class MainWindow {
 		menucharSetAuto.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "auto";
+				settingResCharSet = "auto";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2277,7 +2284,7 @@ public class MainWindow {
 		menucharSetutf8.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "UTF-8";
+				settingResCharSet = "UTF-8";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2287,7 +2294,7 @@ public class MainWindow {
 		menucharSetgbk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "GBK";
+				settingResCharSet = "GBK";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2297,7 +2304,7 @@ public class MainWindow {
 		menuCharsetGb2312.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "GB2312";
+				settingResCharSet = "GB2312";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2307,7 +2314,7 @@ public class MainWindow {
 		menucharSetgb18030.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "GB18030";
+				settingResCharSet = "GB18030";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2317,7 +2324,7 @@ public class MainWindow {
 		menucharSetbig5.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "BIG5";
+				settingResCharSet = "BIG5";
 				UpdateResultBodyStyledText();
 			}
 		});
@@ -2327,7 +2334,7 @@ public class MainWindow {
 		menucharSetbig5HKSCS.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settingCharSet = "BIG5-HKSCS";
+				settingResCharSet = "BIG5-HKSCS";
 				UpdateResultBodyStyledText();
 			}
 		});
