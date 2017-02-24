@@ -566,6 +566,7 @@ public class MainWindow {
 										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
+								mainWindowShell.setText(applicationName);
 							} catch (Exception e2) {
 								logger.debug("创建新模块写入报错", e2);
 							}
