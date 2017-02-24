@@ -566,7 +566,6 @@ public class MainWindow {
 										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
-								mainWindowShell.setText(applicationName);
 							} catch (Exception e2) {
 								logger.debug("创建新模块写入报错", e2);
 							}
@@ -2071,6 +2070,7 @@ public class MainWindow {
 		if (null == apiDoc.getItem().get(modindex).getItem() || apiDoc.getItem().get(modindex).getItem().size() == 0) {
 			// 如果此模块下没有接口,则不再加载接口信息
 			logger.debug("当前分类下无接口信息,跳过加载");
+			mainWindowShell.setText(applicationName);
 			clearParameters();
 			interfaceContextPath = "";
 			urlText.setText(serverAdress);
