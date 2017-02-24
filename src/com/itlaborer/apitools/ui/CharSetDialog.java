@@ -69,6 +69,7 @@ public class CharSetDialog extends Dialog {
 		buttonYes.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// 编码设置
 				switch (comboReq.getSelectionIndex()) {
 				case 0:
 					requestCharSet = "UTF-8";
@@ -88,10 +89,13 @@ public class CharSetDialog extends Dialog {
 				case 5:
 					requestCharSet = "Big5-HKSCS";
 					break;
-
+				case 6:
+					requestCharSet = "ISO-8859-1";
+					break;
 				default:
 					break;
 				}
+				// 编码设置
 				switch (comboRes.getSelectionIndex()) {
 				case 0:
 					responseCharSet = "auto";
@@ -113,6 +117,9 @@ public class CharSetDialog extends Dialog {
 					break;
 				case 6:
 					responseCharSet = "Big5-HKSCS";
+					break;
+				case 7:
+					responseCharSet = "ISO-8859-1";
 					break;
 				default:
 					break;
@@ -137,12 +144,15 @@ public class CharSetDialog extends Dialog {
 
 		comboReq = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
 		comboReq.setBounds(10, 59, 170, 25);
+		// 编码设置
 		comboReq.add("Unicode (UTF-8)");
 		comboReq.add("简体中文 (GBK)");
 		comboReq.add("简体中文 (GB2312)");
 		comboReq.add("简体中文 (GB18030)");
 		comboReq.add("繁体中文 (Big5)");
 		comboReq.add("繁体中文 (Big5-HKSCS)");
+		comboReq.add("西方 (ISO-8859-1)");
+		// 初始化
 		switch (requestCharSet.toUpperCase()) {
 		case "UTF-8":
 			comboReq.select(0);
@@ -159,8 +169,11 @@ public class CharSetDialog extends Dialog {
 		case "BIG5":
 			comboReq.select(4);
 			break;
-		case "BIG5-HKSCS)":
+		case "BIG5-HKSCS":
 			comboReq.select(5);
+			break;
+		case "ISO-8859-1":
+			comboReq.select(6);
 			break;
 		default:
 			comboReq.select(0);
@@ -169,6 +182,7 @@ public class CharSetDialog extends Dialog {
 
 		comboRes = new Combo(shell, SWT.NONE | SWT.READ_ONLY);
 		comboRes.setBounds(201, 59, 170, 25);
+		// 编码设置
 		comboRes.add("自动检测");
 		comboRes.add("Unicode (UTF-8)");
 		comboRes.add("简体中文 (GBK)");
@@ -176,6 +190,8 @@ public class CharSetDialog extends Dialog {
 		comboRes.add("简体中文 (GB18030)");
 		comboRes.add("繁体中文 (Big5)");
 		comboRes.add("繁体中文 (Big5-HKSCS)");
+		comboRes.add("西方 (ISO-8859-1)");
+		// 初始化
 		switch (responseCharSet.toUpperCase()) {
 		case "AUTO":
 			comboRes.select(0);
@@ -197,6 +213,9 @@ public class CharSetDialog extends Dialog {
 			break;
 		case "BIG5-HKSCS)":
 			comboRes.select(6);
+			break;
+		case "ISO-8859-1":
+			comboRes.select(7);
 			break;
 		default:
 			comboRes.select(0);

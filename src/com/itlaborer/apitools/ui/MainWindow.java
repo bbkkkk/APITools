@@ -1761,6 +1761,7 @@ public class MainWindow {
 
 	}
 
+	// 编码设置
 	// 按照指定的编码解码字符串,如果传入的编码方式不在列表支持的范围内，
 	// 则尝试自动编码(如果http响应结果中获取自动编码失败则使用系统默认方式编码)，
 	// 尝试自动编码失败后则使用系统默认编码方式编码
@@ -1786,6 +1787,9 @@ public class MainWindow {
 				break;
 			case "BIG5-HKSCS":
 				string = new String(bytes, "Big5-HKSCS");
+				break;
+			case "ISO-8859-1":
+				string = new String(bytes, "ISO-8859-1");
 				break;
 			default:
 				if (StringUtils.isNotEmpty(autoCheckResCharSet)) {
@@ -2274,6 +2278,7 @@ public class MainWindow {
 		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
 
+		// 编码设置
 		MenuItem mntmCharsetSelect = new MenuItem(popupMenu, SWT.CASCADE);
 		mntmCharsetSelect.setText("字符编码");
 
@@ -2349,6 +2354,16 @@ public class MainWindow {
 			}
 		});
 		menucharSetbig5HKSCS.setText("繁体中文 (Big5-HKSCS)");
+
+		MenuItem mntmCharsetiso886901 = new MenuItem(menu, SWT.NONE);
+		mntmCharsetiso886901.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				settingResCharSet = "ISO-8859-1";
+				UpdateResultBodyStyledText();
+			}
+		});
+		mntmCharsetiso886901.setText("西方 (ISO-8859-1)");
 
 		// 判断初始自动换行状态
 		if (styledText.getWordWrap()) {
