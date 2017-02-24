@@ -234,8 +234,8 @@ public class MainWindow {
 		Menu menuSave = new Menu(menuEdit);
 		menuEdit.setMenu(menuSave);
 
-		MenuItem menuItem_10 = new MenuItem(menuSave, SWT.NONE);
-		menuItem_10.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCreateNewFile = new MenuItem(menuSave, SWT.NONE);
+		menuItemCreateNewFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CreateFileDialog createFileDialog = new CreateFileDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
@@ -262,7 +262,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_10.setText("新建接口文档（空接口文档）");
+		menuItemCreateNewFile.setText("新建接口文档（空接口文档）");
 
 		MenuItem menuItemSave = new MenuItem(menuSave, SWT.NONE);
 		menuItemSave.setText("保存当前接口参数（程序关闭前有效）");
@@ -352,14 +352,14 @@ public class MainWindow {
 		servers = new Menu(serverSelect);
 		serverSelect.setMenu(servers);
 
-		MenuItem menuItem = new MenuItem(rootMenu, SWT.NONE);
-		menuItem.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCreateNewWindow = new MenuItem(rootMenu, SWT.NONE);
+		menuItemCreateNewWindow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				initNewWindow(false, false);
 			}
 		});
-		menuItem.setText("应用分身");
+		menuItemCreateNewWindow.setText("应用分身");
 
 		/////////////////// 帮助////////////////////////////////////////
 		MenuItem menuHelp = new MenuItem(rootMenu, SWT.CASCADE);
@@ -395,8 +395,8 @@ public class MainWindow {
 		Menu menu_6 = new Menu(modSelectCombo);
 		modSelectCombo.setMenu(menu_6);
 
-		MenuItem menuItem_8 = new MenuItem(menu_6, SWT.NONE);
-		menuItem_8.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCopyModName = new MenuItem(menu_6, SWT.NONE);
+		menuItemCopyModName.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Clipboard clipboard = new Clipboard(modSelectCombo.getDisplay());
@@ -408,10 +408,10 @@ public class MainWindow {
 				statusBar.setText("已复制到剪切板:" + modSelectCombo.getText());
 			}
 		});
-		menuItem_8.setText("复制模块名");
+		menuItemCopyModName.setText("复制模块名");
 
-		MenuItem menuItem_4 = new MenuItem(menu_6, SWT.NONE);
-		menuItem_4.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemEditMod = new MenuItem(menu_6, SWT.NONE);
+		menuItemEditMod.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(modSelectCombo.getText())) {
@@ -468,10 +468,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_4.setText("编辑此模块");
+		menuItemEditMod.setText("编辑此模块");
 
-		MenuItem menuItem_5 = new MenuItem(menu_6, SWT.NONE);
-		menuItem_5.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemDeleteMod = new MenuItem(menu_6, SWT.NONE);
+		menuItemDeleteMod.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(modSelectCombo.getText())) {
@@ -521,10 +521,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_5.setText("删除此模块");
+		menuItemDeleteMod.setText("删除此模块");
 
-		MenuItem menuItem_7 = new MenuItem(menu_6, SWT.NONE);
-		menuItem_7.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCreateNewMod = new MenuItem(menu_6, SWT.NONE);
+		menuItemCreateNewMod.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (null == apiDoc) {
@@ -576,7 +576,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_7.setText("新增一个模块");
+		menuItemCreateNewMod.setText("新增一个模块");
 
 		// 接口选择
 		interfaceCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
@@ -586,8 +586,8 @@ public class MainWindow {
 		Menu menu_4 = new Menu(interfaceCombo);
 		interfaceCombo.setMenu(menu_4);
 
-		MenuItem menuItem_9 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_9.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCopyInterfaceName = new MenuItem(menu_4, SWT.NONE);
+		menuItemCopyInterfaceName.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Clipboard clipboard = new Clipboard(interfaceCombo.getDisplay());
@@ -599,10 +599,10 @@ public class MainWindow {
 				statusBar.setText("已复制到剪切板:" + interfaceCombo.getText());
 			}
 		});
-		menuItem_9.setText("复制接口名");
+		menuItemCopyInterfaceName.setText("复制接口名");
 
-		MenuItem menuItem_1 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_1.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemEditInterface1 = new MenuItem(menu_4, SWT.NONE);
+		menuItemEditInterface1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(interfaceCombo.getText())) {
@@ -694,10 +694,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_1.setText("编辑此接口");
+		menuItemEditInterface1.setText("编辑此接口");
 
-		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_2.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemDeleteInterface = new MenuItem(menu_4, SWT.NONE);
+		menuItemDeleteInterface.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(interfaceCombo.getText())) {
@@ -747,10 +747,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_2.setText("删除此接口");
+		menuItemDeleteInterface.setText("删除此接口");
 
-		MenuItem menuItem_6 = new MenuItem(menu_4, SWT.NONE);
-		menuItem_6.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuItemCreateNewInterface = new MenuItem(menu_4, SWT.NONE);
+		menuItemCreateNewInterface.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (modSelectCombo.getItemCount() == 0) {
@@ -818,7 +818,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_6.setText("新增一个接口");
+		menuItemCreateNewInterface.setText("新增一个接口");
 		// 表单
 		parsText = new Text(mainWindowShell, SWT.BORDER);
 		parsText.setBounds(3, 32, 480, 25);
