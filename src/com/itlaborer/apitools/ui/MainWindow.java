@@ -24,6 +24,11 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
@@ -216,7 +221,7 @@ public class MainWindow {
 		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		ApiUtils.SetCenter(mainWindowShell);
-		ApiUtils.DropTargetSupport(mainWindowShell);
+		DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
 		mainWindowShell.setMenuBar(rootMenu);
@@ -2506,5 +2511,45 @@ public class MainWindow {
 			historyList.add(null);
 		} else {
 		}
+	}
+
+	// 拖拽支持
+	private void DropTargetSupport(Shell shell) {
+
+		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
+		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
+		dropTarget.setTransfer(transfer);
+		// 拖拽监听
+		dropTarget.addDropListener(new DropTargetListener() {
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragLeave(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOperationChanged(DropTargetEvent event) {
+			}
+
+			@Override
+			public void dragOver(DropTargetEvent event) {
+			}
+
+			// 获取拖放进来的文件
+			@Override
+			public void drop(DropTargetEvent event) {
+				String[] files = (String[]) event.data;
+				for (int i = 0; i < files.length; i++) {
+					File file = new File(files[i]);
+					logger.debug("检测到拖拽文件:" + file.getPath());
+				}
+			}
+
+			@Override
+			public void dropAccept(DropTargetEvent event) {
+			}
+		});
 	}
 }

@@ -27,11 +27,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
@@ -215,46 +210,6 @@ public class ApiUtils {
 					styledText.setWordWrap(true);
 					warp.setText("关闭自动换行");
 				}
-			}
-		});
-	}
-
-	// 拖拽支持
-	public static void DropTargetSupport(Shell shell) {
-
-		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
-		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
-		dropTarget.setTransfer(transfer);
-		// 拖拽监听
-		dropTarget.addDropListener(new DropTargetListener() {
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragLeave(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-			}
-
-			@Override
-			public void dragOver(DropTargetEvent event) {
-			}
-
-			// 获取拖放进来的文件
-			@Override
-			public void drop(DropTargetEvent event) {
-				String[] files = (String[]) event.data;
-				for (int i = 0; i < files.length; i++) {
-					@SuppressWarnings("unused")
-					File file = new File(files[i]);
-				}
-			}
-
-			@Override
-			public void dropAccept(DropTargetEvent event) {
 			}
 		});
 	}
