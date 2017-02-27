@@ -316,18 +316,6 @@ public class MainWindow {
 
 		MenuItem menuItemUnicode = new MenuItem(menu, SWT.NONE);
 		menuItemUnicode.setText("Unicode编码/解码");
-		// 工具-文件转换
-		MenuItem menuItemConvertDoc = new MenuItem(menu, SWT.NONE);
-		menuItemConvertDoc.setText("恒生FUNDAPI转换工具");
-
-		// 菜单,转换工具的点击事件
-		menuItemConvertDoc.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				CovertTools tools = new CovertTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				tools.open();
-			}
-		});
 
 		MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
 		menuPar.setText("Header参数");
