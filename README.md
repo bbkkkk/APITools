@@ -16,7 +16,11 @@
 ### 常见问题说明
 * 1：控制台里打印日志乱码，需要修改config/log4j.properties,将log4j.appender.CONSOLE.Encoding值改成GB2312
 * 2：启动程序失败，此问题可能是因为使用的SWT版本和jdk版本不一致导致的，比如32位jdk必须使用32位的SWTjar包，请再pom.xml里修改
-* 
+
 ### 联系作者
 * QQ:793554262
 * Email:793554262@qq.com
+* Blog:www.itlaborer.com
+* 微信:liudeweichina
+
+### 发行版下载-暂不提供
