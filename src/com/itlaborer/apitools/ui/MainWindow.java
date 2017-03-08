@@ -167,7 +167,7 @@ public class MainWindow {
 		PropertyConfigurator.configure("config/log4j.properties ");
 		logger.info("程序启动,程序版本为:" + Resource.VERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
-		this.parsSum = 128;
+		this.parsSum = 196;
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
 		this.settingResCharSet = "auto";
