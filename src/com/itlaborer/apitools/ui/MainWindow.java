@@ -201,6 +201,8 @@ public class MainWindow {
 		createContents(display);
 		mainWindowShell.open();
 		InitSystem();
+		// 初始化历史记录
+		initHistory();
 		while (!mainWindowShell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -1977,9 +1979,7 @@ public class MainWindow {
 			// 加载前判断版本
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
-				// 初始化历史记录
 				initServerList(apiDoc.getServerlist());
-				initHistory();
 				initMod();
 			} else {
 				logger.warn("警告:您加载的API列表是不兼容的版本,请重新生成接口文档");
