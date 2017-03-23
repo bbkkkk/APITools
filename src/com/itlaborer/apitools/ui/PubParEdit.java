@@ -31,16 +31,16 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 /**
- * Header工具界面
+ * 公共参数工具界面
  * 
  * @author liudewei[793554262@qq.com]
  * @version 1.0
  * @since 1.0
  */
 
-public class HeaderEdit extends Dialog {
+public class PubParEdit extends Dialog {
 
-	private static Logger logger = Logger.getLogger(HeaderEdit.class.getName());
+	private static Logger logger = Logger.getLogger(PubParEdit.class.getName());
 	protected Shell headerEditShell;
 	private Table formTable;
 	private Text[][] form;
@@ -51,7 +51,7 @@ public class HeaderEdit extends Dialog {
 	private Map<String, String> pars;
 	private LinkedHashMap<String, String> headerNew;
 
-	public HeaderEdit(Shell parent, String windowname, int style) {
+	public PubParEdit(Shell parent, String windowname, int style) {
 		super(parent, style);
 		this.windowname = windowname;
 		logger.info("进入" + windowname + "参数工具");
@@ -79,7 +79,7 @@ public class HeaderEdit extends Dialog {
 
 	private void createContents() {
 		headerEditShell = new Shell(getParent(), getStyle());
-		headerEditShell.setImage(SWTResourceManager.getImage(HeaderEdit.class, Resource.IMAGE_ICON));
+		headerEditShell.setImage(SWTResourceManager.getImage(PubParEdit.class, Resource.IMAGE_ICON));
 		headerEditShell.setSize(680, 420);
 		headerEditShell.setText(windowname + "参数工具");
 		ApiUtils.SetCenterinParent(getParent(), headerEditShell);

@@ -1514,7 +1514,7 @@ public class MainWindow {
 		menuItemHeader.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				HeaderEdit headerEdit = new HeaderEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
 				header = headerEdit.open(header);
 				logger.info("读取到Header:" + header);
 			}
@@ -1523,7 +1523,7 @@ public class MainWindow {
 		menuItemCookie.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				HeaderEdit headerEdit = new HeaderEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
 				cookies = headerEdit.open(cookies);
 				logger.info("读取到Cookie:" + cookies);
 			}
