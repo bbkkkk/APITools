@@ -174,7 +174,7 @@ public class MainWindow {
 		this.settingResCharSet = "auto";
 		this.settingReqCharSet = "UTF-8";
 		this.resultByte = null;
-		this.pubpar=new LinkedHashMap<String, String>();
+		this.pubpar = new LinkedHashMap<String, String>();
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -921,6 +921,31 @@ public class MainWindow {
 		toBrower.setText("浏览器中打开");
 		toBrower.setBounds(1040, 31, 97, 27);
 		formToolkit.adapt(toBrower, true, true);
+
+		Menu browerMenu = new Menu(toBrower);
+		toBrower.setMenu(browerMenu);
+
+		MenuItem mntmget = new MenuItem(browerMenu, SWT.NONE);
+		mntmget.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(urlText.getText())) {
+					return;
+				}
+				HashMap<String, String> pars1 = getParameters();
+				parsText.setText(ParamUtils.mapToQuery(pars1));
+				String url = urlText.getText() + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1)));
+				///////////////////////////////////////////////////////////////////////////////////////////////////
+				Clipboard clipboard = new Clipboard(mainWindowShell.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { url }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				////////////////////////////////////////////////////////////////////////////////////////////////////
+				logger.info("复制到剪切板:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
+				statusBar.setText("请求信息已复制到剪切板:"+url);
+			}
+		});
+		mntmget.setText("复制GET请求到剪切板");
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
@@ -2152,8 +2177,8 @@ public class MainWindow {
 				}
 				// 将参数初始化一下
 				form[i][0].setText(pars.get(i).getTip() + "");
-				form[i][1].setText(pars.get(i).getName()+"");
-				form[i][2].setText(pars.get(i).getValue()+"");
+				form[i][1].setText(pars.get(i).getName() + "");
+				form[i][2].setText(pars.get(i).getValue() + "");
 			}
 		}
 		// 初始化公共参数
