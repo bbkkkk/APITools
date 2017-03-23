@@ -2152,8 +2152,8 @@ public class MainWindow {
 				}
 				// 将参数初始化一下
 				form[i][0].setText(pars.get(i).getTip() + "");
-				form[i][1].setText(pars.get(i).getName());
-				form[i][2].setText(pars.get(i).getValue());
+				form[i][1].setText(pars.get(i).getName()+"");
+				form[i][2].setText(pars.get(i).getValue()+"");
 			}
 		}
 		// 初始化公共参数
