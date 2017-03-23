@@ -505,7 +505,7 @@ public class ApiUtils {
 	public static String jsonFormat(String jsonStr) {
 		// 优先使用gson格式化，gson的规范更好，如果格式化失败则调用本地实现方法
 		try {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 			String prettyJsonString = gson.toJson(new JsonParser().parse(jsonStr));
 			return (prettyJsonString.equals("null")) ? "" : prettyJsonString;
 		} catch (Exception e) {
