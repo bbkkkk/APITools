@@ -107,6 +107,7 @@ public class MainWindow {
 	private boolean openByShortcutFlag = false;
 	private ApiDoc apiDoc;
 	private ApiMod history;
+	protected LinkedHashMap<String, String> pubpar;
 	protected LinkedHashMap<String, String> header;
 	protected LinkedHashMap<String, String> cookies;
 	private byte[] resultByte;
@@ -288,6 +289,18 @@ public class MainWindow {
 				designTools.open();
 			}
 		});
+
+		MenuItem menuItemPubPar = new MenuItem(menu, SWT.NONE);
+		menuItemPubPar.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PubParEdit pubEdit = new PubParEdit(mainWindowShell, "公共", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				pubpar = pubEdit.open(pubpar);
+				logger.info("读取到公共参数:" + pubpar);
+				initPubParameters(pubpar);
+			}
+		});
+		menuItemPubPar.setText("公共参数设置");
 
 		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
 		menuItemMd5.setText("MD5加密");
@@ -2122,6 +2135,20 @@ public class MainWindow {
 				form[i][0].setText(pars.get(i).getTip() + "");
 				form[i][1].setText(pars.get(i).getName());
 				form[i][2].setText(pars.get(i).getValue());
+			}
+		}
+		// 初始化公共参数
+		initPubParameters(pubpar);
+	}
+
+	// 公共参数初始化
+	private void initPubParameters(HashMap<String, String> pars) {
+		if (null != pars) {
+			for (int i = 0; i < parsSum; i++) {
+				String parname = form[i][1].getText();
+				if ((null != parname) && (null != pars.get(parname))) {
+					form[i][2].setText(pars.get(parname));
+				}
 			}
 		}
 	}
