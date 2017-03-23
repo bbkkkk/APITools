@@ -174,6 +174,7 @@ public class MainWindow {
 		this.settingResCharSet = "auto";
 		this.settingReqCharSet = "UTF-8";
 		this.resultByte = null;
+		this.pubpar=new LinkedHashMap<String, String>();
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
@@ -973,6 +974,24 @@ public class MainWindow {
 			label[i].setMenu(frozenPar);
 			menuItem1SubFrozen[i] = (MenuItem) new MenuItem(frozenPar, SWT.NONE);
 			menuItem1SubFrozen[i].setText("冻结此参数");
+
+			MenuItem mntmPubAdd = new MenuItem(frozenPar, SWT.NONE);
+			mntmPubAdd.setText("添加到公共参数");
+			mntmPubAdd.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					String name = form[b][1].getText();
+					String value = form[b][2].getText();
+					if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
+						pubpar.put(name, value);
+						logger.info("参数" + name + ":" + value + "加入到公共参数");
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			MenuItem mntmKey = new MenuItem(frozenPar, SWT.CASCADE);
