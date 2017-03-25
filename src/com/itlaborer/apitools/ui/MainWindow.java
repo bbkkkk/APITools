@@ -280,6 +280,19 @@ public class MainWindow {
 		// 工具菜单子菜单
 		Menu menu = new Menu(menuToolKit);
 		menuToolKit.setMenu(menu);
+
+		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
+		menuItemMd5.setText("MD5加密");
+
+		// MD5工具
+		menuItemMd5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				md5Tools.open();
+			}
+		});
+
 		// 工具-接口列表编辑
 		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
 		menuItemApiListEdit.setText("接口设计器");
@@ -302,18 +315,6 @@ public class MainWindow {
 			}
 		});
 		menuItemPubPar.setText("公共参数设置");
-
-		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
-		menuItemMd5.setText("MD5加密");
-
-		// MD5工具
-		menuItemMd5.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				MD5Tools md5Tools = new MD5Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				md5Tools.open();
-			}
-		});
 
 		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
 		menuItemUrl.setText("URL编码/解码");
@@ -942,7 +943,7 @@ public class MainWindow {
 				clipboard.dispose();
 				////////////////////////////////////////////////////////////////////////////////////////////////////
 				logger.info("复制到剪切板:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
-				statusBar.setText("请求信息已复制到剪切板:"+url);
+				statusBar.setText("请求信息已复制到剪切板:" + url);
 			}
 		});
 		mntmget.setText("复制GET请求到剪切板");
