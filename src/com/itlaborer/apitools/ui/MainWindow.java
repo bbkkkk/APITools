@@ -956,28 +956,34 @@ public class MainWindow {
 		formTable.setLinesVisible(true);
 
 		// 表列
-		TableColumn tblclmnNewColumn = new TableColumn(formTable, SWT.BORDER);
-		tblclmnNewColumn.setWidth(38);
-		tblclmnNewColumn.setResizable(false);
-		tblclmnNewColumn.setText("编号");
+		TableColumn numberColumn = new TableColumn(formTable, SWT.BORDER);
+		numberColumn.setWidth(38);
+		numberColumn.setResizable(false);
+		numberColumn.setText("编号");
 
-		TableColumn tblclmnNewColumn2 = new TableColumn(formTable, SWT.BORDER);
-		tblclmnNewColumn2.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+		TableColumn tipColumn = new TableColumn(formTable, SWT.BORDER);
+		tipColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.24));
-		tblclmnNewColumn2.setResizable(false);
-		tblclmnNewColumn2.setText("备注");
+		tipColumn.setResizable(false);
+		tipColumn.setText("备注");
 
 		TableColumn nameColumn = new TableColumn(formTable, SWT.BORDER);
-		nameColumn.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+		nameColumn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				logger.info("点击");
+			}
+		});
+		nameColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		nameColumn.setText("参数名");
 		nameColumn.setResizable(false);
 
-		TableColumn valueColumn_1 = new TableColumn(formTable, SWT.BORDER);
-		valueColumn_1.setWidth((int) ((formTable.getBounds().width - tblclmnNewColumn.getWidth()
+		TableColumn valueColumn = new TableColumn(formTable, SWT.BORDER);
+		valueColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
-		valueColumn_1.setText("参数值");
-		valueColumn_1.setResizable(false);
+		valueColumn.setText("参数值");
+		valueColumn.setResizable(false);
 
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
