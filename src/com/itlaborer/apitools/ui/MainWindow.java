@@ -68,7 +68,7 @@ import com.itlaborer.apitools.res.KeyCode;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 import com.itlaborer.apitools.utils.ParamUtils;
 
 import net.dongliu.requests.RawResponse;
@@ -159,7 +159,7 @@ public class MainWindow {
 		File log4jFile = new File("./config/log4j.properties");
 		if (!log4jFile.exists()) {
 			try {
-				ApiUtils.SaveToFile(log4jFile, Resource.LOG4J);
+				PubUtils.SaveToFile(log4jFile, Resource.LOG4J);
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
@@ -224,7 +224,7 @@ public class MainWindow {
 		mainWindowShell.setSize(1145, 670);
 		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
-		ApiUtils.SetCenter(mainWindowShell);
+		PubUtils.SetCenter(mainWindowShell);
 		DropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
@@ -254,8 +254,8 @@ public class MainWindow {
 					newDoc.setName(name);
 					newDoc.setServerlist(serverList);
 					newDoc.setItem(new ArrayList<ApiMod>());
-					if (ApiUtils.SaveToFile(new File("./config/" + name + "-" + version + ".json"),
-							ApiUtils.jsonFormat(JSON.toJSONString(newDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+					if (PubUtils.SaveToFile(new File("./config/" + name + "-" + version + ".json"),
+							PubUtils.jsonFormat(JSON.toJSONString(newDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						statusBar.setText("保存成功,请重新配置程序配置文件后重启加载接口文档");
 					} else {
 						statusBar.setText("保存失败,请重试");
@@ -459,8 +459,8 @@ public class MainWindow {
 						}
 					}
 					// 保存更新
-					if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-							ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+					if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+							PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(),
 								apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getName() + "");
 						modSelectCombo.setToolTipText(
@@ -493,7 +493,7 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().remove(modindex);
 						// 保存
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+						PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
 								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						modSelectCombo.remove(modindex);
@@ -567,7 +567,7 @@ public class MainWindow {
 							apiList.setDescription(description);
 							apiDoc.getItem().add(apiList);
 							try {
-								ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils.jsonFormat(
+								PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils.jsonFormat(
 										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
@@ -677,8 +677,8 @@ public class MainWindow {
 						}
 					}
 					// 保存变化--并更新UI
-					if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-							ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+					if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+							PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						ApiItem apiItem = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex());
 						interfaceCombo.setItem(interfaceCombo.getSelectionIndex(), apiItem.getName());
@@ -720,7 +720,7 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意,保存时会把之前保存到内存中的参数也更新到文档---
-						ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+						PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
 								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						interfaceCombo.remove(interfaceindex);
@@ -804,13 +804,13 @@ public class MainWindow {
 							apiItem.setDescription(description);
 							apiItem.setPath(path);
 							apiItem.setMethod("GET");
-							apiItem.setUuid(ApiUtils.getUUID());
+							apiItem.setUuid(PubUtils.getUUID());
 							apiItem.setParameters(new ArrayList<ApiPar>());
 							// 加入当前组
 							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().add(apiItem);
 							interfaceCombo.add(collectionName);
 							// 保存
-							ApiUtils.SaveToFile(new File("./config/" + apiJsonFile), ApiUtils
+							PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
 									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 							// 切换到这个接口
 							interfaceCombo.select(interfaceCombo.getItemCount() - 1);
@@ -1076,7 +1076,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.base64EncodeString(form[b][1].getText()));
+						form[b][1].setText(PubUtils.base64EncodeString(form[b][1].getText()));
 					}
 				}
 
@@ -1091,7 +1091,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.base64DecodeString(form[b][1].getText()));
+						form[b][1].setText(PubUtils.base64DecodeString(form[b][1].getText()));
 					}
 				}
 
@@ -1106,7 +1106,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()));
+						form[b][1].setText(PubUtils.MD5(form[b][1].getText()));
 					}
 				}
 
@@ -1121,7 +1121,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(ApiUtils.MD5(form[b][1].getText()).toLowerCase());
+						form[b][1].setText(PubUtils.MD5(form[b][1].getText()).toLowerCase());
 					}
 				}
 
@@ -1195,7 +1195,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(ApiUtils.base64EncodeString(form[b][2].getText()));
+						form[b][2].setText(PubUtils.base64EncodeString(form[b][2].getText()));
 					}
 				}
 
@@ -1210,7 +1210,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(ApiUtils.base64DecodeString(form[b][2].getText()));
+						form[b][2].setText(PubUtils.base64DecodeString(form[b][2].getText()));
 					}
 				}
 
@@ -1225,7 +1225,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(ApiUtils.MD5(form[b][2].getText()));
+						form[b][2].setText(PubUtils.MD5(form[b][2].getText()));
 					}
 				}
 
@@ -1240,7 +1240,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(ApiUtils.MD5(form[b][2].getText()).toLowerCase());
+						form[b][2].setText(PubUtils.MD5(form[b][2].getText()).toLowerCase());
 					}
 				}
 
@@ -1740,22 +1740,22 @@ public class MainWindow {
 				try {
 					switch (method) {
 					case "GET":
-						result = ApiUtils.HttpGet(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpGet(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "POST":
-						result = ApiUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "HEAD":
-						result = ApiUtils.HttpHead(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpHead(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PUT":
-						result = ApiUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PATCH":
-						result = ApiUtils.HttpPatch(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpPatch(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "DELETE":
-						result = ApiUtils.HttpDelete(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.HttpDelete(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					default:
 						logger.debug("HTTP请求时未找到可用的方法");
@@ -1858,7 +1858,7 @@ public class MainWindow {
 			logger.debug("未找到可用的编码方式，且自动编码失败，使用系统默认编码方式进行编码");
 			string = new String(bytes);
 		}
-		return ApiUtils.jsonFormat(string);
+		return PubUtils.jsonFormat(string);
 	}
 
 	// 按照指定的编码更新resultBodyStyledText
@@ -1936,8 +1936,8 @@ public class MainWindow {
 					tempSavePars.get(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险,保存时间过长程序界面卡死
-			if (ApiUtils.SaveToFile(new File("./config/" + apiJsonFile),
-					ApiUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
+			if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+					PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 				statusBar.setText("保存成功,已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败,请重试");
@@ -1975,11 +1975,11 @@ public class MainWindow {
 		File configFile = new File("./config/config.properties");
 		if (!configFile.exists()) {
 			try {
-				ApiUtils.SaveToFile(configFile, Resource.CONFIG);
+				PubUtils.SaveToFile(configFile, Resource.CONFIG);
 				logger.warn("警告:参数配置文件丢失,已创建默认配置");
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
-				ApiUtils.SaveToFile(new File("./config/api-xinzhiweather.json"), ApiUtils.jsonFormat(
+				PubUtils.SaveToFile(new File("./config/api-xinzhiweather.json"), PubUtils.jsonFormat(
 						JSON.toJSONString(new XinzhiWeather().getApidoc(), SerializerFeature.WriteNullStringAsEmpty)));
 			} catch (Exception e) {
 				logger.warn("异常", e);
@@ -1988,7 +1988,7 @@ public class MainWindow {
 		// 此处开始加载配置文件内容
 		try {
 			// 加载配置
-			properties = ApiUtils.ReadProperties(configFile);
+			properties = PubUtils.ReadProperties(configFile);
 			// 加载API列表
 			loadApiJsonFileArray = properties.getProperty("apilist").split("\\|");
 			if (null != loadApiJsonFileArray && loadApiJsonFileArray.length > 0) {
@@ -2038,7 +2038,7 @@ public class MainWindow {
 			return;
 		}
 		try {
-			apiDoc = JSON.parseObject(ApiUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
+			apiDoc = JSON.parseObject(PubUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
 			// 检查接口文档是老版本的文档没有,需要补正
 			// 加载前判断版本
 			if (apiDoc.getDecodeversion().equals(1.1)) {
@@ -2534,7 +2534,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				Pattern p = Pattern.compile("\\s*|\t|\r|\n");
 				Matcher m = p.matcher(styledText.getText());
-				styledText.setText(ApiUtils.jsonFormat(m.replaceAll("")));
+				styledText.setText(PubUtils.jsonFormat(m.replaceAll("")));
 			}
 		});
 

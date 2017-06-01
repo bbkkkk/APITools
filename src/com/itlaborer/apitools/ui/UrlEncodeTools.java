@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * Url工具界面
@@ -54,12 +54,12 @@ public class UrlEncodeTools extends Dialog {
 		urlEncodeToolsShell.setImage(SWTResourceManager.getImage(UrlEncodeTools.class, Resource.IMAGE_ICON));
 		urlEncodeToolsShell.setSize(680, 420);
 		urlEncodeToolsShell.setText("URL编码/解码工具");
-		ApiUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);
+		PubUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);
 
 		final StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setBounds(3, 3, 669, 357);
-		ApiUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.StyledTextAddContextMenu(styledText);
 
 		// URL编码
 		Button btnNewButton = new Button(urlEncodeToolsShell, SWT.NONE);

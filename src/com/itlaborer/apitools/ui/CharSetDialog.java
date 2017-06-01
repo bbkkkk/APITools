@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -63,7 +63,7 @@ public class CharSetDialog extends Dialog {
 		shell.setImage(SWTResourceManager.getImage(CharSetDialog.class, Resource.IMAGE_ICON));
 		shell.setText("字符集设置");
 		shell.setSize(400, 200);
-		ApiUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.SetCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.addSelectionListener(new SelectionAdapter() {

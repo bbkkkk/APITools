@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -53,13 +53,13 @@ public class Base64Tools extends Dialog {
 		base64ToolsShell.setImage(SWTResourceManager.getImage(Base64Tools.class, Resource.IMAGE_ICON));
 		base64ToolsShell.setSize(680, 420);
 		base64ToolsShell.setText("Base64编码/解码工具");
-		ApiUtils.SetCenterinParent(getParent(), base64ToolsShell);
+		PubUtils.SetCenterinParent(getParent(), base64ToolsShell);
 
 		final StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		styledText.setBounds(3, 3, 669, 357);
-		ApiUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.StyledTextAddContextMenu(styledText);
 		// 编码
 		Button encodeButton = new Button(base64ToolsShell, SWT.NONE);
 		encodeButton.setBounds(3, 363, 333, 27);
@@ -69,7 +69,7 @@ public class Base64Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isNotEmpty(styledText.getText())) {
 					logger.debug("编码串:" + styledText.getText());
-					styledText.setText(ApiUtils.base64EncodeString(styledText.getText()));
+					styledText.setText(PubUtils.base64EncodeString(styledText.getText()));
 				}
 			}
 		});
@@ -81,7 +81,7 @@ public class Base64Tools extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Base64解码-----
-				styledText.setText(ApiUtils.base64DecodeString(styledText.getText()));
+				styledText.setText(PubUtils.base64DecodeString(styledText.getText()));
 			}
 		});
 	}

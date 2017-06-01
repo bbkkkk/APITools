@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * API文档类
@@ -72,6 +72,6 @@ public class ApiDoc {
 	}
 
 	public String toString() {
-		return ApiUtils.jsonFormat(JSON.toJSONString(this));
+		return PubUtils.jsonFormat(JSON.toJSONString(this));
 	}
 }

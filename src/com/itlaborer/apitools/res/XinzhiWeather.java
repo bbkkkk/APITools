@@ -6,7 +6,7 @@ import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiMod;
 import com.itlaborer.apitools.model.ApiPar;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * 心知天气API，作为示例接口文档
@@ -24,7 +24,7 @@ public class XinzhiWeather {
 
 		// 第一个接口
 		ApiItem nowWeather = new ApiItem();
-		nowWeather.setUuid(ApiUtils.getUUID());
+		nowWeather.setUuid(PubUtils.getUUID());
 		nowWeather.setPath("now.json");
 		nowWeather.setName("天气实况");
 		nowWeather.setDescription("可以通过此接口获取到全国的城市的当日天气信息");
@@ -35,7 +35,7 @@ public class XinzhiWeather {
 		nowWeather.setParameters(nowWeatherPars);
 		// 第二个接口
 		ApiItem dailyWeather = new ApiItem();
-		dailyWeather.setUuid(ApiUtils.getUUID());
+		dailyWeather.setUuid(PubUtils.getUUID());
 		dailyWeather.setPath("daily.json");
 		dailyWeather.setName("逐日预报和历史");
 		dailyWeather.setDescription("可以通过此接口获取到全国的城市的近七日天气信息");

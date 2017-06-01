@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 public class DesignTools {
 
@@ -49,7 +49,7 @@ public class DesignTools {
 		shell.setSize(1145, 680);
 		shell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		shell.setText("APIDesignTools-" + Resource.VERSION);
-		ApiUtils.SetCenter(shell);
+		PubUtils.SetCenter(shell);
 
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);

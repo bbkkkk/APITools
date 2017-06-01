@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
@@ -58,7 +58,7 @@ public class MySelectionDialog extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		shell.setImage(SWTResourceManager.getImage(MySelectionDialog.class, Resource.IMAGE_ICON));
 		shell.setSize(400, 180);
-		ApiUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.SetCenterinParent(getParent(), shell);
 		shell.setText(getText());
 
 		Label lblText = new Label(shell, SWT.WRAP);

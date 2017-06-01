@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Combo;
 
@@ -78,7 +78,7 @@ public class EditCollectionDialog extends Dialog {
 		shell.setImage(SWTResourceManager.getImage(EditCollectionDialog.class, Resource.IMAGE_ICON));
 		shell.setText("编辑接口");
 		shell.setSize(480, 220);
-		ApiUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.SetCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.setBounds(293, 155, 80, 27);

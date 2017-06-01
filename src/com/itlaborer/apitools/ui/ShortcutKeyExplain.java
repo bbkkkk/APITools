@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * 快捷键说明界面
@@ -55,7 +55,7 @@ public class ShortcutKeyExplain extends Dialog {
 		aboutToolsShell.setImage(SWTResourceManager.getImage(ShortcutKeyExplain.class, Resource.IMAGE_ICON));
 		aboutToolsShell.setSize(400, 391);
 		aboutToolsShell.setText(getText());
-		ApiUtils.SetCenterinParent(getParent(), aboutToolsShell);
+		PubUtils.SetCenterinParent(getParent(), aboutToolsShell);
 
 		Link link = new Link(aboutToolsShell, SWT.NONE);
 		link.setBounds(143, 336, 108, 17);

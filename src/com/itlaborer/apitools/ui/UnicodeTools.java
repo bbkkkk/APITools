@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * Unicode工具界面
@@ -50,11 +50,11 @@ public class UnicodeTools extends Dialog {
 		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, Resource.IMAGE_ICON));
 		unicodeToolsShell.setSize(680, 420);
 		unicodeToolsShell.setText("Unicode编码/解码工具");
-		ApiUtils.SetCenterinParent(getParent(), unicodeToolsShell);
+		PubUtils.SetCenterinParent(getParent(), unicodeToolsShell);
 
 		final StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setBounds(3, 3, 669, 357);
-		ApiUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.StyledTextAddContextMenu(styledText);
 
 		//全Unicode编码
 		Button allUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);
@@ -65,7 +65,7 @@ public class UnicodeTools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				// 获取unicode串
 				logger.debug("开始Unicode编码");
-				String unicodeString = ApiUtils.string2Unicode(styledText.getText());
+				String unicodeString = PubUtils.string2Unicode(styledText.getText());
 				if (unicodeString == null) {
 					//
 				} else {
@@ -83,7 +83,7 @@ public class UnicodeTools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				// 获取unicode串
 				logger.debug("开始Unicode编码");
-				String unicodeString = ApiUtils.stringzh2Unicode(styledText.getText());
+				String unicodeString = PubUtils.stringzh2Unicode(styledText.getText());
 				if (unicodeString == null) {
 					//
 				} else {
@@ -101,7 +101,7 @@ public class UnicodeTools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("开始Unicode解码");
 				;
-				styledText.setText(ApiUtils.unicode2String(styledText.getText()));
+				styledText.setText(PubUtils.unicode2String(styledText.getText()));
 			}
 		});
 	}

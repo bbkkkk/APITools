@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * 关于界面
@@ -55,7 +55,7 @@ public class AboutTools extends Dialog {
 		aboutToolsShell.setImage(SWTResourceManager.getImage(AboutTools.class, Resource.IMAGE_ICON));
 		aboutToolsShell.setSize(400, 391);
 		aboutToolsShell.setText(getText());
-		ApiUtils.SetCenterinParent(getParent(), aboutToolsShell);
+		PubUtils.SetCenterinParent(getParent(), aboutToolsShell);
 
 		Label copyRightlabel = new Label(aboutToolsShell, SWT.CENTER);
 		copyRightlabel.setBounds(10, 311, 375, 17);

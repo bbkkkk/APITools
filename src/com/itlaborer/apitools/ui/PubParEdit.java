@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -82,7 +82,7 @@ public class PubParEdit extends Dialog {
 		headerEditShell.setImage(SWTResourceManager.getImage(PubParEdit.class, Resource.IMAGE_ICON));
 		headerEditShell.setSize(680, 420);
 		headerEditShell.setText(windowname + "参数工具");
-		ApiUtils.SetCenterinParent(getParent(), headerEditShell);
+		PubUtils.SetCenterinParent(getParent(), headerEditShell);
 
 		formTable = new Table(headerEditShell, SWT.BORDER | SWT.HIDE_SELECTION);
 		formTable.setBounds(3, 3, 669, 357);

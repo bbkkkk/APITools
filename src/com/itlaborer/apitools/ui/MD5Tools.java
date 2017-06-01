@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.ApiUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 /**
  * MD5工具界面
@@ -51,12 +51,12 @@ public class MD5Tools extends Dialog {
 		md5ToolsShell.setImage(SWTResourceManager.getImage(MD5Tools.class, Resource.IMAGE_ICON));
 		md5ToolsShell.setSize(680, 420);
 		md5ToolsShell.setText("MD5加密工具");
-		ApiUtils.SetCenterinParent(getParent(), md5ToolsShell);
+		PubUtils.SetCenterinParent(getParent(), md5ToolsShell);
 
 		final StyledText styledText = new StyledText(md5ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setBounds(3, 3, 669, 357);
-		ApiUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.StyledTextAddContextMenu(styledText);
 
 		// 小写加密
 		Button btnNewButton = new Button(md5ToolsShell, SWT.NONE);
@@ -67,7 +67,7 @@ public class MD5Tools extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("加密串:" + styledText.getText());
 				styledText.setText(
-						StringUtils.isEmpty(styledText.getText())?"" : (ApiUtils.MD5(styledText.getText()).toLowerCase()));
+						StringUtils.isEmpty(styledText.getText())?"" : (PubUtils.MD5(styledText.getText()).toLowerCase()));
 			}
 		});
 
@@ -79,7 +79,7 @@ public class MD5Tools extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("加密串:" + styledText.getText());
-				styledText.setText(StringUtils.isEmpty(styledText.getText())? "" : ApiUtils.MD5(styledText.getText()));
+				styledText.setText(StringUtils.isEmpty(styledText.getText())? "" : PubUtils.MD5(styledText.getText()));
 			}
 		});
 	}

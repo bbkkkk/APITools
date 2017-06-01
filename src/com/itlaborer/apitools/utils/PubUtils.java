@@ -52,9 +52,9 @@ import net.dongliu.requests.Requests;
  * @since 1.0
  */
 
-public class ApiUtils {
+public class PubUtils {
 
-	private static Logger logger = Logger.getLogger(ApiUtils.class.getName());
+	private static Logger logger = Logger.getLogger(PubUtils.class.getName());
 
 	// 设置程序窗口居中
 	public static void SetCenter(Shell shell) {
