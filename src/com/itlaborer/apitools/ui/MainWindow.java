@@ -949,7 +949,7 @@ public class MainWindow {
 		mntmget.setText("复制GET请求到剪切板");
 
 		// 参数table
-		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION);
+		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.VIRTUAL);
 		formTable.setBounds(3, 62, 480, 530);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);

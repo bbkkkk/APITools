@@ -278,7 +278,7 @@ public class PubUtils {
 		InputStreamReader reader = null;
 		StringWriter writer = new StringWriter();
 		try {
-			if (encoding == null || "".equals(encoding.trim())) {
+			if (StringUtils.isNotEmpty(encoding)) {
 				reader = new InputStreamReader(new FileInputStream(file), encoding);
 			} else {
 				reader = new InputStreamReader(new FileInputStream(file));
@@ -455,7 +455,7 @@ public class PubUtils {
 	}
 
 	// 判断字符是否是中日韩字符
-	private static final boolean isChinese(char c) {
+	public static final boolean isChinese(char c) {
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
 		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
 				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
