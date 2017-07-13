@@ -202,7 +202,7 @@ public class MainWindow {
 		display = Display.getDefault();
 		createContents(display);
 		mainWindowShell.open();
-		InitSystem();
+		initSystem();
 		// 初始化历史记录
 		initHistory();
 		while (!mainWindowShell.isDisposed()) {
@@ -225,7 +225,7 @@ public class MainWindow {
 		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
 		PubUtils.SetCenter(mainWindowShell);
-		DropTargetSupport(mainWindowShell);
+		dropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
 		mainWindowShell.setMenuBar(rootMenu);
@@ -878,7 +878,7 @@ public class MainWindow {
 		charSetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				CharSetDialog charSetDialog = new CharSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				charSetDialog charSetDialog = new charSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] objects = charSetDialog.open(settingReqCharSet, settingResCharSet);
 				if ((boolean) objects[0] == true) {
 					logger.debug("请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
@@ -1478,7 +1478,7 @@ public class MainWindow {
 					// Ctrl+s临时保存
 					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_S)) {
 						keyDownFlag = true;
-						SavePars2Memory();
+						savePars2Memory();
 					}
 				}
 			}
@@ -1513,15 +1513,15 @@ public class MainWindow {
 		menuItemSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SavePars2Memory();
+				savePars2Memory();
 			}
 		});
 		// 保存事件
 		menuItemSaveToFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SavePars2Memory();
-				SavePars2File();
+				savePars2Memory();
+				savePars2File();
 			}
 		});
 		// 参数重排
@@ -1785,9 +1785,9 @@ public class MainWindow {
 					if (true) {
 						// 使用指定编码解码
 						if (StringUtils.equals(settingResCharSet, "auto")) {
-							bodyReturnStr = DecodeString(resultByte, autoCheckResCharSet);
+							bodyReturnStr = decodeString(resultByte, autoCheckResCharSet);
 						} else {
-							bodyReturnStr = DecodeString(resultByte, settingResCharSet);
+							bodyReturnStr = decodeString(resultByte, settingResCharSet);
 						}
 						display.syncExec(new Thread() {
 							public void run() {
@@ -1819,7 +1819,7 @@ public class MainWindow {
 	// 按照指定的编码解码字符串,如果传入的编码方式不在列表支持的范围内，
 	// 则尝试自动编码(如果http响应结果中获取自动编码失败则使用系统默认方式编码)，
 	// 尝试自动编码失败后则使用系统默认编码方式编码
-	private String DecodeString(byte[] bytes, String charSet) {
+	private String decodeString(byte[] bytes, String charSet) {
 		logger.debug("传入的编码方式为:" + charSet);
 		String string = null;
 		try {
@@ -1862,7 +1862,7 @@ public class MainWindow {
 	}
 
 	// 按照指定的编码更新resultBodyStyledText
-	private void UpdateResultBodyStyledText() {
+	private void updateResultBodyStyledText() {
 		if (null == resultByte) {
 			return;
 		}
@@ -1870,14 +1870,14 @@ public class MainWindow {
 		new Thread() {
 			public void run() {
 				if (StringUtils.equals(settingResCharSet, "auto")) {
-					final String string = DecodeString(resultByte, autoCheckResCharSet);
+					final String string = decodeString(resultByte, autoCheckResCharSet);
 					display.syncExec(new Thread() {
 						public void run() {
 							resultBodyStyledText.setText(string);
 						}
 					});
 				} else {
-					final String string = DecodeString(resultByte, settingResCharSet);
+					final String string = decodeString(resultByte, settingResCharSet);
 					display.syncExec(new Thread() {
 						public void run() {
 							resultBodyStyledText.setText(string);
@@ -1890,7 +1890,7 @@ public class MainWindow {
 	}
 
 	// 保存参数到内存
-	private void SavePars2Memory() {
+	private void savePars2Memory() {
 		logger.debug("调用了临时保存参数");
 		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
 			statusBar.setText("保存失败：只允许在现有接口上保存已填写的参数");
@@ -1925,7 +1925,7 @@ public class MainWindow {
 
 	// 保存参数到文件
 	// 新读取一份文档保存,因为内存中的那份可能在其他接口处做了临时保存
-	private void SavePars2File() {
+	private void savePars2File() {
 		logger.debug("调用了永久保存参数");
 		if (modSelectCombo.getSelectionIndex() == -1 | interfaceCombo.getSelectionIndex() == -1) {
 			return;
@@ -1949,7 +1949,7 @@ public class MainWindow {
 
 	///////////////////////////////////////////////////////////////////////////
 	// 初始化程序
-	private void InitSystem() {
+	private void initSystem() {
 		// 加载并初始化参数信息
 		methodSelectCombo.select(0);
 		logger.debug("初始化配置信息-默认表单发送方式为:" + this.methodSelectCombo.getText());
@@ -2010,7 +2010,7 @@ public class MainWindow {
 								}
 								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 								apiJsonFile = apiItem.getText();
-								InitApiList();
+								initApiList();
 							}
 						});
 					}
@@ -2026,12 +2026,12 @@ public class MainWindow {
 		if (null == apiJsonFile) {
 			logger.debug("API列表为空,跳过加载");
 		} else {
-			InitApiList();
+			initApiList();
 		}
 	}
 
 	// 初始化API列表信息
-	private void InitApiList() {
+	private void initApiList() {
 		File apilistfile = new File("./config/" + apiJsonFile);
 		if (!apilistfile.exists()) {
 			logger.warn("警告:您加载的API文档不存在,程序将跳过加载API列表,请检查配置");
@@ -2356,7 +2356,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "auto";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetAuto.setText("自动检测");
@@ -2366,7 +2366,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "UTF-8";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetutf8.setText("Unicode (UTF-8)");
@@ -2376,7 +2376,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "GBK";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetgbk.setText("简体中文 (GBK)");
@@ -2386,7 +2386,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "GB2312";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menuCharsetGb2312.setText("简体中文 (GB2312)");
@@ -2396,7 +2396,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "GB18030";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetgb18030.setText("简体中文 (GB18030)");
@@ -2406,7 +2406,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "BIG5";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetbig5.setText("繁体中文 (Big5)");
@@ -2416,7 +2416,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "BIG5-HKSCS";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		menucharSetbig5HKSCS.setText("繁体中文 (Big5-HKSCS)");
@@ -2426,7 +2426,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				settingResCharSet = "ISO-8859-1";
-				UpdateResultBodyStyledText();
+				updateResultBodyStyledText();
 			}
 		});
 		mntmCharsetiso886901.setText("西方 (ISO-8859-1)");
@@ -2596,7 +2596,7 @@ public class MainWindow {
 	}
 
 	// 拖拽支持
-	private void DropTargetSupport(Shell shell) {
+	private void dropTargetSupport(Shell shell) {
 
 		DropTarget dropTarget = new DropTarget(shell, DND.DROP_NONE);
 		Transfer[] transfer = new Transfer[] { FileTransfer.getInstance() };
