@@ -68,8 +68,8 @@ import com.itlaborer.apitools.res.KeyCode;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
 import com.itlaborer.apitools.swt.SWTResourceManager;
-import com.itlaborer.apitools.utils.PubUtils;
 import com.itlaborer.apitools.utils.ParamUtils;
+import com.itlaborer.apitools.utils.PubUtils;
 
 import net.dongliu.requests.RawResponse;
 
@@ -91,6 +91,8 @@ public class MainWindow {
 
 	// 其他成员变量-
 	private int httpCode, parsSum;
+	// 参数顺序标志,0原始顺序,1正序,2倒序
+	private int orderFlag;
 	private long httpTime;
 	private Properties properties;
 	private String applicationName;
@@ -159,15 +161,16 @@ public class MainWindow {
 		File log4jFile = new File("./config/log4j.properties");
 		if (!log4jFile.exists()) {
 			try {
-				PubUtils.SaveToFile(log4jFile, Resource.LOG4J);
+				PubUtils.saveToFile(log4jFile, Resource.LOG4J);
 			} catch (Exception e) {
 				logger.warn("异常", e);
 			}
 		}
 		/////////////////////////////////////////////////////////
 		PropertyConfigurator.configure("config/log4j.properties ");
-		logger.info("程序启动,程序版本为:" + Resource.VERSION);
+		logger.info("程序启动,程序版本为:" + Resource.APIVERSION);
 		this.formToolkit = new FormToolkit(Display.getDefault());
+		this.orderFlag = 0;
 		this.parsSum = 196;
 		this.loadHistorySum = 50;
 		this.serverAdress = "";
@@ -178,7 +181,7 @@ public class MainWindow {
 		this.cookies = new LinkedHashMap<String, String>();
 		this.header = new LinkedHashMap<String, String>();
 		this.tempSavePars = new HashMap<String, ApiItem>();
-		this.header.put("User-Agent", "APITools-" + Resource.VERSION);
+		this.header.put("User-Agent", "APITools-" + Resource.APIVERSION);
 		this.header.put("SocksTimeout", "30000");
 		this.header.put("ConnectTimeout", "30000");
 		this.parBackgroundNormalColor = SWTResourceManager.getColor(SWT.COLOR_WHITE);
@@ -219,12 +222,12 @@ public class MainWindow {
 	}
 
 	protected void createContents(final Display display) {
-		applicationName = "APITools" + "-" + Resource.VERSION;
+		applicationName = "APITools" + "-" + Resource.APIVERSION;
 		mainWindowShell = new Shell(display, SWT.MIN);
 		mainWindowShell.setSize(1145, 670);
 		mainWindowShell.setText(applicationName);
 		mainWindowShell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
-		PubUtils.SetCenter(mainWindowShell);
+		PubUtils.setCenter(mainWindowShell);
 		dropTargetSupport(mainWindowShell);
 		// 菜单////////////////////////////////////////////////////////
 		Menu rootMenu = new Menu(mainWindowShell, SWT.BAR);
@@ -254,7 +257,7 @@ public class MainWindow {
 					newDoc.setName(name);
 					newDoc.setServerlist(serverList);
 					newDoc.setItem(new ArrayList<ApiMod>());
-					if (PubUtils.SaveToFile(new File("./config/" + name + "-" + version + ".json"),
+					if (PubUtils.saveToFile(new File("./config/" + name + "-" + version + ".json"),
 							PubUtils.jsonFormat(JSON.toJSONString(newDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						statusBar.setText("保存成功,请重新配置程序配置文件后重启加载接口文档");
 					} else {
@@ -385,7 +388,8 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				ShortcutKeyExplain shortcutKeyExplain = new ShortcutKeyExplain(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL);
-				shortcutKeyExplain.open();
+				shortcutKeyExplain
+						.open("Ctrl+Q：提交请求\r\nCtrl+Enter：提交请求\r\nCtrl+L：清空结果\r\nCtrl+S：保存参数到文件\r\nCtrl+N：打开一个新窗口");
 			}
 		});
 		menuItemShortcutKey.setText("快捷键");
@@ -459,7 +463,7 @@ public class MainWindow {
 						}
 					}
 					// 保存更新
-					if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+					if (PubUtils.saveToFile(new File("./config/" + apiJsonFile),
 							PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						modSelectCombo.setItem(modSelectCombo.getSelectionIndex(),
 								apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getName() + "");
@@ -493,7 +497,7 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().remove(modindex);
 						// 保存
-						PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
+						PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
 								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						modSelectCombo.remove(modindex);
@@ -567,7 +571,7 @@ public class MainWindow {
 							apiList.setDescription(description);
 							apiDoc.getItem().add(apiList);
 							try {
-								PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils.jsonFormat(
+								PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils.jsonFormat(
 										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 								modSelectCombo.select(modSelectCombo.getItemCount() - 1);
 								initSelectMod(modSelectCombo.getItemCount() - 1);
@@ -677,7 +681,7 @@ public class MainWindow {
 						}
 					}
 					// 保存变化--并更新UI
-					if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+					if (PubUtils.saveToFile(new File("./config/" + apiJsonFile),
 							PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 						ApiItem apiItem = apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 								.get(interfaceCombo.getSelectionIndex());
@@ -720,7 +724,7 @@ public class MainWindow {
 						// 移除
 						apiDoc.getItem().get(modindex).getItem().remove(interfaceindex);
 						// 保存--请注意,保存时会把之前保存到内存中的参数也更新到文档---
-						PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
+						PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
 								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 						// 重新初始化界面
 						interfaceCombo.remove(interfaceindex);
@@ -810,7 +814,7 @@ public class MainWindow {
 							apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem().add(apiItem);
 							interfaceCombo.add(collectionName);
 							// 保存
-							PubUtils.SaveToFile(new File("./config/" + apiJsonFile), PubUtils
+							PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
 									.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 							// 切换到这个接口
 							interfaceCombo.select(interfaceCombo.getItemCount() - 1);
@@ -869,8 +873,8 @@ public class MainWindow {
 
 		// 重排参数
 		button = new Button(mainWindowShell, SWT.NONE);
-		button.setToolTipText("将参数重新从第一个表格重排列");
-		button.setText("重排参数");
+		button.setToolTipText("将参数重新从第一个表格按正序或者倒序重新排列");
+		button.setText("参数排序");
 		button.setBounds(712, 31, 72, 27);
 		formToolkit.adapt(button, true, true);
 		// 字符集设置
@@ -878,7 +882,7 @@ public class MainWindow {
 		charSetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				charSetDialog charSetDialog = new charSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				CharSetDialog charSetDialog = new CharSetDialog(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				Object[] objects = charSetDialog.open(settingReqCharSet, settingResCharSet);
 				if ((boolean) objects[0] == true) {
 					logger.debug("请求编码设置为:" + (String) objects[1] + ",响应编码设置为:" + (String) objects[2]);
@@ -933,16 +937,16 @@ public class MainWindow {
 				if (StringUtils.isEmpty(urlText.getText())) {
 					return;
 				}
-				HashMap<String, String> pars1 = getParameters();
-				parsText.setText(ParamUtils.mapToQuery(pars1));
-				String url = urlText.getText() + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1)));
+				HashMap<String, String> pars = getParameters();
+				parsText.setText(ParamUtils.mapToQuery(pars));
+				String url = urlText.getText() + (pars.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars)));
 				///////////////////////////////////////////////////////////////////////////////////////////////////
 				Clipboard clipboard = new Clipboard(mainWindowShell.getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				clipboard.setContents(new String[] { url }, new Transfer[] { textTransfer });
 				clipboard.dispose();
 				////////////////////////////////////////////////////////////////////////////////////////////////////
-				logger.info("复制到剪切板:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
+				logger.info("复制到剪切板:" + url + (pars.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars))));
 				statusBar.setText("请求信息已复制到剪切板:" + url);
 			}
 		});
@@ -962,6 +966,12 @@ public class MainWindow {
 		numberColumn.setText("编号");
 
 		TableColumn tipColumn = new TableColumn(formTable, SWT.BORDER);
+		tipColumn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("不支持按备注排序");
+			}
+		});
 		tipColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.24));
 		tipColumn.setResizable(false);
@@ -971,7 +981,8 @@ public class MainWindow {
 		nameColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				logger.info("点击");
+				statusBar.setText("");
+				compressAndOrderParameters();
 			}
 		});
 		nameColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
@@ -980,6 +991,12 @@ public class MainWindow {
 		nameColumn.setResizable(false);
 
 		TableColumn valueColumn = new TableColumn(formTable, SWT.BORDER);
+		valueColumn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("不支持按参数值排序");
+			}
+		});
 		valueColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		valueColumn.setText("参数值");
@@ -1106,7 +1123,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.MD5(form[b][1].getText()));
+						form[b][1].setText(PubUtils.md5(form[b][1].getText()));
 					}
 				}
 
@@ -1121,7 +1138,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.MD5(form[b][1].getText()).toLowerCase());
+						form[b][1].setText(PubUtils.md5(form[b][1].getText()).toLowerCase());
 					}
 				}
 
@@ -1225,7 +1242,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.MD5(form[b][2].getText()));
+						form[b][2].setText(PubUtils.md5(form[b][2].getText()));
 					}
 				}
 
@@ -1240,7 +1257,7 @@ public class MainWindow {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.MD5(form[b][2].getText()).toLowerCase());
+						form[b][2].setText(PubUtils.md5(form[b][2].getText()).toLowerCase());
 					}
 				}
 
@@ -1434,13 +1451,13 @@ public class MainWindow {
 		tabItem.setControl(resultBodyStyledText);
 		resultBodyStyledText.setAlwaysShowScrollBars(true);
 		formToolkit.adapt(resultBodyStyledText);
-		StyledTextAddContextMenu(resultBodyStyledText);
+		styledTextAddContextMenu(resultBodyStyledText);
 
 		resultHeaderStyledText = new StyledText(cTabFolder, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
 		tabItem2.setControl(resultHeaderStyledText);
 		resultHeaderStyledText.setAlwaysShowScrollBars(true);
 		formToolkit.adapt(resultHeaderStyledText);
-		StyledTextAddContextMenu(resultHeaderStyledText);
+		styledTextAddContextMenu(resultHeaderStyledText);
 
 		// 状态栏
 		statusBar = new Text(mainWindowShell, SWT.BORDER);
@@ -1475,10 +1492,11 @@ public class MainWindow {
 						keyDownFlag = true;
 						clearResult();
 					}
-					// Ctrl+s临时保存
+					// Ctrl+s保存参数到文件
 					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_S)) {
 						keyDownFlag = true;
 						savePars2Memory();
+						savePars2File();
 					}
 				}
 			}
@@ -1528,7 +1546,8 @@ public class MainWindow {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				compressParameters();
+				statusBar.setText("");
+				compressAndOrderParameters();
 			}
 		});
 
@@ -1546,7 +1565,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AboutTools about = new AboutTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				about.open();
+				about.open(Resource.APIEXPLAIN, Resource.APIVERSION);
 			}
 		});
 
@@ -1664,11 +1683,11 @@ public class MainWindow {
 					statusBar.setText("空地址无法发起请求");
 					return;
 				}
-				HashMap<String, String> pars1 = getParameters();
-				parsText.setText(ParamUtils.mapToQuery(pars1));
+				HashMap<String, String> pars = getParameters();
+				parsText.setText(ParamUtils.mapToQuery(pars));
 				String url = urlText.getText();
-				Program.launch(url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
-				logger.info("浏览器中打开:" + url + (pars1.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars1))));
+				Program.launch(url + (pars.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars))));
+				logger.info("浏览器中打开:" + url + (pars.size() == 0 ? ("") : ("?" + ParamUtils.mapToQuery(pars))));
 				statusBar.setText("已在浏览器中发起请求");
 			}
 		});
@@ -1740,22 +1759,22 @@ public class MainWindow {
 				try {
 					switch (method) {
 					case "GET":
-						result = PubUtils.HttpGet(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpGet(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "POST":
-						result = PubUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "HEAD":
-						result = PubUtils.HttpHead(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpHead(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PUT":
-						result = PubUtils.HttpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpPost(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "PATCH":
-						result = PubUtils.HttpPatch(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpPatch(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					case "DELETE":
-						result = PubUtils.HttpDelete(url, pars, header, cookies, Charset.forName(settingReqCharSet));
+						result = PubUtils.httpDelete(url, pars, header, cookies, Charset.forName(settingReqCharSet));
 						break;
 					default:
 						logger.debug("HTTP请求时未找到可用的方法");
@@ -1936,14 +1955,14 @@ public class MainWindow {
 					tempSavePars.get(apiDoc.getItem().get(modSelectCombo.getSelectionIndex()).getItem()
 							.get(interfaceCombo.getSelectionIndex()).getUuid()));
 			// 保存到文件--潜在的风险,保存时间过长程序界面卡死
-			if (PubUtils.SaveToFile(new File("./config/" + apiJsonFile),
+			if (PubUtils.saveToFile(new File("./config/" + apiJsonFile),
 					PubUtils.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)))) {
 				statusBar.setText("保存成功,已写入接口配置文件");
 			} else {
 				statusBar.setText("保存失败,请重试");
 			}
 		} catch (Exception e) {
-			logger.error("异常:" + e);
+			logger.error("异常", e);
 		}
 	}
 
@@ -1975,11 +1994,11 @@ public class MainWindow {
 		File configFile = new File("./config/config.properties");
 		if (!configFile.exists()) {
 			try {
-				PubUtils.SaveToFile(configFile, Resource.CONFIG);
+				PubUtils.saveToFile(configFile, Resource.CONFIG);
 				logger.warn("警告:参数配置文件丢失,已创建默认配置");
 				// 当创建默认配置文档的时候也生成个默认的接口列表--心知天气
 				/////////////////////////// 示例接口//////////////////////////////////////
-				PubUtils.SaveToFile(new File("./config/api-xinzhiweather.json"), PubUtils.jsonFormat(
+				PubUtils.saveToFile(new File("./config/api-xinzhiweather.json"), PubUtils.jsonFormat(
 						JSON.toJSONString(new XinzhiWeather().getApidoc(), SerializerFeature.WriteNullStringAsEmpty)));
 			} catch (Exception e) {
 				logger.warn("异常", e);
@@ -1988,7 +2007,7 @@ public class MainWindow {
 		// 此处开始加载配置文件内容
 		try {
 			// 加载配置
-			properties = PubUtils.ReadProperties(configFile);
+			properties = PubUtils.readProperties(configFile);
 			// 加载API列表
 			loadApiJsonFileArray = properties.getProperty("apilist").split("\\|");
 			if (null != loadApiJsonFileArray && loadApiJsonFileArray.length > 0) {
@@ -2038,7 +2057,7 @@ public class MainWindow {
 			return;
 		}
 		try {
-			apiDoc = JSON.parseObject(PubUtils.ReadFromFile(apilistfile, "UTF-8"), ApiDoc.class);
+			apiDoc = JSON.parseObject(PubUtils.readFromFile(apilistfile, "UTF-8"), ApiDoc.class);
 			// 检查接口文档是老版本的文档没有,需要补正
 			// 加载前判断版本
 			if (apiDoc.getDecodeversion().equals(1.1)) {
@@ -2174,6 +2193,7 @@ public class MainWindow {
 
 	// 参数初始化
 	private void initParameters(ArrayList<ApiPar> pars) {
+		orderFlag = 0;
 		clearParameters();
 		if (null != pars) {
 			for (int i = 0; i < pars.size(); i++) {
@@ -2282,7 +2302,8 @@ public class MainWindow {
 	}
 
 	// 参数重排
-	private void compressParameters() {
+	private void compressAndOrderParameters() {
+		// 执行参数压缩
 		for (int i = 0; i < parsSum; i++) {
 			if (form[i][0].getText().trim().isEmpty() && form[i][1].getText().trim().isEmpty()
 					&& form[i][2].getText().trim().isEmpty()) {
@@ -2307,6 +2328,7 @@ public class MainWindow {
 								form[i][1].setForeground(parFontsFrozenColor);
 								form[i][2].setForeground(parFontsFrozenColor);
 								menuItem1SubFrozen[i].setText("解冻此参数");
+								label[j].setToolTipText("");
 								form[j][0].setForeground(parFontsnormalColor);
 								form[j][1].setForeground(parFontsnormalColor);
 								form[j][2].setForeground(parFontsnormalColor);
@@ -2321,10 +2343,129 @@ public class MainWindow {
 				}
 			}
 		}
+		// 执行参数重排
+		// 正序排列
+		if (orderFlag == 0 | orderFlag == 2) {
+			orderFlag = 1;
+			logger.debug("进入正序排列");
+			// 冒泡排序
+			for (int i = 1; i < parsSum; i++) {
+				// 如果所有都空，则表明遍历到了最后一个参数，终止
+				if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
+						&& StringUtils.isEmpty(form[i][2].getText())) {
+					break;
+				}
+				// 否则和前面的比较，进行冒泡排序
+				else {
+					for (int j = i; j > 0; j--) {
+						// 如果后面的参数名小于前面的，则互换位置
+						if (form[j][1].getText().compareTo(form[j - 1][1].getText()) < 0) {
+							// 互换位置
+							String tip = form[j][0].getText();
+							String name = form[j][1].getText();
+							String value = form[j][2].getText();
+							form[j][0].setText(form[j - 1][0].getText());
+							form[j][1].setText(form[j - 1][1].getText());
+							form[j][2].setText(form[j - 1][2].getText());
+							form[j - 1][0].setText(tip);
+							form[j - 1][1].setText(name);
+							form[j - 1][2].setText(value);
+							// 判断冻结信息
+							// 如果互换的两个参数都没冻结，无需处理，两个都冻结了无需处理
+							if ((form[j][0].getForeground().equals(parFontsFrozenColor))
+									&& (form[j - 1][0].getForeground().equals(parFontsnormalColor))) {
+								label[j - 1].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+								form[j - 1][0].setForeground(parFontsFrozenColor);
+								form[j - 1][1].setForeground(parFontsFrozenColor);
+								form[j - 1][2].setForeground(parFontsFrozenColor);
+								menuItem1SubFrozen[j - 1].setText("解冻此参数");
+								label[j].setToolTipText("");
+								form[j][0].setForeground(parFontsnormalColor);
+								form[j][1].setForeground(parFontsnormalColor);
+								form[j][2].setForeground(parFontsnormalColor);
+								menuItem1SubFrozen[j].setText("冻结此参数");
+							}
+							if ((form[j][0].getForeground().equals(parFontsnormalColor))
+									&& (form[j - 1][0].getForeground().equals(parFontsFrozenColor))) {
+								label[j].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+								form[j][0].setForeground(parFontsFrozenColor);
+								form[j][1].setForeground(parFontsFrozenColor);
+								form[j][2].setForeground(parFontsFrozenColor);
+								menuItem1SubFrozen[j].setText("解冻此参数");
+								label[j - 1].setToolTipText("");
+								form[j - 1][0].setForeground(parFontsnormalColor);
+								form[j - 1][1].setForeground(parFontsnormalColor);
+								form[j - 1][2].setForeground(parFontsnormalColor);
+								menuItem1SubFrozen[j - 1].setText("冻结此参数");
+							}
+						}
+					}
+				}
+			}
+		}
+		// 执行倒序排列
+		else {
+			logger.debug("进入倒序排列");
+			orderFlag = 2;
+			// 冒泡排序
+			for (int i = 1; i < parsSum; i++) {
+				// 如果所有都空，则表明遍历到了最后一个参数，终止
+				if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
+						&& StringUtils.isEmpty(form[i][2].getText())) {
+					break;
+				}
+				// 否则和前面的比较，进行冒泡排序
+				else {
+					for (int j = i; j > 0; j--) {
+						// 如果后面的参数名小于前面的，则互换位置
+						if (form[j][1].getText().compareTo(form[j - 1][1].getText()) > 0) {
+							// 互换位置
+							String tip = form[j][0].getText();
+							String name = form[j][1].getText();
+							String value = form[j][2].getText();
+							form[j][0].setText(form[j - 1][0].getText());
+							form[j][1].setText(form[j - 1][1].getText());
+							form[j][2].setText(form[j - 1][2].getText());
+							form[j - 1][0].setText(tip);
+							form[j - 1][1].setText(name);
+							form[j - 1][2].setText(value);
+							// 判断冻结信息
+							// 如果互换的两个参数都没冻结，无需处理，两个都冻结了无需处理
+							if ((form[j][0].getForeground().equals(parFontsFrozenColor))
+									&& (form[j - 1][0].getForeground().equals(parFontsnormalColor))) {
+								label[j - 1].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+								form[j - 1][0].setForeground(parFontsFrozenColor);
+								form[j - 1][1].setForeground(parFontsFrozenColor);
+								form[j - 1][2].setForeground(parFontsFrozenColor);
+								menuItem1SubFrozen[j - 1].setText("解冻此参数");
+								label[j].setToolTipText("");
+								form[j][0].setForeground(parFontsnormalColor);
+								form[j][1].setForeground(parFontsnormalColor);
+								form[j][2].setForeground(parFontsnormalColor);
+								menuItem1SubFrozen[j].setText("冻结此参数");
+							}
+							if ((form[j][0].getForeground().equals(parFontsnormalColor))
+									&& (form[j - 1][0].getForeground().equals(parFontsFrozenColor))) {
+								label[j].setToolTipText("此参数已冻结,冻结后不再发送此参数");
+								form[j][0].setForeground(parFontsFrozenColor);
+								form[j][1].setForeground(parFontsFrozenColor);
+								form[j][2].setForeground(parFontsFrozenColor);
+								menuItem1SubFrozen[j].setText("解冻此参数");
+								label[j - 1].setToolTipText("");
+								form[j - 1][0].setForeground(parFontsnormalColor);
+								form[j - 1][1].setForeground(parFontsnormalColor);
+								form[j - 1][2].setForeground(parFontsnormalColor);
+								menuItem1SubFrozen[j - 1].setText("冻结此参数");
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// 给主页面的返回区域添加右键菜单
-	public void StyledTextAddContextMenu(final StyledText styledText) {
+	public void styledTextAddContextMenu(final StyledText styledText) {
 		Menu popupMenu = new Menu(styledText);
 		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
 		cut.setText("剪切");

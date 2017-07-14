@@ -1,6 +1,8 @@
 package com.itlaborer.apitools.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Dialog;
@@ -11,10 +13,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.PubUtils;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
-public class charSetDialog extends Dialog {
+public class CharSetDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -31,7 +31,7 @@ public class charSetDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public charSetDialog(Shell parent, int style) {
+	public CharSetDialog(Shell parent, int style) {
 		super(parent, style);
 	}
 
@@ -60,10 +60,10 @@ public class charSetDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setImage(SWTResourceManager.getImage(charSetDialog.class, Resource.IMAGE_ICON));
+		shell.setImage(SWTResourceManager.getImage(CharSetDialog.class, Resource.IMAGE_ICON));
 		shell.setText("字符集设置");
 		shell.setSize(400, 200);
-		PubUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.setCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.addSelectionListener(new SelectionAdapter() {

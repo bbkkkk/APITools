@@ -12,6 +12,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
@@ -26,9 +28,6 @@ import org.eclipse.swt.widgets.Text;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.PubUtils;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * 公共参数工具界面
@@ -82,7 +81,7 @@ public class PubParEdit extends Dialog {
 		headerEditShell.setImage(SWTResourceManager.getImage(PubParEdit.class, Resource.IMAGE_ICON));
 		headerEditShell.setSize(680, 420);
 		headerEditShell.setText(windowname + "参数工具");
-		PubUtils.SetCenterinParent(getParent(), headerEditShell);
+		PubUtils.setCenterinParent(getParent(), headerEditShell);
 
 		formTable = new Table(headerEditShell, SWT.BORDER | SWT.HIDE_SELECTION);
 		formTable.setBounds(3, 3, 669, 357);

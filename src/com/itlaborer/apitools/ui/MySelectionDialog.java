@@ -1,18 +1,17 @@
 package com.itlaborer.apitools.ui;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.PubUtils;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class MySelectionDialog extends Dialog {
 
@@ -58,7 +57,7 @@ public class MySelectionDialog extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		shell.setImage(SWTResourceManager.getImage(MySelectionDialog.class, Resource.IMAGE_ICON));
 		shell.setSize(400, 180);
-		PubUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.setCenterinParent(getParent(), shell);
 		shell.setText(getText());
 
 		Label lblText = new Label(shell, SWT.WRAP);

@@ -2,20 +2,20 @@ package com.itlaborer.apitools.ui;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.PubUtils;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
 
 public class CreateModDialog extends Dialog {
 
@@ -64,7 +64,7 @@ public class CreateModDialog extends Dialog {
 		shell.setImage(SWTResourceManager.getImage(CreateModDialog.class, Resource.IMAGE_ICON));
 		shell.setText("创建一个新的模块");
 		shell.setSize(400, 200);
-		PubUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.setCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.setBounds(213, 135, 80, 27);

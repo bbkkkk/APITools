@@ -36,8 +36,8 @@ public class AboutTools extends Dialog {
 		logger.info("进入关于");
 	}
 
-	public Object open() {
-		createContents();
+	public Object open(String exlplain, String version) {
+		createContents(exlplain, version);
 		aboutToolsShell.open();
 		aboutToolsShell.layout();
 		Display display = getParent().getDisplay();
@@ -50,12 +50,12 @@ public class AboutTools extends Dialog {
 		return result;
 	}
 
-	private void createContents() {
+	private void createContents(String exlplain, String version) {
 		aboutToolsShell = new Shell(getParent(), getStyle());
 		aboutToolsShell.setImage(SWTResourceManager.getImage(AboutTools.class, Resource.IMAGE_ICON));
 		aboutToolsShell.setSize(400, 391);
 		aboutToolsShell.setText(getText());
-		PubUtils.SetCenterinParent(getParent(), aboutToolsShell);
+		PubUtils.setCenterinParent(getParent(), aboutToolsShell);
 
 		Label copyRightlabel = new Label(aboutToolsShell, SWT.CENTER);
 		copyRightlabel.setBounds(10, 311, 375, 17);
@@ -67,14 +67,16 @@ public class AboutTools extends Dialog {
 		link.addSelectionListener(new LinkSelection());
 
 		Label versionLabel = new Label(aboutToolsShell, SWT.NONE);
-		versionLabel.setBounds(184, 288, 43, 17);
-		versionLabel.setText(Resource.VERSION);
+		versionLabel.setAlignment(SWT.CENTER);
+		versionLabel.setBounds(156, 288, 82, 17);
+		versionLabel.setText(version);
 
-		StyledText readMeTextLabel = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
+		StyledText readMeTextLabel = new StyledText(aboutToolsShell,
+				SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		readMeTextLabel.setBounds(3, 33, 389, 114);
-		readMeTextLabel.setText(Resource.EXPLAIN);
+		readMeTextLabel.setText(exlplain);
 
-		StyledText lblgplV = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP|SWT.V_SCROLL);
+		StyledText lblgplV = new StyledText(aboutToolsShell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		lblgplV.setText(
 				"Copyright itlaborer.com\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.");
 		lblgplV.setBounds(3, 176, 389, 106);

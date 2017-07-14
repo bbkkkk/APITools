@@ -53,13 +53,13 @@ public class Base64Tools extends Dialog {
 		base64ToolsShell.setImage(SWTResourceManager.getImage(Base64Tools.class, Resource.IMAGE_ICON));
 		base64ToolsShell.setSize(680, 420);
 		base64ToolsShell.setText("Base64编码/解码工具");
-		PubUtils.SetCenterinParent(getParent(), base64ToolsShell);
+		PubUtils.setCenterinParent(getParent(), base64ToolsShell);
 
 		final StyledText styledText = new StyledText(base64ToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		styledText.setBounds(3, 3, 669, 357);
-		PubUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.styledTextAddContextMenu(styledText);
 		// 编码
 		Button encodeButton = new Button(base64ToolsShell, SWT.NONE);
 		encodeButton.setBounds(3, 363, 333, 27);

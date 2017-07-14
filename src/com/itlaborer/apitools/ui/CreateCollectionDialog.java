@@ -2,20 +2,20 @@ package com.itlaborer.apitools.ui;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.utils.PubUtils;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
 
 public class CreateCollectionDialog extends Dialog {
 
@@ -71,7 +71,7 @@ public class CreateCollectionDialog extends Dialog {
 		shell.setImage(SWTResourceManager.getImage(CreateCollectionDialog.class, Resource.IMAGE_ICON));
 		shell.setText("创建一个新的接口");
 		shell.setSize(480, 220);
-		PubUtils.SetCenterinParent(getParent(), shell);
+		PubUtils.setCenterinParent(getParent(), shell);
 
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.setBounds(293, 155, 80, 27);

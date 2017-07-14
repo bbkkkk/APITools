@@ -54,12 +54,12 @@ public class UrlEncodeTools extends Dialog {
 		urlEncodeToolsShell.setImage(SWTResourceManager.getImage(UrlEncodeTools.class, Resource.IMAGE_ICON));
 		urlEncodeToolsShell.setSize(680, 420);
 		urlEncodeToolsShell.setText("URL编码/解码工具");
-		PubUtils.SetCenterinParent(getParent(), urlEncodeToolsShell);
+		PubUtils.setCenterinParent(getParent(), urlEncodeToolsShell);
 
 		final StyledText styledText = new StyledText(urlEncodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setWordWrap(true);
 		styledText.setBounds(3, 3, 669, 357);
-		PubUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.styledTextAddContextMenu(styledText);
 
 		// URL编码
 		Button btnNewButton = new Button(urlEncodeToolsShell, SWT.NONE);

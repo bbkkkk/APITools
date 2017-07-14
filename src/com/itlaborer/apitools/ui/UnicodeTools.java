@@ -50,11 +50,11 @@ public class UnicodeTools extends Dialog {
 		unicodeToolsShell.setImage(SWTResourceManager.getImage(UnicodeTools.class, Resource.IMAGE_ICON));
 		unicodeToolsShell.setSize(680, 420);
 		unicodeToolsShell.setText("Unicode编码/解码工具");
-		PubUtils.SetCenterinParent(getParent(), unicodeToolsShell);
+		PubUtils.setCenterinParent(getParent(), unicodeToolsShell);
 
 		final StyledText styledText = new StyledText(unicodeToolsShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
 		styledText.setBounds(3, 3, 669, 357);
-		PubUtils.StyledTextAddContextMenu(styledText);
+		PubUtils.styledTextAddContextMenu(styledText);
 
 		//全Unicode编码
 		Button allUnicodeButton = new Button(unicodeToolsShell, SWT.NONE);

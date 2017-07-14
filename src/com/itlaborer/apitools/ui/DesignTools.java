@@ -48,8 +48,8 @@ public class DesignTools {
 		shell = new Shell(SWT.MIN);
 		shell.setSize(1145, 680);
 		shell.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_ICON));
-		shell.setText("APIDesignTools-" + Resource.VERSION);
-		PubUtils.SetCenter(shell);
+		shell.setText("APIDesignTools-" + Resource.APIVERSION);
+		PubUtils.setCenter(shell);
 
 		Menu menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);

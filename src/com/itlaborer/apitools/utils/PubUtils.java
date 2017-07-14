@@ -57,7 +57,7 @@ public class PubUtils {
 	private static Logger logger = Logger.getLogger(PubUtils.class.getName());
 
 	// 设置程序窗口居中
-	public static void SetCenter(Shell shell) {
+	public static void setCenter(Shell shell) {
 		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int shellH = shell.getBounds().height;
@@ -72,7 +72,7 @@ public class PubUtils {
 	}
 
 	// 设置程序窗口居中于父窗口
-	public static void SetCenterinParent(Shell parentshell, Shell shell) {
+	public static void setCenterinParent(Shell parentshell, Shell shell) {
 		int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 		int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int shellH = shell.getBounds().height;
@@ -96,7 +96,7 @@ public class PubUtils {
 	}
 
 	// 给不支持右键菜单的StyledText添加右键菜单
-	public static void StyledTextAddContextMenu(final StyledText styledText) {
+	public static void styledTextAddContextMenu(final StyledText styledText) {
 		Menu popupMenu = new Menu(styledText);
 		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
 		cut.setText("剪切");
@@ -215,12 +215,12 @@ public class PubUtils {
 	}
 
 	// MD5字符串加密
-	public static String MD5(String s) {
+	public static String md5(String s) {
 		return DigestUtils.md5Hex(s).toUpperCase();
 	}
 
 	// HTTP GET 忽略证书安全
-	public static RawResponse HttpGet(String url, HashMap<String, String> parameter,
+	public static RawResponse httpGet(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.get(url).verify(false).headers(header).cookies(cookies).params(parameter)
@@ -229,7 +229,7 @@ public class PubUtils {
 	}
 
 	// HTTP POST 忽略证书安全
-	public static RawResponse HttpPost(String url, HashMap<String, String> parameter,
+	public static RawResponse httpPost(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.post(url).verify(false).headers(header).cookies(cookies).forms(parameter)
@@ -238,7 +238,7 @@ public class PubUtils {
 	}
 
 	// HTTP HEAD 忽略证书安全
-	public static RawResponse HttpHead(String url, HashMap<String, String> parameter,
+	public static RawResponse httpHead(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.head(url).verify(false).headers(header).cookies(cookies).params(parameter)
@@ -247,7 +247,7 @@ public class PubUtils {
 	}
 
 	// HTTP PUT 忽略证书安全
-	public static RawResponse HttpPut(String url, HashMap<String, String> parameter,
+	public static RawResponse httpPut(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.put(url).verify(false).headers(header).cookies(cookies).forms(parameter)
@@ -256,7 +256,7 @@ public class PubUtils {
 	}
 
 	// HTTP PATCH 忽略证书安全
-	public static RawResponse HttpPatch(String url, HashMap<String, String> parameter,
+	public static RawResponse httpPatch(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.patch(url).verify(false).headers(header).cookies(cookies).forms(parameter)
@@ -265,7 +265,7 @@ public class PubUtils {
 	}
 
 	// HTTP DELETE 忽略证书安全
-	public static RawResponse HttpDelete(String url, HashMap<String, String> parameter,
+	public static RawResponse httpDelete(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
 		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).forms(parameter)
@@ -274,7 +274,7 @@ public class PubUtils {
 	}
 
 	// 读取文件到String字符串
-	public static String ReadFromFile(File file, String encoding) {
+	public static String readFromFile(File file, String encoding) {
 		InputStreamReader reader = null;
 		StringWriter writer = new StringWriter();
 		try {
@@ -303,7 +303,7 @@ public class PubUtils {
 	}
 
 	// String保存到文件方法
-	public static boolean SaveToFile(File file, String content) {
+	public static boolean saveToFile(File file, String content) {
 		FileWriter fwriter = null;
 		try {
 			fwriter = new FileWriter(file);
@@ -318,7 +318,7 @@ public class PubUtils {
 	}
 
 	// 文件复制方法
-	public static long CopyFile(File f1, File f2) throws Exception {
+	public static long copyFile(File f1, File f2) throws Exception {
 		long time = new Date().getTime();
 		int length = 2097152;
 		FileInputStream in = new FileInputStream(f1);
@@ -337,16 +337,16 @@ public class PubUtils {
 	}
 
 	// String编码转换方法--GBK到UTF-8
-	public static String GetUTF8StringFromGBKString(String gbkStr) {
+	public static String getUTF8StringFromGBKString(String gbkStr) {
 		try {
-			return new String(GetUTF8BytesFromGBKString(gbkStr), "UTF-8");
+			return new String(getUTF8BytesFromGBKString(gbkStr), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new InternalError();
 		}
 	}
 
 	// GBK字符串转换到UTF-8byte数组
-	public static byte[] GetUTF8BytesFromGBKString(String gbkStr) {
+	public static byte[] getUTF8BytesFromGBKString(String gbkStr) {
 		int n = gbkStr.length();
 		byte[] utfBytes = new byte[3 * n];
 		int k = 0;
@@ -369,11 +369,11 @@ public class PubUtils {
 	}
 
 	// 删除文件夹的方法
-	public static boolean DeleteDir(File dir) {
+	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (int i = 0; i < children.length; i++) {
-				boolean success = DeleteDir(new File(dir, children[i]));
+				boolean success = deleteDir(new File(dir, children[i]));
 				if (!success) {
 					return false;
 				}
@@ -515,7 +515,7 @@ public class PubUtils {
 	}
 
 	// 读取Properties
-	public static Properties ReadProperties(File file) {
+	public static Properties readProperties(File file) {
 		Properties properties = new Properties();
 		try {
 			properties.load(new InputStreamReader(new FileInputStream(file), "UTF-8"));
