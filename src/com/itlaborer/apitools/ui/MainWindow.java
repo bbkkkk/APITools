@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,6 +65,7 @@ import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
 import com.itlaborer.apitools.model.ApiMod;
 import com.itlaborer.apitools.model.ApiPar;
+import com.itlaborer.apitools.model.ApiPar2;
 import com.itlaborer.apitools.res.KeyCode;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.res.XinzhiWeather;
@@ -982,7 +984,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("");
-				compressAndOrderParameters();
+				orderParameters();
 			}
 		});
 		nameColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
@@ -1547,7 +1549,7 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("");
-				compressAndOrderParameters();
+				orderParameters();
 			}
 		});
 
@@ -2302,163 +2304,54 @@ public class MainWindow {
 	}
 
 	// 参数重排
-	private void compressAndOrderParameters() {
-		// 执行参数压缩
+	@SuppressWarnings("unchecked")
+	private void orderParameters() {
+		// 获取所有参数
+		ArrayList<ApiPar2> orderPars = new ArrayList<>();
 		for (int i = 0; i < parsSum; i++) {
-			if (form[i][0].getText().trim().isEmpty() && form[i][1].getText().trim().isEmpty()
-					&& form[i][2].getText().trim().isEmpty()) {
-				if (i == parsSum - 1) {
-					break;
-				} else {
-					for (int j = i + 1; j < parsSum; j++) {
-						if (!form[j][0].getText().trim().isEmpty() || !form[j][1].getText().trim().isEmpty()
-								|| !form[j][2].getText().trim().isEmpty()) {
-							form[i][0].setText(form[j][0].getText());
-							form[i][0].setToolTipText((form[j][0].getToolTipText()));
-							form[i][1].setText(form[j][1].getText());
-							form[i][2].setText(form[j][2].getText());
-							form[j][0].setText("");
-							form[j][0].setToolTipText("");
-							form[j][1].setText("");
-							form[j][2].setText("");
-							// 判断是否做过冻结,如果是,则需要移动锁定标志位
-							if ((form[j][0].getForeground().equals(parFontsFrozenColor))) {
-								label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								form[i][0].setForeground(parFontsFrozenColor);
-								form[i][1].setForeground(parFontsFrozenColor);
-								form[i][2].setForeground(parFontsFrozenColor);
-								menuItem1SubFrozen[i].setText("解冻此参数");
-								label[j].setToolTipText("");
-								form[j][0].setForeground(parFontsnormalColor);
-								form[j][1].setForeground(parFontsnormalColor);
-								form[j][2].setForeground(parFontsnormalColor);
-								menuItem1SubFrozen[j].setText("冻结此参数");
-							}
-							break;
-						} else {
-							// 落花流水忽西东
-							continue;
-						}
-					}
-				}
+			if (!form[i][0].getText().trim().isEmpty() || !form[i][1].getText().trim().isEmpty()
+					|| !form[i][2].getText().trim().isEmpty()) {
+				ApiPar2 parInfo = new ApiPar2(form[i][1].getText(), form[i][0].getText(), form[i][2].getText(),
+						form[i][0].getForeground().equals(parFontsFrozenColor));
+				orderPars.add(parInfo);
 			}
 		}
-		// 执行参数重排
-		// 正序排列
+		Collections.sort(orderPars);
+		// 清除原来的数据，准备渲染显示
+		clearParameters();
+		// 正序显示
 		if (orderFlag == 0 | orderFlag == 2) {
 			orderFlag = 1;
-			logger.debug("进入正序排列");
-			// 冒泡排序
-			for (int i = 1; i < parsSum; i++) {
-				// 如果所有都空，则表明遍历到了最后一个参数，终止
-				if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
-						&& StringUtils.isEmpty(form[i][2].getText())) {
-					break;
-				}
-				// 否则和前面的比较，进行冒泡排序
-				else {
-					for (int j = i; j > 0; j--) {
-						// 如果后面的参数名小于前面的，则互换位置
-						if (form[j][1].getText().compareTo(form[j - 1][1].getText()) < 0) {
-							// 互换位置
-							String tip = form[j][0].getText();
-							String name = form[j][1].getText();
-							String value = form[j][2].getText();
-							form[j][0].setText(form[j - 1][0].getText());
-							form[j][1].setText(form[j - 1][1].getText());
-							form[j][2].setText(form[j - 1][2].getText());
-							form[j - 1][0].setText(tip);
-							form[j - 1][1].setText(name);
-							form[j - 1][2].setText(value);
-							// 判断冻结信息
-							// 如果互换的两个参数都没冻结，无需处理，两个都冻结了无需处理
-							if ((form[j][0].getForeground().equals(parFontsFrozenColor))
-									&& (form[j - 1][0].getForeground().equals(parFontsnormalColor))) {
-								label[j - 1].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								form[j - 1][0].setForeground(parFontsFrozenColor);
-								form[j - 1][1].setForeground(parFontsFrozenColor);
-								form[j - 1][2].setForeground(parFontsFrozenColor);
-								menuItem1SubFrozen[j - 1].setText("解冻此参数");
-								label[j].setToolTipText("");
-								form[j][0].setForeground(parFontsnormalColor);
-								form[j][1].setForeground(parFontsnormalColor);
-								form[j][2].setForeground(parFontsnormalColor);
-								menuItem1SubFrozen[j].setText("冻结此参数");
-							}
-							if ((form[j][0].getForeground().equals(parFontsnormalColor))
-									&& (form[j - 1][0].getForeground().equals(parFontsFrozenColor))) {
-								label[j].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								form[j][0].setForeground(parFontsFrozenColor);
-								form[j][1].setForeground(parFontsFrozenColor);
-								form[j][2].setForeground(parFontsFrozenColor);
-								menuItem1SubFrozen[j].setText("解冻此参数");
-								label[j - 1].setToolTipText("");
-								form[j - 1][0].setForeground(parFontsnormalColor);
-								form[j - 1][1].setForeground(parFontsnormalColor);
-								form[j - 1][2].setForeground(parFontsnormalColor);
-								menuItem1SubFrozen[j - 1].setText("冻结此参数");
-							}
-						}
-					}
+			int size = orderPars.size();
+			for (int i = 0; i < size; i++) {
+				form[i][0].setText(orderPars.get(i).getTip());
+				form[i][0].setToolTipText(orderPars.get(i).getTip());
+				form[i][1].setText(orderPars.get(i).getName());
+				form[i][2].setText(orderPars.get(i).getValue());
+				if (orderPars.get(i).isFrozen()) {
+					form[i][0].setForeground(parFontsFrozenColor);
+					form[i][1].setForeground(parFontsFrozenColor);
+					form[i][2].setForeground(parFontsFrozenColor);
+					menuItem1SubFrozen[i].setText("解冻此参数");
+					label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 				}
 			}
 		}
-		// 执行倒序排列
+		// 逆序显示
 		else {
-			logger.debug("进入倒序排列");
 			orderFlag = 2;
-			// 冒泡排序
-			for (int i = 1; i < parsSum; i++) {
-				// 如果所有都空，则表明遍历到了最后一个参数，终止
-				if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
-						&& StringUtils.isEmpty(form[i][2].getText())) {
-					break;
-				}
-				// 否则和前面的比较，进行冒泡排序
-				else {
-					for (int j = i; j > 0; j--) {
-						// 如果后面的参数名小于前面的，则互换位置
-						if (form[j][1].getText().compareTo(form[j - 1][1].getText()) > 0) {
-							// 互换位置
-							String tip = form[j][0].getText();
-							String name = form[j][1].getText();
-							String value = form[j][2].getText();
-							form[j][0].setText(form[j - 1][0].getText());
-							form[j][1].setText(form[j - 1][1].getText());
-							form[j][2].setText(form[j - 1][2].getText());
-							form[j - 1][0].setText(tip);
-							form[j - 1][1].setText(name);
-							form[j - 1][2].setText(value);
-							// 判断冻结信息
-							// 如果互换的两个参数都没冻结，无需处理，两个都冻结了无需处理
-							if ((form[j][0].getForeground().equals(parFontsFrozenColor))
-									&& (form[j - 1][0].getForeground().equals(parFontsnormalColor))) {
-								label[j - 1].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								form[j - 1][0].setForeground(parFontsFrozenColor);
-								form[j - 1][1].setForeground(parFontsFrozenColor);
-								form[j - 1][2].setForeground(parFontsFrozenColor);
-								menuItem1SubFrozen[j - 1].setText("解冻此参数");
-								label[j].setToolTipText("");
-								form[j][0].setForeground(parFontsnormalColor);
-								form[j][1].setForeground(parFontsnormalColor);
-								form[j][2].setForeground(parFontsnormalColor);
-								menuItem1SubFrozen[j].setText("冻结此参数");
-							}
-							if ((form[j][0].getForeground().equals(parFontsnormalColor))
-									&& (form[j - 1][0].getForeground().equals(parFontsFrozenColor))) {
-								label[j].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-								form[j][0].setForeground(parFontsFrozenColor);
-								form[j][1].setForeground(parFontsFrozenColor);
-								form[j][2].setForeground(parFontsFrozenColor);
-								menuItem1SubFrozen[j].setText("解冻此参数");
-								label[j - 1].setToolTipText("");
-								form[j - 1][0].setForeground(parFontsnormalColor);
-								form[j - 1][1].setForeground(parFontsnormalColor);
-								form[j - 1][2].setForeground(parFontsnormalColor);
-								menuItem1SubFrozen[j - 1].setText("冻结此参数");
-							}
-						}
-					}
+			int size = orderPars.size();
+			for (int i = 0; i < size; i++) {
+				form[i][0].setText(orderPars.get(size - 1 - i).getTip());
+				form[i][0].setToolTipText(orderPars.get(size - 1 - i).getTip());
+				form[i][1].setText(orderPars.get(size - 1 - i).getName());
+				form[i][2].setText(orderPars.get(size - 1 - i).getValue());
+				if (orderPars.get(size - 1 - i).isFrozen()) {
+					form[i][0].setForeground(parFontsFrozenColor);
+					form[i][1].setForeground(parFontsFrozenColor);
+					form[i][2].setForeground(parFontsFrozenColor);
+					menuItem1SubFrozen[i].setText("解冻此参数");
+					label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 				}
 			}
 		}
