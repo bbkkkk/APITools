@@ -2065,7 +2065,12 @@ public class MainWindow {
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
 				initServerList(apiDoc.getServerlist());
-				initMod();
+				if (null != apiDoc.getItem() | apiDoc.getItem().size() > 0) {
+					initMod();
+				} else {
+					logger.debug("空的接口文档,跳过初始化接口列表");
+					clearParameters();
+				}
 			} else {
 				logger.warn("警告:您加载的API列表是不兼容的版本,请重新生成接口文档");
 				statusBar.setText("警告:您加载的API列表是不兼容的版本,请重新生成接口文档");
@@ -2123,7 +2128,8 @@ public class MainWindow {
 	private void initMod() {
 		modSelectCombo.removeAll();
 		interfaceCombo.removeAll();
-		if (null == apiDoc.getItem()) {
+		if (null == apiDoc.getItem() | apiDoc.getItem().size() == 0) {
+			clearParameters();
 			return;
 		}
 		for (int i = 0; i < apiDoc.getItem().size(); i++) {
