@@ -1439,7 +1439,7 @@ public class MainWindow {
 		}
 
 		// 接口返回内容显示区域
-		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER);
+		cTabFolder = new CTabFolder(mainWindowShell, SWT.BORDER | SWT.FLAT);
 		cTabFolder.setBounds(487, 62, 649, 530);
 		cTabFolder.setSelectionBackground(
 				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
