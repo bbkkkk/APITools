@@ -1711,14 +1711,46 @@ public class MainWindow {
 				try {
 					queryString = URLDecoder.decode(parsText.getText(), "UTF-8");
 					if (queryString.equals("")) {
-						logger.info("参数串为空,停止转换");
-						statusBar.setText("参数串为空,停止转换");
+						logger.info("参数串为空,停止导入");
+						statusBar.setText("参数串为空,停止导入");
 						return;
 					}
 					HashMap<String, String> queryMap = new HashMap<String, String>();
 					queryMap = ParamUtils.queryToMap(queryString);
-					initParameters(covertHashMaptoApiPar(queryMap));
-					parsText.setText(queryString);
+					// 新的参数覆盖方案，遍历原参数，如果原参数存在则覆盖value值，否则添加新的参数
+					// 第一遍遍历，覆盖，将存在的参数值替换为参数串里的
+					for (int i = 0; i < form.length; i++) {
+						String value = queryMap.get(form[i][1].getText());
+						if (StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(form[i][1].getText())) {
+							form[i][2].setText(value);
+							// 将使用过的参数删除
+							queryMap.remove(form[i][1].getText());
+						}
+					}
+					// 第二次遍历，如果map里还有未使用的参数，则追加到原参数下面
+					if (!queryMap.isEmpty()) {
+						ArrayList<ApiPar> apiPars = covertHashMaptoApiPar(queryMap);
+						int index = 0;
+						// 寻找可以插入参数的空闲位置，逐个插入
+						for (int i = 0; i < form.length; i++) {
+							if (index == apiPars.size()) {
+								// 如果所有参数都已经填充完毕则跳出循环
+								break;
+							}
+							if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
+									&& StringUtils.isEmpty(form[i][0].getText())) {
+								form[i][0].setText("");
+								form[i][0].setToolTipText("");
+								form[i][1].setText(apiPars.get(index).getName());
+								form[i][2].setText(apiPars.get(index).getValue());
+								index++;
+							}
+						}
+						// 判断是否存在参数框比剩下的参数多的问题
+						if (index < apiPars.size()) {
+							statusBar.setText("由于导入的参数过多，存在未导入的参数");
+						}
+					}
 				} catch (UnsupportedEncodingException e1) {
 					logger.error("异常", e1);
 				}
