@@ -983,7 +983,6 @@ public class MainWindow {
 		nameColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("");
 				orderParameters();
 			}
 		});
@@ -1548,7 +1547,6 @@ public class MainWindow {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				statusBar.setText("");
 				orderParameters();
 			}
 		});
