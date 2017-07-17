@@ -2331,6 +2331,7 @@ public class MainWindow {
 		statusBar.setText("");
 		parsText.setText("");
 		for (int i = 0; i < parsSum; i++) {
+			label[i].setToolTipText("");
 			menuItem1SubFrozen[i].setText("冻结此参数");
 			form[i][0].setText("");
 			form[i][1].setText("");
@@ -2352,11 +2353,18 @@ public class MainWindow {
 				ApiPar2 parInfo = new ApiPar2(form[i][1].getText(), form[i][0].getText(), form[i][2].getText(),
 						form[i][0].getForeground().equals(parFontsFrozenColor));
 				orderPars.add(parInfo);
+				// 获取参数后清除输入框内容
+				menuItem1SubFrozen[i].setText("冻结此参数");
+				label[i].setToolTipText("");
+				form[i][0].setText("");
+				form[i][1].setText("");
+				form[i][2].setText("");
+				form[i][0].setForeground(parFontsnormalColor);
+				form[i][1].setForeground(parFontsnormalColor);
+				form[i][2].setForeground(parFontsnormalColor);
 			}
 		}
 		Collections.sort(orderPars);
-		// 清除原来的数据，准备渲染显示
-		clearParameters();
 		// 正序显示
 		if (orderFlag == 0 | orderFlag == 2) {
 			orderFlag = 1;
