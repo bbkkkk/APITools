@@ -398,9 +398,19 @@ public class MainWindow {
 		// 菜单项-关于
 		MenuItem menuItemAbout = new MenuItem(menu_3, SWT.NONE);
 		menuItemAbout.setText("关于");
+
+		// 历史记录和定义接口选择框
+		Combo combo = new Combo(mainWindowShell, SWT.READ_ONLY);
+		combo.setBounds(3, 3, 72, 25);
+		formToolkit.adapt(combo);
+		formToolkit.paintBordersFor(combo);
+
+		combo.add("定义接口");
+		combo.add("历史记录");
+		combo.select(0);
 		// 模块选择
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
-		modSelectCombo.setBounds(3, 3, 230, 25);
+		modSelectCombo.setBounds(78, 3, 155, 25);
 		formToolkit.adapt(modSelectCombo);
 
 		Menu menu_6 = new Menu(modSelectCombo);
