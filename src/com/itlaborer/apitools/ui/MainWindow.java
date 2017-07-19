@@ -125,6 +125,7 @@ public class MainWindow {
 	private Button parsClearButton;
 	private Button toBrower;
 	private Button charSetButton;
+	private Combo collectionOrHistorySelect;
 	private Combo methodSelectCombo;
 	private Combo modSelectCombo;
 	private Combo interfaceCombo;
@@ -400,14 +401,30 @@ public class MainWindow {
 		menuItemAbout.setText("关于");
 
 		// 历史记录和定义接口选择框
-		Combo combo = new Combo(mainWindowShell, SWT.READ_ONLY);
-		combo.setBounds(3, 3, 72, 25);
-		formToolkit.adapt(combo);
-		formToolkit.paintBordersFor(combo);
+		collectionOrHistorySelect = new Combo(mainWindowShell, SWT.READ_ONLY);
+		collectionOrHistorySelect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				switch (collectionOrHistorySelect.getSelectionIndex()) {
+				case 0:
+					// 当前位接口列表模式
+					serverSelect.setEnabled(true);
+					break;
+				case 1:
+					serverSelect.setEnabled(false);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		collectionOrHistorySelect.setBounds(3, 3, 71, 25);
+		formToolkit.adapt(collectionOrHistorySelect);
+		formToolkit.paintBordersFor(collectionOrHistorySelect);
+		collectionOrHistorySelect.add("定义接口");
+		collectionOrHistorySelect.add("历史请求");
+		collectionOrHistorySelect.select(0);
 
-		combo.add("定义接口");
-		combo.add("历史记录");
-		combo.select(0);
 		// 模块选择
 		modSelectCombo = new Combo(mainWindowShell, SWT.READ_ONLY);
 		modSelectCombo.setBounds(78, 3, 155, 25);
@@ -2071,6 +2088,9 @@ public class MainWindow {
 								}
 								apiItem.setImage(SWTResourceManager.getImage(MainWindow.class, Resource.IMAGE_CHECKED));
 								apiJsonFile = apiItem.getText();
+								// 新加载接口文档时，如果当前在查看历史记录，则跳回接口列表
+								collectionOrHistorySelect.select(0);
+								serverSelect.setEnabled(true);
 								initApiList();
 							}
 						});
