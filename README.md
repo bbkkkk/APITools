@@ -8,7 +8,7 @@
 * 可拓展其他功能，使用Java编写，简单方便
 
 ### 构建说明
-* 1:执行git clone https://git.oschina.net/zzunet/APITools.git
+* 1:执行[码云]git clone https://git.oschina.net/zzunet/APITools.git,[github]https://github.com/cnldw/APITools.git
 * 2:根据系统类别修改pom.xml(程序使用SWT开发，需要根据系统和jvm版本修改pom.xml)
 * 3:执行build.bat构建程序，构建完成后程序包将生成在target目录，譬如APITools-1.8-jar-with-dependencies.jar
 * 4:切换到target目录，执行java -Dfile.encoding=UTF-8 -jar APITools-1.8-jar-with-dependencies.jar启动程序（建议使用作为文件默认编码方式）
