@@ -317,6 +317,16 @@ public class MainWindow {
 				PubParEdit pubEdit = new PubParEdit(mainWindowShell, "公共", SWT.CLOSE | SWT.SYSTEM_MODAL);
 				pubpar = pubEdit.open(pubpar);
 				logger.info("读取到公共参数:" + pubpar);
+				// 保存公共参数
+				apiDoc.setPublicpars(pubpar);
+				// 在新的线程异步保存
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
+								.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+					}
+				}).start();
 				initPubParameters(pubpar);
 			}
 		});
@@ -1061,6 +1071,16 @@ public class MainWindow {
 					String value = form[b][2].getText();
 					if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
 						pubpar.put(name, value);
+						// 保存公共参数
+						apiDoc.setPublicpars(pubpar);
+						// 在新的线程异步保存
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
+										.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+							}
+						}).start();
 						logger.info("参数" + name + ":" + value + "加入到公共参数");
 					}
 				}
@@ -2125,6 +2145,7 @@ public class MainWindow {
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
 				initServerList(apiDoc.getServerlist());
+				pubpar=apiDoc.getPublicpars();
 				if (null != apiDoc.getItem() | apiDoc.getItem().size() > 0) {
 					initMod();
 				} else {
@@ -2586,7 +2607,8 @@ public class MainWindow {
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				// 获取剪切板上的文本
 				String cliptext = (clipboard.getContents(textTransfer) != null
-						? clipboard.getContents(textTransfer).toString() : "");
+						? clipboard.getContents(textTransfer).toString()
+						: "");
 				clipboard.dispose();
 				int caretOffset = styledText.getSelection().x;
 				styledText.setText(new StringBuffer(styledText.getText())
