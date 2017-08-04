@@ -1,6 +1,7 @@
 package com.itlaborer.apitools.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -23,8 +24,10 @@ public class ApiDoc {
 	@JSONField(ordinal = 3)
 	private String version;
 	@JSONField(ordinal = 4)
-	private String serverlist;
+	private LinkedHashMap<String, String> publicpars;
 	@JSONField(ordinal = 5)
+	private String serverlist;
+	@JSONField(ordinal = 6)
 	private ArrayList<ApiMod> item;
 
 	public ApiDoc() {
@@ -63,12 +66,20 @@ public class ApiDoc {
 		this.serverlist = serverlist;
 	}
 
-	public ArrayList<ApiMod> getItem() {
-		return item;
+	public LinkedHashMap<String, String> getPublicpars() {
+		return publicpars;
+	}
+
+	public void setPublicpars(LinkedHashMap<String, String> publicpars) {
+		this.publicpars = publicpars;
 	}
 
 	public void setItem(ArrayList<ApiMod> item) {
 		this.item = item;
+	}
+
+	public ArrayList<ApiMod> getItem() {
+		return item;
 	}
 
 	public String toString() {
