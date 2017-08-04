@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.itlaborer.apitools.model.ApiDoc;
 import com.itlaborer.apitools.model.ApiItem;
@@ -1077,8 +1078,8 @@ public class MainWindow {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils
-										.jsonFormat(JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
+								PubUtils.saveToFile(new File("./config/" + apiJsonFile), PubUtils.jsonFormat(
+										JSON.toJSONString(apiDoc, SerializerFeature.WriteNullStringAsEmpty)));
 							}
 						}).start();
 						logger.info("参数" + name + ":" + value + "加入到公共参数");
@@ -2145,7 +2146,7 @@ public class MainWindow {
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
 				initServerList(apiDoc.getServerlist());
-				pubpar=apiDoc.getPublicpars();
+				pubpar = apiDoc.getPublicpars();
 				if (null != apiDoc.getItem() | apiDoc.getItem().size() > 0) {
 					initMod();
 				} else {
@@ -2302,12 +2303,42 @@ public class MainWindow {
 	}
 
 	// 公共参数初始化
-	private void initPubParameters(HashMap<String, String> pars) {
+	private void initPubParameters(HashMap<String, String> parssrc) {
+		// 深度拷贝
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, String> pars = JSON.parseObject(JSON.toJSONString(parssrc),
+				new LinkedHashMap<String, JSONObject>().getClass());
 		if (null != pars) {
 			for (int i = 0; i < parsSum; i++) {
 				String parname = form[i][1].getText();
 				if ((null != parname) && (null != pars.get(parname))) {
 					form[i][2].setText(pars.get(parname));
+					// 使用后移除
+					logger.debug("从临时变量里移除公共参数:" + parname);
+					pars.remove(parname);
+				}
+			}
+			// 如果还有剩余公共参数，则补充填写到未使用的参数框
+			if (null != pars && pars.size() > 0) {
+				// 转换为list，方便按照索引位置读取
+				ArrayList<ApiPar> list = covertHashMaptoApiPar(pars);
+				int j = 0;
+				for (int i = 0; i < parsSum; i++) {
+					String parname = form[i][1].getText();
+					String parvalue = form[i][2].getText();
+					if (StringUtils.isEmpty(parname) && StringUtils.isEmpty(parvalue)) {
+						form[i][1].setText(list.get(j).getName());
+						form[i][2].setText(list.get(j).getValue());
+						j++;
+						// 没有更多可用公共参数了
+						if (j > list.size() - 1) {
+							break;
+						}
+						// 都初始化到最后一个了，公共参数还没初始化完，则提示
+						if (i == parsSum - 1) {
+							statusBar.setText("有太多公共参数要初始化，参数框不够了...");
+						}
+					}
 				}
 			}
 		}
