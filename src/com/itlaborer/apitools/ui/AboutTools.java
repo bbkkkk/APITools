@@ -3,8 +3,8 @@ package com.itlaborer.apitools.ui;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -17,10 +17,10 @@ import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.PubUtils;
 
 /**
- * 关于界面
+ * 此界面是软件的关于界面，可以在open方法中传入解释和版本信息
  * 
  * @author liudewei[793554262@qq.com]
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 
@@ -36,12 +36,18 @@ public class AboutTools extends Dialog {
 		logger.info("进入关于");
 	}
 
+	/**
+	 * oepn方法
+	 * 
+	 * @param exlplain
+	 * @param version
+	 * @return
+	 */
 	public Object open(String exlplain, String version) {
 		createContents(exlplain, version);
 		aboutToolsShell.open();
 		aboutToolsShell.layout();
 		Display display = getParent().getDisplay();
-
 		while (!aboutToolsShell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -64,7 +70,18 @@ public class AboutTools extends Dialog {
 		Link link = new Link(aboutToolsShell, SWT.NONE);
 		link.setBounds(143, 336, 108, 17);
 		link.setText("<a>www.itlaborer.com</a>");
-		link.addSelectionListener(new LinkSelection());
+		link.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				logger.info("访问作者的博客");
+				Program.launch(Resource.BLOG);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
 		Label versionLabel = new Label(aboutToolsShell, SWT.NONE);
 		versionLabel.setAlignment(SWT.CENTER);
@@ -90,13 +107,5 @@ public class AboutTools extends Dialog {
 		label_2.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_2.setText("软件说明:");
 		label_2.setBounds(3, 12, 136, 17);
-	}
-
-	// 打开网站
-	private final class LinkSelection extends SelectionAdapter {
-		public void widgetSelected(SelectionEvent e) {
-			logger.info("访问作者的博客");
-			Program.launch(Resource.BLOG);
-		}
 	}
 }
