@@ -152,6 +152,8 @@ public class MainWindow {
 	private Listener shortcutListenerRecover;
 	private Display display;
 
+	// 文本搜索器
+	private TextSearch textSearch;
 	// 颜色
 	private Color parBackgroundNormalColor;
 	private Color parBackgroundSelectedColor;
@@ -402,8 +404,8 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				ShortcutKeyExplain shortcutKeyExplain = new ShortcutKeyExplain(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL);
-				shortcutKeyExplain
-						.open("Ctrl+Q：提交请求\r\nCtrl+Enter：提交请求\r\nCtrl+L：清空结果\r\nCtrl+S：保存参数到文件\r\nCtrl+N：打开一个新窗口");
+				shortcutKeyExplain.open(
+						"Ctrl+Q：提交请求\r\nCtrl+Enter：提交请求\r\nCtrl+L：清空结果\r\nCtrl+S：保存参数到文件\r\nCtrl+N：打开一个新窗口\r\nCtrl+F:相应内容搜索");
 			}
 		});
 		menuItemShortcutKey.setText("快捷键");
@@ -1547,6 +1549,16 @@ public class MainWindow {
 						savePars2Memory();
 						savePars2File();
 					}
+					// Ctrl+F搜索
+					if ((e.stateMask == SWT.CTRL) && (e.keyCode == KeyCode.KEY_F)) {
+						keyDownFlag = true;
+						if (resultBodyStyledText.isFocusControl()) {
+							searchText(resultBodyStyledText);
+						}
+						if (resultHeaderStyledText.isFocusControl()) {
+							searchText(resultHeaderStyledText);
+						}
+					}
 				}
 			}
 		};
@@ -1810,6 +1822,17 @@ public class MainWindow {
 				clearResult();
 			}
 		});
+	}
+
+	// 文本内容搜索
+	protected void searchText(StyledText resultBodyStyledText) {
+		if (null == textSearch || null == textSearch.getshell() || textSearch.getshell().isDisposed()) {
+			textSearch = new TextSearch(mainWindowShell, SWT.CLOSE);
+			textSearch.open(resultBodyStyledText);
+		} else {
+			// 如果搜索框还在,直接使用
+			textSearch.updateTextAndActiveWindow(resultBodyStyledText);
+		}
 	}
 
 	// 提交请求
@@ -2496,11 +2519,20 @@ public class MainWindow {
 		allSelect.setText("全选");
 		MenuItem clear = new MenuItem(popupMenu, SWT.NONE);
 		clear.setText("清空");
+		MenuItem search = new MenuItem(popupMenu, SWT.NONE);
+		search.setText("搜索");
+		// 响应结果搜索器
+		search.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				searchText(resultBodyStyledText);
+			}
+		});
 		MenuItem compressJson = new MenuItem(popupMenu, SWT.NONE);
 		compressJson.setText("压缩JSON");
 		MenuItem formatJson = new MenuItem(popupMenu, SWT.NONE);
 		formatJson.setText("格式化JSON");
-		final MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
+		MenuItem warp = new MenuItem(popupMenu, SWT.NONE);
 		warp.setText("自动换行");
 		styledText.setMenu(popupMenu);
 
@@ -2607,7 +2639,6 @@ public class MainWindow {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
 			}
 		});
 		// 剪切菜单的点击事件

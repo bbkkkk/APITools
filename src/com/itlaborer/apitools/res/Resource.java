@@ -12,7 +12,7 @@ import com.itlaborer.apitools.utils.PubUtils;
 
 public class Resource {
 
-	public static String APIVERSION = "V1.9.0";
+	public static String APIVERSION = "V1.9.1";
 	public static String AUTHOR = "作者:刘德位(793554262@qq.com)";
 	public static String BLOG = "http://www.itlaborer.com";
 	public static String CONFIG = PubUtils.base64DecodeString(
