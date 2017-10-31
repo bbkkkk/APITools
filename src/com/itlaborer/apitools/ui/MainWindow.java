@@ -302,17 +302,6 @@ public class MainWindow {
 			}
 		});
 
-		// 工具-接口列表编辑
-		MenuItem menuItemApiListEdit = new MenuItem(menu, SWT.NONE);
-		menuItemApiListEdit.setText("接口设计器");
-		menuItemApiListEdit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DesignTools designTools = new DesignTools();
-				designTools.open();
-			}
-		});
-
 		MenuItem menuItemPubPar = new MenuItem(menu, SWT.NONE);
 		menuItemPubPar.addSelectionListener(new SelectionAdapter() {
 			@Override
