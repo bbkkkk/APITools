@@ -133,7 +133,7 @@ public class MainWindow {
 	private StyledText resultBodyStyledText;
 	private StyledText resultHeaderStyledText;
 	private Text statusBar;
-	private Text parsText;
+	private StyledText parsText;
 	private Text urlText;
 	private Button submitButton;
 	private Button button;
@@ -860,8 +860,8 @@ public class MainWindow {
 		});
 		menuItemCreateNewInterface.setText("新增一个接口");
 		// 表单
-		parsText = new Text(mainWindowShell, SWT.BORDER);
-		parsText.setBounds(3, 32, 480, 25);
+		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP|SWT.V_SCROLL);
+		parsText.setBounds(3, 32, 480, 50);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
 		urlText.setBounds(487, 3, 478, 25);
@@ -985,7 +985,7 @@ public class MainWindow {
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.VIRTUAL);
-		formTable.setBounds(3, 62, 480, 530);
+		formTable.setBounds(3, 84, 480, 508);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
