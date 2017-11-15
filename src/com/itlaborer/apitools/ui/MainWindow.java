@@ -632,7 +632,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				ArrayList<HashMap<String, String>> queryList = new ArrayList<HashMap<String, String>>();
 				ApiMod apiMod = apiDoc.getItem().get(modSelectCombo.getSelectionIndex());
-				if (null != apiMod && apiMod.getItem().size() > 0) {
+				if (null != apiMod&& null!=apiMod.getItem() && apiMod.getItem().size() > 0) {
 					for (int a = 0; a < apiMod.getItem().size(); a++) {
 						HashMap<String, String> hashMap = new HashMap<>();
 						hashMap.put("name", apiMod.getItem().get(a).getName());
