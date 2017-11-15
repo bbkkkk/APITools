@@ -625,6 +625,38 @@ public class MainWindow {
 
 		Menu menu_4 = new Menu(interfaceCombo);
 		interfaceCombo.setMenu(menu_4);
+		
+		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
+		menuItem_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ArrayList<HashMap<String, String>> queryList = new ArrayList<HashMap<String, String>>();
+				ApiMod apiMod = apiDoc.getItem().get(modSelectCombo.getSelectionIndex());
+				if (null != apiMod && apiMod.getItem().size() > 0) {
+					for (int a = 0; a < apiMod.getItem().size(); a++) {
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("name", apiMod.getItem().get(a).getName());
+						hashMap.put("uuid", apiMod.getItem().get(a).getUuid());
+						queryList.add(hashMap);
+					}
+					// 打开查询窗口
+					InterfaceSearch interfaceSearch = new InterfaceSearch(mainWindowShell,
+							SWT.CLOSE | SWT.SYSTEM_MODAL);
+					Object[] result = interfaceSearch.open(queryList);
+					if ((boolean) result[0]) {
+						String uuid = (String) (result[1]);
+						for (int a = 0; a < apiMod.getItem().size(); a++) {
+							if (StringUtils.equals(apiMod.getItem().get(a).getUuid(), uuid)) {
+								interfaceCombo.select(a);
+								initSelectInterface(modSelectCombo.getSelectionIndex(), a);
+								break;
+							}
+						}
+					}
+				}
+			}
+		});
+		menuItem_2.setText("查找接口");
 
 		MenuItem menuItemCopyInterfaceName = new MenuItem(menu_4, SWT.NONE);
 		menuItemCopyInterfaceName.addSelectionListener(new SelectionAdapter() {
