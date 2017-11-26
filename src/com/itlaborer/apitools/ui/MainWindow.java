@@ -424,7 +424,7 @@ public class MainWindow {
 		formToolkit.adapt(collectionOrHistorySelect);
 		formToolkit.paintBordersFor(collectionOrHistorySelect);
 		collectionOrHistorySelect.add("定义接口");
-		collectionOrHistorySelect.add("历史请求");
+		collectionOrHistorySelect.add("历史记录");
 		collectionOrHistorySelect.select(0);
 
 		// 模块选择
