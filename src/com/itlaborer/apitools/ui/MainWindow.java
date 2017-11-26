@@ -283,9 +283,21 @@ public class MainWindow {
 		MenuItem menuItemSaveToFile = new MenuItem(menuSave, SWT.NONE);
 		menuItemSaveToFile.setText("保存当前接口参数（保存到接口文档）");
 
+		// API列表
+		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
+		apiSelect.setText("接口列表");
+		apis = new Menu(apiSelect);
+		apiSelect.setMenu(apis);
+
+		// 服务器列表
+		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
+		serverSelect.setText("服务器列表");
+		servers = new Menu(serverSelect);
+		serverSelect.setMenu(servers);
+
 		// 工具菜单///////////////////////////////////////////////////
 		MenuItem menuToolKit = new MenuItem(rootMenu, SWT.CASCADE);
-		menuToolKit.setText("工具箱");
+		menuToolKit.setText("工具集合");
 		// 工具菜单子菜单
 		Menu menu = new Menu(menuToolKit);
 		menuToolKit.setMenu(menu);
@@ -301,6 +313,35 @@ public class MainWindow {
 				md5Tools.open();
 			}
 		});
+		
+				MenuItem menuPar = new MenuItem(menu, SWT.CASCADE);
+				menuPar.setText("Header参数");
+				Menu menu_2 = new Menu(menuPar);
+				menuPar.setMenu(menu_2);
+				
+						MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
+						menuItemHeader.setText("Header");
+						
+								MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
+								menuItemCookie.setText("Cookie");
+								// Header编辑器
+								menuItemHeader.addSelectionListener(new SelectionAdapter() {
+									@Override
+									public void widgetSelected(SelectionEvent e) {
+										PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
+										header = headerEdit.open(header);
+										logger.info("读取到Header:" + header);
+									}
+								});
+								// Cookie编辑器
+								menuItemCookie.addSelectionListener(new SelectionAdapter() {
+									@Override
+									public void widgetSelected(SelectionEvent e) {
+										PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
+										cookies = headerEdit.open(cookies);
+										logger.info("读取到Cookie:" + cookies);
+									}
+								});
 
 		MenuItem menuItemPubPar = new MenuItem(menu, SWT.NONE);
 		menuItemPubPar.addSelectionListener(new SelectionAdapter() {
@@ -322,7 +363,7 @@ public class MainWindow {
 				initPubParameters(pubpar);
 			}
 		});
-		menuItemPubPar.setText("公共参数设置");
+		menuItemPubPar.setText("公共表单参数");
 
 		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
 		menuItemUrl.setText("URL编码/解码");
@@ -341,29 +382,6 @@ public class MainWindow {
 
 		MenuItem menuItemUnicode = new MenuItem(menu, SWT.NONE);
 		menuItemUnicode.setText("Unicode编码/解码");
-
-		MenuItem menuPar = new MenuItem(rootMenu, SWT.CASCADE);
-		menuPar.setText("Header参数");
-		Menu menu_2 = new Menu(menuPar);
-		menuPar.setMenu(menu_2);
-
-		MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
-		menuItemHeader.setText("Header");
-
-		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
-		menuItemCookie.setText("Cookie");
-
-		// API列表
-		apiSelect = new MenuItem(rootMenu, SWT.CASCADE);
-		apiSelect.setText("接口列表");
-		apis = new Menu(apiSelect);
-		apiSelect.setMenu(apis);
-
-		// 服务器列表
-		serverSelect = new MenuItem(rootMenu, SWT.CASCADE);
-		serverSelect.setText("服务器列表");
-		servers = new Menu(serverSelect);
-		serverSelect.setMenu(servers);
 
 		MenuItem menuItemCreateNewWindow = new MenuItem(rootMenu, SWT.NONE);
 		menuItemCreateNewWindow.addSelectionListener(new SelectionAdapter() {
@@ -625,14 +643,14 @@ public class MainWindow {
 
 		Menu menu_4 = new Menu(interfaceCombo);
 		interfaceCombo.setMenu(menu_4);
-		
+
 		MenuItem menuItem_2 = new MenuItem(menu_4, SWT.NONE);
 		menuItem_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ArrayList<HashMap<String, String>> queryList = new ArrayList<HashMap<String, String>>();
 				ApiMod apiMod = apiDoc.getItem().get(modSelectCombo.getSelectionIndex());
-				if (null != apiMod&& null!=apiMod.getItem() && apiMod.getItem().size() > 0) {
+				if (null != apiMod && null != apiMod.getItem() && apiMod.getItem().size() > 0) {
 					for (int a = 0; a < apiMod.getItem().size(); a++) {
 						HashMap<String, String> hashMap = new HashMap<>();
 						hashMap.put("name", apiMod.getItem().get(a).getName());
@@ -892,7 +910,7 @@ public class MainWindow {
 		});
 		menuItemCreateNewInterface.setText("新增一个接口");
 		// 表单
-		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP|SWT.V_SCROLL);
+		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		parsText.setBounds(3, 32, 480, 50);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
@@ -1672,24 +1690,6 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Program.launch(Resource.FEEDBACK);
-			}
-		});
-		// Header编辑器
-		menuItemHeader.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
-				header = headerEdit.open(header);
-				logger.info("读取到Header:" + header);
-			}
-		});
-		// Cookie编辑器
-		menuItemCookie.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
-				cookies = headerEdit.open(cookies);
-				logger.info("读取到Cookie:" + cookies);
 			}
 		});
 
