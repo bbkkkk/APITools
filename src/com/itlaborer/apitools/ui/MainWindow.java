@@ -168,6 +168,8 @@ public class MainWindow {
 	private Timer requestTimer;
 	private long delay = 0;
 	private long intevalPeriod = 1000;
+	private long timerSum = -1;
+	private long count = 0;
 	private boolean timerIsRun = false;
 	private String timerUrl;
 
@@ -951,6 +953,8 @@ public class MainWindow {
 		menuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// 重置请求次数
+				count = 0;
 				if (!timerIsRun) {
 					timerIsRun = true;
 					timerUrl = urlText.getText();
@@ -963,8 +967,11 @@ public class MainWindow {
 									String url = urlText.getText();
 									if (!StringUtils.equals(url, timerUrl)) {
 										requestTask.cancel();
-										statusBar.setText("接口地址发生变化，定时请求已终止");
+										statusBar.setText("接口地址发生变化,定时循环提交已终止");
+									} else if (timerSum > 0 && count >= timerSum) {
+										statusBar.setText("已完成" + count + "次请求,定时循环提交已终止");
 									} else {
+										count++;
 										sentRequest();
 									}
 								}
@@ -984,8 +991,11 @@ public class MainWindow {
 									String url = urlText.getText();
 									if (!StringUtils.equals(url, timerUrl)) {
 										requestTask.cancel();
-										statusBar.setText("接口地址发生变化，定时请求已终止");
+										statusBar.setText("接口地址发生变化,定时循环提交已终止");
+									} else if (timerSum > 0 && count >= timerSum) {
+										statusBar.setText("已完成" + count + "次请求,定时循环提交已终止");
 									} else {
+										count++;
 										sentRequest();
 									}
 								}
@@ -1000,6 +1010,7 @@ public class MainWindow {
 
 		MenuItem menuItem_1 = new MenuItem(menu_1, SWT.NONE);
 		menuItem_1.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (timerIsRun) {
@@ -1017,12 +1028,15 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				TimerConfigDialog timerConfigDialog = new TimerConfigDialog(mainWindowShell,
 						SWT.CLOSE | SWT.SYSTEM_MODAL);
-				Object[] objects = timerConfigDialog.open(delay, intevalPeriod);
+				Object[] objects = timerConfigDialog.open(delay, intevalPeriod, timerSum);
 				if ((boolean) objects[0] == true) {
-					logger.debug("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2]);
-					statusBar.setText("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2]);
+					logger.debug("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2] + ",次数限制:"
+							+ (long) objects[3]);
+					statusBar.setText("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2]
+							+ ",次数限制:" + (long) objects[3]);
 					delay = (long) objects[1];
 					intevalPeriod = (long) objects[2];
+					timerSum = (long) objects[3];
 				}
 			}
 		});
@@ -2174,6 +2188,7 @@ public class MainWindow {
 						}
 					});
 				}
+
 			}
 		};
 		httpThread.setName("httpRequest");

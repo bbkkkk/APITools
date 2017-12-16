@@ -24,9 +24,12 @@ public class TimerConfigDialog extends Dialog {
 	private Button buttonYes;
 	private long delay;
 	private long intevalPeriod;
+	private long timerSum;
 	private Text delayText;
 	private Text intevalPeriodText;
 	private boolean errFlag = false;
+	private Label label_2;
+	private Text sumText;
 
 	/**
 	 * Create the dialog.
@@ -43,9 +46,10 @@ public class TimerConfigDialog extends Dialog {
 	 * 
 	 * @return the result
 	 */
-	public Object[] open(long delay, long intevalPeriod) {
+	public Object[] open(long delay, long intevalPeriod, long timerSum) {
 		this.delay = delay;
 		this.intevalPeriod = intevalPeriod;
+		this.timerSum = timerSum;
 		createContents();
 		shell.open();
 		shell.layout();
@@ -55,7 +59,7 @@ public class TimerConfigDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return (new Object[] { saveFlag, this.delay, this.intevalPeriod });
+		return (new Object[] { saveFlag, this.delay, this.intevalPeriod, this.timerSum });
 	}
 
 	/**
@@ -78,6 +82,7 @@ public class TimerConfigDialog extends Dialog {
 				}
 				delay = new Long(delayText.getText());
 				intevalPeriod = new Long(intevalPeriodText.getText());
+				timerSum = new Long(sumText.getText());
 				saveFlag = true;
 				shell.dispose();
 			}
@@ -98,17 +103,17 @@ public class TimerConfigDialog extends Dialog {
 
 		Label waringText = new Label(shell, SWT.NONE);
 		waringText.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		waringText.setBounds(11, 83, 373, 27);
+		waringText.setBounds(11, 112, 373, 17);
 
 		Label label = new Label(shell, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label.setBounds(11, 31, 185, 17);
+		label.setBounds(13, 11, 185, 17);
 		label.setText("延迟启动时间(毫秒)：");
 
 		Label label_1 = new Label(shell, SWT.NONE);
 		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
 		label_1.setText("每次请求间隔时长(毫秒)：");
-		label_1.setBounds(202, 31, 182, 17);
+		label_1.setBounds(204, 11, 182, 17);
 
 		delayText = new Text(shell, SWT.BORDER);
 		delayText.addModifyListener(new ModifyListener() {
@@ -128,29 +133,35 @@ public class TimerConfigDialog extends Dialog {
 				}
 			}
 		});
-		delayText.setBounds(10, 54, 186, 23);
+		delayText.setBounds(12, 34, 186, 23);
 		delayText.setText(delay + "");
 
 		intevalPeriodText = new Text(shell, SWT.BORDER);
-		intevalPeriodText.setBounds(202, 54, 182, 23);
+		intevalPeriodText.setBounds(204, 34, 182, 23);
 		intevalPeriodText.setText(intevalPeriod + "");
+
+		label_2 = new Label(shell, SWT.NONE);
+		label_2.setText("请求次数限制(<1为不限制)");
+		label_2.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label_2.setBounds(12, 63, 185, 17);
+
+		sumText = new Text(shell, SWT.BORDER);
+		sumText.setText(timerSum + "");
+		sumText.setBounds(11, 83, 186, 23);
 		intevalPeriodText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				try {
 					long time = new Long(intevalPeriodText.getText());
 					if (time < 1) {
 						errFlag = true;
-						waringText.setText("每次请求间隔时长只能是大于等于1的数字");
-					} else if (time < 50) {
-						errFlag = false;
-						waringText.setText("每次请求间隔时长不建议低于50毫秒,以免造成服务器压力");
+						waringText.setText("请求次数限制只能是数字");
 					} else {
 						errFlag = false;
 						waringText.setText("");
 					}
 				} catch (Exception e2) {
 					errFlag = true;
-					waringText.setText("每次请求间隔时长只能是大于等于1的数字");
+					waringText.setText("请求次数限制只能是数字");
 				}
 			}
 		});
