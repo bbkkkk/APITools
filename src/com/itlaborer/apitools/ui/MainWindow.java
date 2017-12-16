@@ -208,7 +208,6 @@ public class MainWindow {
 		this.parFontsFrozenColor = SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY);
 		this.parFontsnormalColor = SWTResourceManager.getColor(SWT.COLOR_BLACK);
 		this.requestTimer = new Timer(true);
-
 	}
 
 	// 从这里开始,不是么？小桥流水人家~
@@ -946,11 +945,11 @@ public class MainWindow {
 		submitButton.setBounds(1040, 2, 97, 27);
 		submitButton.setText("提      交");
 
-		Menu menu_1 = new Menu(submitButton);
-		submitButton.setMenu(menu_1);
+		Menu menuTimer = new Menu(submitButton);
+		submitButton.setMenu(menuTimer);
 
-		MenuItem menuItem = new MenuItem(menu_1, SWT.NONE);
-		menuItem.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuTimerItem = new MenuItem(menuTimer, SWT.NONE);
+		menuTimerItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// 重置请求次数
@@ -1006,10 +1005,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem.setText("开启定时循环提交");
+		menuTimerItem.setText("开启定时循环提交");
 
-		MenuItem menuItem_1 = new MenuItem(menu_1, SWT.NONE);
-		menuItem_1.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuTimerItem_1 = new MenuItem(menuTimer, SWT.NONE);
+		menuTimerItem_1.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1020,10 +1019,10 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_1.setText("终止定时循环提交");
+		menuTimerItem_1.setText("终止定时循环提交");
 
-		MenuItem menuItem_3 = new MenuItem(menu_1, SWT.NONE);
-		menuItem_3.addSelectionListener(new SelectionAdapter() {
+		MenuItem menuTimerItem_3 = new MenuItem(menuTimer, SWT.NONE);
+		menuTimerItem_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TimerConfigDialog timerConfigDialog = new TimerConfigDialog(mainWindowShell,
@@ -1040,7 +1039,7 @@ public class MainWindow {
 				}
 			}
 		});
-		menuItem_3.setText("配置定时循环提交");
+		menuTimerItem_3.setText("配置定时循环提交");
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);
