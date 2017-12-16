@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -313,35 +314,35 @@ public class MainWindow {
 				md5Tools.open();
 			}
 		});
-		
-				MenuItem menuPar = new MenuItem(menu, SWT.CASCADE);
-				menuPar.setText("Header参数");
-				Menu menu_2 = new Menu(menuPar);
-				menuPar.setMenu(menu_2);
-				
-						MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
-						menuItemHeader.setText("Header");
-						
-								MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
-								menuItemCookie.setText("Cookie");
-								// Header编辑器
-								menuItemHeader.addSelectionListener(new SelectionAdapter() {
-									@Override
-									public void widgetSelected(SelectionEvent e) {
-										PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
-										header = headerEdit.open(header);
-										logger.info("读取到Header:" + header);
-									}
-								});
-								// Cookie编辑器
-								menuItemCookie.addSelectionListener(new SelectionAdapter() {
-									@Override
-									public void widgetSelected(SelectionEvent e) {
-										PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
-										cookies = headerEdit.open(cookies);
-										logger.info("读取到Cookie:" + cookies);
-									}
-								});
+
+		MenuItem menuPar = new MenuItem(menu, SWT.CASCADE);
+		menuPar.setText("Header参数");
+		Menu menu_2 = new Menu(menuPar);
+		menuPar.setMenu(menu_2);
+
+		MenuItem menuItemHeader = new MenuItem(menu_2, SWT.NONE);
+		menuItemHeader.setText("Header");
+
+		MenuItem menuItemCookie = new MenuItem(menu_2, SWT.NONE);
+		menuItemCookie.setText("Cookie");
+		// Header编辑器
+		menuItemHeader.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Header常规", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				header = headerEdit.open(header);
+				logger.info("读取到Header:" + header);
+			}
+		});
+		// Cookie编辑器
+		menuItemCookie.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PubParEdit headerEdit = new PubParEdit(mainWindowShell, "Cookie", SWT.CLOSE | SWT.SYSTEM_MODAL);
+				cookies = headerEdit.open(cookies);
+				logger.info("读取到Cookie:" + cookies);
+			}
+		});
 
 		MenuItem menuItemPubPar = new MenuItem(menu, SWT.NONE);
 		menuItemPubPar.addSelectionListener(new SelectionAdapter() {
@@ -1004,7 +1005,7 @@ public class MainWindow {
 		// 去浏览器
 		toBrower = new Button(mainWindowShell, SWT.NONE);
 		toBrower.setToolTipText("用HTTP GET方式在浏览器中请求接口");
-		toBrower.setText("浏览器中打开");
+		toBrower.setText("浏览器中GET");
 		toBrower.setBounds(1040, 31, 97, 27);
 		formToolkit.adapt(toBrower, true, true);
 
@@ -1031,7 +1032,132 @@ public class MainWindow {
 				statusBar.setText("请求信息已复制到剪切板:" + url);
 			}
 		});
-		mntmget.setText("复制GET请求到剪切板");
+		mntmget.setText("复制GET请求URL到剪切板");
+
+		MenuItem mntmcurl = new MenuItem(browerMenu, SWT.NONE);
+		mntmcurl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(urlText.getText())) {
+					return;
+				}
+				HashMap<String, String> pars = getParameters();
+				parsText.setText(ParamUtils.mapToQuery(pars));
+				StringBuilder sBuilder = new StringBuilder();
+				// 接口地址
+				String url = urlText.getText();
+				// 开始构建curl指令
+				switch (methodSelectCombo.getText()) {
+				// GET请求
+				case "GET":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-G -d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				case "POST":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				case "HEAD":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					sBuilder.append("-I ");
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				case "PUT":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					sBuilder.append("-X PUT ");
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				case "PATCH":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					sBuilder.append("-X PATCH ");
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				case "DELETE":
+					sBuilder.append("curl ");
+					if (null != header && header.size() > 0) {
+						Object[] keyArray = header.keySet().toArray();
+						Arrays.sort(keyArray);
+						for (Object key : keyArray) {
+							if ((!header.get(key).isEmpty()) && (!header.get(key).isEmpty())) {
+								sBuilder.append("-H '").append(key).append(":").append(header.get(key)).append("' ");
+							}
+						}
+					}
+					sBuilder.append("-X DELETE ");
+					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+					}
+					break;
+				default:
+					break;
+				}
+				///////////////////////////////////////////////////////////////////////////////////////////////////
+				String info = sBuilder.toString();
+				Clipboard clipboard = new Clipboard(mainWindowShell.getDisplay());
+				TextTransfer textTransfer = TextTransfer.getInstance();
+				clipboard.setContents(new String[] { info }, new Transfer[] { textTransfer });
+				clipboard.dispose();
+				////////////////////////////////////////////////////////////////////////////////////////////////////
+				logger.info("复制到剪切板:" + info);
+				statusBar.setText("请求信息已复制到剪切板:" + info);
+			}
+		});
+		mntmcurl.setText("复制CURl指令到剪切板");
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.VIRTUAL);

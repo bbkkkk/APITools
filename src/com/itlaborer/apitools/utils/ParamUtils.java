@@ -65,6 +65,35 @@ public class ParamUtils {
 		return query.toString();
 	}
 
+	public static String mapToQuery(Map<String, String> queryMap, boolean urlEncode) {
+		StringBuffer query = new StringBuffer();
+		boolean have = false;
+		Iterator<Entry<String, String>> queryIterator = queryMap.entrySet().iterator();
+		for (; queryIterator.hasNext();) {
+			Entry<String, String> nameVal = queryIterator.next();
+			String name = nameVal.getKey();
+			String value = nameVal.getValue();
+			if (notEmpty(name, value)) {
+				if (have) {
+					query.append("&");
+				} else {
+					have = true;
+				}
+				if (urlEncode) {
+					try {
+						query.append(URLEncoder.encode(nameVal.getKey(), "UTF-8")).append("=")
+								.append(URLEncoder.encode(nameVal.getValue(), "UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						query.append(nameVal.getKey()).append("=").append(nameVal.getValue());
+					}
+				} else {
+					query.append(nameVal.getKey()).append("=").append(nameVal.getValue());
+				}
+			}
+		}
+		return query.toString();
+	}
+
 	public static boolean notEmpty(String... values) {
 		boolean result = true;
 		if (values == null || values.length == 0) {
