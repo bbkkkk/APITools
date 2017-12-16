@@ -1061,7 +1061,7 @@ public class MainWindow {
 						}
 					}
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-G -d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-G -d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				case "POST":
@@ -1076,7 +1076,7 @@ public class MainWindow {
 						}
 					}
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				case "HEAD":
@@ -1092,7 +1092,7 @@ public class MainWindow {
 					}
 					sBuilder.append("-I ");
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				case "PUT":
@@ -1108,7 +1108,7 @@ public class MainWindow {
 					}
 					sBuilder.append("-X PUT ");
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				case "PATCH":
@@ -1124,7 +1124,7 @@ public class MainWindow {
 					}
 					sBuilder.append("-X PATCH ");
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				case "DELETE":
@@ -1140,13 +1140,14 @@ public class MainWindow {
 					}
 					sBuilder.append("-X DELETE ");
 					if (StringUtils.isNotEmpty(ParamUtils.mapToQuery(pars))) {
-						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ").append(url);
+						sBuilder.append("-d \"").append(ParamUtils.mapToQuery(pars, true)).append("\" ");
 					}
 					break;
 				default:
 					break;
 				}
 				///////////////////////////////////////////////////////////////////////////////////////////////////
+				sBuilder.append(url);
 				String info = sBuilder.toString();
 				Clipboard clipboard = new Clipboard(mainWindowShell.getDisplay());
 				TextTransfer textTransfer = TextTransfer.getInstance();
