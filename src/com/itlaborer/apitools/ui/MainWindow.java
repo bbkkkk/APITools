@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -161,6 +163,14 @@ public class MainWindow {
 	private Color parFontsFrozenColor;
 	private Color parFontsnormalColor;
 
+	// 定时任务提交相关
+	private TimerTask requestTask;
+	private Timer requestTimer;
+	private long delay = 0;
+	private long intevalPeriod = 1000;
+	private boolean timerIsRun = false;
+	private String timerUrl;
+
 	// 主窗口
 	public MainWindow() {
 		/////////////////////////////////////////////////////////
@@ -195,6 +205,8 @@ public class MainWindow {
 		this.parBackgroundSelectedColor = new Color(Display.getCurrent(), 227, 247, 255);
 		this.parFontsFrozenColor = SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY);
 		this.parFontsnormalColor = SWTResourceManager.getColor(SWT.COLOR_BLACK);
+		this.requestTimer = new Timer(true);
+
 	}
 
 	// 从这里开始,不是么？小桥流水人家~
@@ -931,6 +943,90 @@ public class MainWindow {
 		submitButton = new Button(mainWindowShell, SWT.NONE);
 		submitButton.setBounds(1040, 2, 97, 27);
 		submitButton.setText("提      交");
+
+		Menu menu_1 = new Menu(submitButton);
+		submitButton.setMenu(menu_1);
+
+		MenuItem menuItem = new MenuItem(menu_1, SWT.NONE);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!timerIsRun) {
+					timerIsRun = true;
+					timerUrl = urlText.getText();
+					requestTask = new TimerTask() {
+						@Override
+						public void run() {
+							mainWindowShell.getDisplay().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									String url = urlText.getText();
+									if (!StringUtils.equals(url, timerUrl)) {
+										requestTask.cancel();
+										statusBar.setText("接口地址发生变化，定时请求已终止");
+									} else {
+										sentRequest();
+									}
+								}
+							});
+						}
+					};
+					requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
+				} else {
+					logger.debug("任务已启动，先清除原任务后重新布置任务");
+					requestTask.cancel();
+					requestTask = new TimerTask() {
+						@Override
+						public void run() {
+							mainWindowShell.getDisplay().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									String url = urlText.getText();
+									if (!StringUtils.equals(url, timerUrl)) {
+										requestTask.cancel();
+										statusBar.setText("接口地址发生变化，定时请求已终止");
+									} else {
+										sentRequest();
+									}
+								}
+							});
+						}
+					};
+					requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
+				}
+			}
+		});
+		menuItem.setText("开启定时循环提交");
+
+		MenuItem menuItem_1 = new MenuItem(menu_1, SWT.NONE);
+		menuItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (timerIsRun) {
+					requestTask.cancel();
+					timerIsRun = false;
+					statusBar.setText("定时循环提交已关闭");
+				}
+			}
+		});
+		menuItem_1.setText("终止定时循环提交");
+
+		MenuItem menuItem_3 = new MenuItem(menu_1, SWT.NONE);
+		menuItem_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TimerConfigDialog timerConfigDialog = new TimerConfigDialog(mainWindowShell,
+						SWT.CLOSE | SWT.SYSTEM_MODAL);
+				Object[] objects = timerConfigDialog.open(delay, intevalPeriod);
+				if ((boolean) objects[0] == true) {
+					logger.debug("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2]);
+					statusBar.setText("定时器延迟启动时间(毫秒):" + (long) objects[1] + ",每次请求间隔时长(毫秒):" + (long) objects[2]);
+					delay = (long) objects[1];
+					intevalPeriod = (long) objects[2];
+				}
+			}
+		});
+		menuItem_3.setText("配置定时循环提交");
 
 		// 参数转换
 		parsCovertButton = new Button(mainWindowShell, SWT.NONE);

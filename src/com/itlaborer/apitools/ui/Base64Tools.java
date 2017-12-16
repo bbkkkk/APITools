@@ -1,5 +1,7 @@
 package com.itlaborer.apitools.ui;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -12,9 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.itlaborer.apitools.res.Resource;
 import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.PubUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Base64工具界面
