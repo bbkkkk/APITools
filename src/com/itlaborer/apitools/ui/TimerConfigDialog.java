@@ -72,6 +72,54 @@ public class TimerConfigDialog extends Dialog {
 		shell.setSize(400, 200);
 		PubUtils.setCenterinParent(getParent(), shell);
 
+		Label label = new Label(shell, SWT.NONE);
+		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label.setBounds(13, 11, 185, 17);
+		label.setText("延迟启动时间(毫秒)：");
+
+		Label label_1 = new Label(shell, SWT.NONE);
+		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label_1.setText("每次请求间隔时长(毫秒)：");
+		label_1.setBounds(204, 11, 182, 17);
+
+		label_2 = new Label(shell, SWT.NONE);
+		label_2.setText("请求次数限制(<1为不限制)");
+		label_2.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
+		label_2.setBounds(12, 63, 185, 17);
+
+		Label waringText = new Label(shell, SWT.NONE);
+		waringText.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		waringText.setBounds(11, 112, 373, 17);
+
+		delayText = new Text(shell, SWT.BORDER);
+		delayText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				try {
+					long time = new Long(delayText.getText());
+					if (time < 0) {
+						errFlag = true;
+						waringText.setText("延迟启动时间只能是大于等于0的数字");
+					} else {
+						errFlag = false;
+						waringText.setText("");
+					}
+				} catch (Exception e2) {
+					errFlag = true;
+					waringText.setText("延迟启动时间只能是大于等于0的数字");
+				}
+			}
+		});
+		delayText.setBounds(12, 34, 186, 23);
+		delayText.setText(delay + "");
+
+		intevalPeriodText = new Text(shell, SWT.BORDER);
+		intevalPeriodText.setBounds(204, 34, 182, 23);
+		intevalPeriodText.setText(intevalPeriod + "");
+
+		sumText = new Text(shell, SWT.BORDER);
+		sumText.setText(timerSum + "");
+		sumText.setBounds(11, 83, 186, 23);
+
 		buttonYes = new Button(shell, SWT.NONE);
 		buttonYes.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -100,54 +148,6 @@ public class TimerConfigDialog extends Dialog {
 		});
 		buttonNo.setBounds(304, 135, 80, 27);
 		buttonNo.setText("放弃");
-
-		Label waringText = new Label(shell, SWT.NONE);
-		waringText.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		waringText.setBounds(11, 112, 373, 17);
-
-		Label label = new Label(shell, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label.setBounds(13, 11, 185, 17);
-		label.setText("延迟启动时间(毫秒)：");
-
-		Label label_1 = new Label(shell, SWT.NONE);
-		label_1.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label_1.setText("每次请求间隔时长(毫秒)：");
-		label_1.setBounds(204, 11, 182, 17);
-
-		delayText = new Text(shell, SWT.BORDER);
-		delayText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				try {
-					long time = new Long(delayText.getText());
-					if (time < 0) {
-						errFlag = true;
-						waringText.setText("延迟启动时间只能是大于等于0的数字");
-					} else {
-						errFlag = false;
-						waringText.setText("");
-					}
-				} catch (Exception e2) {
-					errFlag = true;
-					waringText.setText("延迟启动时间只能是大于等于0的数字");
-				}
-			}
-		});
-		delayText.setBounds(12, 34, 186, 23);
-		delayText.setText(delay + "");
-
-		intevalPeriodText = new Text(shell, SWT.BORDER);
-		intevalPeriodText.setBounds(204, 34, 182, 23);
-		intevalPeriodText.setText(intevalPeriod + "");
-
-		label_2 = new Label(shell, SWT.NONE);
-		label_2.setText("请求次数限制(<1为不限制)");
-		label_2.setFont(SWTResourceManager.getFont("微软雅黑", 9, SWT.BOLD));
-		label_2.setBounds(12, 63, 185, 17);
-
-		sumText = new Text(shell, SWT.BORDER);
-		sumText.setText(timerSum + "");
-		sumText.setBounds(11, 83, 186, 23);
 		intevalPeriodText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				try {
