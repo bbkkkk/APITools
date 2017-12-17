@@ -950,7 +950,7 @@ public class MainWindow {
 		// 表单
 		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		parsText.setToolTipText("这里是提交给服务器的参数预览,可以从这里导入参数");
-		parsText.setBounds(3, 32, 480, 54);
+		parsText.setBounds(3, 32, 480, 52);
 		PubUtils.styledTextAddContextMenu(parsText);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
@@ -1285,7 +1285,7 @@ public class MainWindow {
 
 		// 参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.VIRTUAL);
-		formTable.setBounds(3, 84, 480, 508);
+		formTable.setBounds(3, 86, 480, 506);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
@@ -2000,7 +2000,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				// 遍历参数框,找到参数里多余的空格
 				for (int i = 0; i < parsSum; i++) {
-					formPar[i][0].setText(formPar[i][1].getText().trim());
+					formPar[i][0].setText(formPar[i][0].getText().trim());
 					formPar[i][1].setText(formPar[i][1].getText().trim());
 					formPar[i][2].setText(formPar[i][2].getText().trim());
 					formPar[i][3].setText(formPar[i][3].getText().trim());
