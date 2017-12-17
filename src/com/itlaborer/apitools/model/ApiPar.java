@@ -16,20 +16,49 @@ public class ApiPar {
 	private String tip;
 	@JSONField(ordinal = 3)
 	private String value;
+	@JSONField(ordinal = 4)
+	private boolean isnull;
+
+
 
 	public ApiPar() {
 
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
 	public ApiPar(String name, String value) {
 		this.name = name;
 		this.value = value;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param tip
+	 * @param value
+	 */
 	public ApiPar(String name, String tip, String value) {
 		this.name = name;
 		this.tip = tip;
 		this.value = value;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param tip
+	 * @param value
+	 * @param isnull
+	 */
+	public ApiPar(String name, String tip, String value,boolean isnull) {
+		this.name = name;
+		this.tip = tip;
+		this.value = value;
+		this.isnull=isnull;
 	}
 
 	public String getName() {
@@ -54,6 +83,14 @@ public class ApiPar {
 
 	public void setTip(String tip) {
 		this.tip = tip;
+	}
+	
+	public boolean isIsnull() {
+		return isnull;
+	}
+
+	public void setIsnull(boolean isnull) {
+		this.isnull = isnull;
 	}
 
 }

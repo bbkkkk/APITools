@@ -30,8 +30,8 @@ public class XinzhiWeather {
 		nowWeather.setDescription("可以通过此接口获取到全国的城市的当日天气信息");
 		nowWeather.setMethod("GET");
 		ArrayList<ApiPar> nowWeatherPars = new ArrayList<ApiPar>();
-		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
-		nowWeatherPars.add(new ApiPar("location", "城市中文名", "北京"));
+		nowWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv",false));
+		nowWeatherPars.add(new ApiPar("location", "城市中文名", "北京",false));
 		nowWeather.setParameters(nowWeatherPars);
 		// 第二个接口
 		ApiItem dailyWeather = new ApiItem();
@@ -41,8 +41,8 @@ public class XinzhiWeather {
 		dailyWeather.setDescription("可以通过此接口获取到全国的城市的近七日天气信息");
 		dailyWeather.setMethod("GET");
 		ArrayList<ApiPar> dailyWeatherPars = new ArrayList<ApiPar>();
-		dailyWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv"));
-		dailyWeatherPars.add(new ApiPar("location", "城市中文名", "上海"));
+		dailyWeatherPars.add(new ApiPar("key", "API密钥", "lo5ujaa0pv5jtrkv",false));
+		dailyWeatherPars.add(new ApiPar("location", "城市中文名", "上海",false));
 		dailyWeather.setParameters(dailyWeatherPars);
 
 		// 加入接口列表
