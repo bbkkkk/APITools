@@ -1271,6 +1271,12 @@ public class MainWindow {
 		numberColumn.setText("编号");
 
 		TableColumn tableColumn = new TableColumn(formTable, SWT.NONE);
+		tableColumn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("不支持非空排序");
+			}
+		});
 		tableColumn.setWidth(38);
 		tableColumn.setText("非空");
 
