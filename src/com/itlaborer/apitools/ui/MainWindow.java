@@ -949,7 +949,6 @@ public class MainWindow {
 		menuItemCreateNewInterface.setText("新增一个接口");
 		// 表单
 		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		parsText.setToolTipText("这里是提交给服务器的参数预览,可以从这里导入参数");
 		parsText.setBounds(3, 32, 480, 52);
 		PubUtils.styledTextAddContextMenu(parsText);
 		// URL
@@ -1278,7 +1277,7 @@ public class MainWindow {
 				clipboard.dispose();
 				////////////////////////////////////////////////////////////////////////////////////////////////////
 				logger.info("复制到剪切板:" + info);
-				statusBar.setText("请求信息已复制到剪切板:" + info);
+				statusBar.setText("CURL指令已复制到剪切板:" + info);
 			}
 		});
 		mntmcurl.setText("复制CURl指令到剪切板");
@@ -1297,6 +1296,7 @@ public class MainWindow {
 		numberColumn.setText("编号");
 
 		TableColumn tableColumn = new TableColumn(formTable, SWT.NONE);
+		tableColumn.setResizable(false);
 		tableColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1337,7 +1337,7 @@ public class MainWindow {
 				statusBar.setText("不支持按参数值排序");
 			}
 		});
-		valueColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
+		valueColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth() - tableColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		valueColumn.setText("参数值");
 		valueColumn.setResizable(false);
