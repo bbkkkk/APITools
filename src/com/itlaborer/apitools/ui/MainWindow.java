@@ -316,8 +316,50 @@ public class MainWindow {
 		Menu menu = new Menu(menuToolKit);
 		menuToolKit.setMenu(menu);
 
-		MenuItem menuItemMd5 = new MenuItem(menu, SWT.NONE);
+		MenuItem menuItemCode = new MenuItem(menu, SWT.CASCADE);
+		menuItemCode.setText("编码解码");
+
+		Menu menu_1 = new Menu(menuItemCode);
+		menuItemCode.setMenu(menu_1);
+
+		MenuItem menuItemMd5 = new MenuItem(menu_1, SWT.NONE);
 		menuItemMd5.setText("MD5加密");
+
+		MenuItem menuItemUrl = new MenuItem(menu_1, SWT.NONE);
+		menuItemUrl.setText("URL编码/解码");
+
+		MenuItem menuItemBase64 = new MenuItem(menu_1, SWT.NONE);
+		menuItemBase64.setText("Base64编码/解码");
+
+		MenuItem menuItemUnicode = new MenuItem(menu_1, SWT.NONE);
+		menuItemUnicode.setText("Unicode编码/解码");
+
+		// Unicode工具
+		menuItemUnicode.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UnicodeTools unicodeTools = new UnicodeTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				unicodeTools.open();
+			}
+		});
+
+		// Base64工具
+		menuItemBase64.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				base64Tools.open();
+			}
+		});
+
+		// 菜单选项事件
+		menuItemUrl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UrlEncodeTools urlEncodeTools = new UrlEncodeTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
+				urlEncodeTools.open();
+			}
+		});
 
 		// MD5工具
 		menuItemMd5.addSelectionListener(new SelectionAdapter() {
@@ -378,24 +420,6 @@ public class MainWindow {
 			}
 		});
 		menuItemPubPar.setText("公共表单参数");
-
-		MenuItem menuItemUrl = new MenuItem(menu, SWT.NONE);
-		menuItemUrl.setText("URL编码/解码");
-
-		MenuItem menuItemBase64 = new MenuItem(menu, SWT.NONE);
-		menuItemBase64.setText("Base64编码/解码");
-
-		// Base64工具
-		menuItemBase64.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Base64Tools base64Tools = new Base64Tools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				base64Tools.open();
-			}
-		});
-
-		MenuItem menuItemUnicode = new MenuItem(menu, SWT.NONE);
-		menuItemUnicode.setText("Unicode编码/解码");
 
 		MenuItem menuItemCreateNewWindow = new MenuItem(rootMenu, SWT.NONE);
 		menuItemCreateNewWindow.addSelectionListener(new SelectionAdapter() {
@@ -925,7 +949,9 @@ public class MainWindow {
 		menuItemCreateNewInterface.setText("新增一个接口");
 		// 表单
 		parsText = new StyledText(mainWindowShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		parsText.setBounds(3, 32, 480, 50);
+		parsText.setToolTipText("这里是提交给服务器的参数预览,可以从这里导入参数");
+		parsText.setBounds(3, 32, 480, 54);
+		PubUtils.styledTextAddContextMenu(parsText);
 		// URL
 		urlText = new Text(mainWindowShell, SWT.BORDER);
 		urlText.setBounds(487, 3, 478, 25);
@@ -1741,6 +1767,7 @@ public class MainWindow {
 					setParTableBackgroundSelection(b);
 				}
 			});
+
 			formPar[i][1].addMouseTrackListener(new MouseTrackListener() {
 
 				@Override
@@ -1917,30 +1944,12 @@ public class MainWindow {
 			}
 		});
 
-		// 菜单选项事件
-		menuItemUrl.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				UrlEncodeTools urlEncodeTools = new UrlEncodeTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				urlEncodeTools.open();
-			}
-		});
-
 		// 关于-点击事件
 		menuItemAbout.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AboutTools about = new AboutTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
 				about.open(Resource.APIEXPLAIN, Resource.APIVERSION);
-			}
-		});
-
-		// Unicode工具
-		menuItemUnicode.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				UnicodeTools unicodeTools = new UnicodeTools(mainWindowShell, SWT.CLOSE | SWT.SYSTEM_MODAL);
-				unicodeTools.open();
 			}
 		});
 
@@ -2220,7 +2229,6 @@ public class MainWindow {
 						}
 					});
 				}
-
 			}
 		};
 		httpThread.setName("httpRequest");
@@ -2460,7 +2468,9 @@ public class MainWindow {
 			if (apiDoc.getDecodeversion().equals(1.1)) {
 				logger.debug("加载的api版本为" + apiDoc.getVersion());
 				initServerList(apiDoc.getServerlist());
-				pubpar = apiDoc.getPublicpars();
+				if (null != apiDoc.getPublicpars()) {
+					pubpar = apiDoc.getPublicpars();
+				}
 				if (null != apiDoc.getItem() | apiDoc.getItem().size() > 0) {
 					initMod();
 				} else {
@@ -2801,6 +2811,7 @@ public class MainWindow {
 				formPar[i][2].setText(orderPars.get(size - 1 - i).getName());
 				formPar[i][3].setText(orderPars.get(size - 1 - i).getValue());
 				if (orderPars.get(size - 1 - i).isFrozen()) {
+					formPar[i][0].setForeground(parFontsFrozenColor);
 					formPar[i][1].setForeground(parFontsFrozenColor);
 					formPar[i][2].setForeground(parFontsFrozenColor);
 					formPar[i][3].setForeground(parFontsFrozenColor);
