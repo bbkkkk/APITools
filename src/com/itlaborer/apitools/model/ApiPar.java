@@ -19,8 +19,6 @@ public class ApiPar {
 	@JSONField(ordinal = 4)
 	private boolean isnull;
 
-
-
 	public ApiPar() {
 
 	}

@@ -23,30 +23,6 @@ public class ApiPar2 extends ApiPar implements Comparable {
 	/**
 	 * 
 	 * @param name
-	 * @param value
-	 */
-	public ApiPar2(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-
-	/**
-	 * 
-	 * @param name
-	 * @param tip
-	 * @param value
-	 * @param frozen
-	 */
-	public ApiPar2(String name, String tip, String value, boolean frozen) {
-		this.name = name;
-		this.tip = tip;
-		this.value = value;
-		this.frozen = frozen;
-	}
-
-	/**
-	 * 
-	 * @param name
 	 * @param tip
 	 * @param value
 	 * @param isnull
@@ -104,5 +80,4 @@ public class ApiPar2 extends ApiPar implements Comparable {
 	public int compareTo(Object o) {
 		return this.getName().compareTo(((ApiPar2) o).getName());
 	}
-
 }

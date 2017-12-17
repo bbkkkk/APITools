@@ -143,7 +143,7 @@ public class MainWindow {
 	private Button textClearButton;
 	private Button clearSpaceButton;
 	private Table formTable;
-	private Text[][] form;
+	private Text[][] formPar;
 	private Label[] label;
 	private MenuItem[] menuItem1SubFrozen;
 	private MenuItem serverSelect;
@@ -989,7 +989,7 @@ public class MainWindow {
 					}
 				};
 				// 启动定时任务
-				statusBar.setText("定时任务已配置," +( delay<0?0:delay) + "毫秒后启动");
+				statusBar.setText("定时任务已配置," + (delay < 0 ? 0 : delay) + "毫秒后启动");
 				requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
 			}
 		});
@@ -1270,6 +1270,10 @@ public class MainWindow {
 		numberColumn.setResizable(false);
 		numberColumn.setText("编号");
 
+		TableColumn tableColumn = new TableColumn(formTable, SWT.NONE);
+		tableColumn.setWidth(38);
+		tableColumn.setText("非空");
+
 		TableColumn tipColumn = new TableColumn(formTable, SWT.BORDER);
 		tipColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1277,7 +1281,7 @@ public class MainWindow {
 				statusBar.setText("不支持按备注排序");
 			}
 		});
-		tipColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
+		tipColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth() - tableColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.24));
 		tipColumn.setResizable(false);
 		tipColumn.setText("备注");
@@ -1289,7 +1293,7 @@ public class MainWindow {
 				orderParameters();
 			}
 		});
-		nameColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth()
+		nameColumn.setWidth((int) ((formTable.getBounds().width - numberColumn.getWidth() - tableColumn.getWidth()
 				- formTable.getVerticalBar().getSize().x - 4) * 0.38));
 		nameColumn.setText("参数名");
 		nameColumn.setResizable(false);
@@ -1308,7 +1312,7 @@ public class MainWindow {
 
 		// 将Label和Text绑定到table
 		label = new Label[parsSum];
-		form = new Text[parsSum][3];
+		formPar = new Text[parsSum][4];
 		menuItem1SubFrozen = new MenuItem[parsSum];
 		TableItem[] items = formTable.getItems();
 		for (int i = 0; i < parsSum; i++) {
@@ -1333,8 +1337,8 @@ public class MainWindow {
 			mntmPubAdd.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					String name = form[b][1].getText();
-					String value = form[b][2].getText();
+					String name = formPar[b][2].getText();
+					String value = formPar[b][3].getText();
 					if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(value)) {
 						pubpar.put(name, value);
 						// 保存公共参数
@@ -1368,9 +1372,9 @@ public class MainWindow {
 			menuItemKeyUrlEncode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
 						try {
-							form[b][1].setText(URLEncoder.encode(form[b][1].getText(), "UTF-8"));
+							formPar[b][2].setText(URLEncoder.encode(formPar[b][2].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("转码异常", e1);
 						}
@@ -1387,9 +1391,9 @@ public class MainWindow {
 			menuItemKeyUrlDecode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
 						try {
-							form[b][1].setText(URLDecoder.decode(form[b][1].getText(), "UTF-8"));
+							formPar[b][2].setText(URLDecoder.decode(formPar[b][2].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("解码异常", e1);
 						}
@@ -1406,8 +1410,8 @@ public class MainWindow {
 			menuItemKeyBase64.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.base64EncodeString(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
+						formPar[b][2].setText(PubUtils.base64EncodeString(formPar[b][2].getText()));
 					}
 				}
 
@@ -1421,8 +1425,8 @@ public class MainWindow {
 			menuItemKeyBase64D.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.base64DecodeString(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
+						formPar[b][2].setText(PubUtils.base64DecodeString(formPar[b][2].getText()));
 					}
 				}
 
@@ -1436,8 +1440,8 @@ public class MainWindow {
 			menuItemKeyMD5Cap.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.md5(form[b][1].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
+						formPar[b][2].setText(PubUtils.md5(formPar[b][2].getText()));
 					}
 				}
 
@@ -1451,8 +1455,8 @@ public class MainWindow {
 			menuItemKeyMD5Low.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(PubUtils.md5(form[b][1].getText()).toLowerCase());
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
+						formPar[b][2].setText(PubUtils.md5(formPar[b][2].getText()).toLowerCase());
 					}
 				}
 
@@ -1466,8 +1470,8 @@ public class MainWindow {
 			menuItemKeyTrim.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][1].getText())) {
-						form[b][1].setText(form[b][1].getText().trim());
+					if (StringUtils.isNotEmpty(formPar[b][2].getText())) {
+						formPar[b][2].setText(formPar[b][2].getText().trim());
 					}
 				}
 
@@ -1487,9 +1491,9 @@ public class MainWindow {
 			menuItemValueUrlEncode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
 						try {
-							form[b][2].setText(URLEncoder.encode(form[b][2].getText(), "UTF-8"));
+							formPar[b][3].setText(URLEncoder.encode(formPar[b][3].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("转码异常", e1);
 						}
@@ -1506,9 +1510,9 @@ public class MainWindow {
 			menuItemValueUrlDecode.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
 						try {
-							form[b][2].setText(URLDecoder.decode(form[b][2].getText(), "UTF-8"));
+							formPar[b][3].setText(URLDecoder.decode(formPar[b][3].getText(), "UTF-8"));
 						} catch (UnsupportedEncodingException e1) {
 							logger.debug("解码异常", e1);
 						}
@@ -1525,8 +1529,8 @@ public class MainWindow {
 			menuItemValueBase64.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.base64EncodeString(form[b][2].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
+						formPar[b][3].setText(PubUtils.base64EncodeString(formPar[b][3].getText()));
 					}
 				}
 
@@ -1540,8 +1544,8 @@ public class MainWindow {
 			menuItemValueBase64D.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.base64DecodeString(form[b][2].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
+						formPar[b][3].setText(PubUtils.base64DecodeString(formPar[b][3].getText()));
 					}
 				}
 
@@ -1555,8 +1559,8 @@ public class MainWindow {
 			menuItemValueMD5Cap.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.md5(form[b][2].getText()));
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
+						formPar[b][3].setText(PubUtils.md5(formPar[b][3].getText()));
 					}
 				}
 
@@ -1570,8 +1574,8 @@ public class MainWindow {
 			menuItemValueMD5Low.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(PubUtils.md5(form[b][2].getText()).toLowerCase());
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
+						formPar[b][3].setText(PubUtils.md5(formPar[b][3].getText()).toLowerCase());
 					}
 				}
 
@@ -1585,8 +1589,8 @@ public class MainWindow {
 			menuItemValueTrim.addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isNotEmpty(form[b][2].getText())) {
-						form[b][2].setText(form[b][2].getText().trim());
+					if (StringUtils.isNotEmpty(formPar[b][3].getText())) {
+						formPar[b][3].setText(formPar[b][3].getText().trim());
 					}
 				}
 
@@ -1599,24 +1603,26 @@ public class MainWindow {
 			menuItem1SubFrozen[i].addSelectionListener(new SelectionListener() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (StringUtils.isEmpty(form[b][0].getText()) && StringUtils.isEmpty(form[b][1].getText())
-							&& StringUtils.isEmpty(form[b][2].getText())) {
+					if (StringUtils.isEmpty(formPar[b][1].getText()) && StringUtils.isEmpty(formPar[b][2].getText())
+							&& StringUtils.isEmpty(formPar[b][3].getText())) {
 						statusBar.setText("空的输入框,放弃冻结");
 					} else {
 						if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "冻结此参数")) {
 							// 冻结标志
 							label[b].setToolTipText("此参数已冻结,冻结后不再发送此参数");
-							form[b][0].setForeground(parFontsFrozenColor);
-							form[b][1].setForeground(parFontsFrozenColor);
-							form[b][2].setForeground(parFontsFrozenColor);
+							formPar[b][0].setForeground(parFontsFrozenColor);
+							formPar[b][1].setForeground(parFontsFrozenColor);
+							formPar[b][2].setForeground(parFontsFrozenColor);
+							formPar[b][3].setForeground(parFontsFrozenColor);
 							menuItem1SubFrozen[b].setText("解冻此参数");
 							statusBar.setText("冻结参数完毕");
 						} else if (StringUtils.equals(menuItem1SubFrozen[b].getText(), "解冻此参数")) {
 							// 解冻标志
 							label[b].setToolTipText("");
-							form[b][0].setForeground(parFontsnormalColor);
-							form[b][1].setForeground(parFontsnormalColor);
-							form[b][2].setForeground(parFontsnormalColor);
+							formPar[b][0].setForeground(parFontsnormalColor);
+							formPar[b][1].setForeground(parFontsnormalColor);
+							formPar[b][2].setForeground(parFontsnormalColor);
+							formPar[b][3].setForeground(parFontsnormalColor);
 							menuItem1SubFrozen[b].setText("冻结此参数");
 							statusBar.setText("解冻参数完毕");
 						}
@@ -1647,24 +1653,28 @@ public class MainWindow {
 			});
 			//////////////////////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////////////////////////////
-			// 第二列
+			// 第2列
 			TableEditor editor1 = new TableEditor(formTable);
-			form[i][0] = new Text(formTable, SWT.NONE);
+			formPar[i][0] = new Text(formTable, SWT.NONE | SWT.CENTER);
 			editor1.grabHorizontal = true;
-			editor1.setEditor(form[i][0], items[i], 1);
-			// 第三列
+			editor1.setEditor(formPar[i][0], items[i], 1);
+			// 第3列
 			TableEditor editor2 = new TableEditor(formTable);
-			form[i][1] = new Text(formTable, SWT.NONE);
+			formPar[i][1] = new Text(formTable, SWT.NONE);
 			editor2.grabHorizontal = true;
-			editor2.setEditor(form[i][1], items[i], 2);
-
-			// 第四列
+			editor2.setEditor(formPar[i][1], items[i], 2);
+			// 第4列
 			TableEditor editor3 = new TableEditor(formTable);
-			form[i][2] = new Text(formTable, SWT.NONE);
+			formPar[i][2] = new Text(formTable, SWT.NONE);
 			editor3.grabHorizontal = true;
-			editor3.setEditor(form[i][2], items[i], 3);
+			editor3.setEditor(formPar[i][2], items[i], 3);
+			// 第5列
+			TableEditor editor4 = new TableEditor(formTable);
+			formPar[i][3] = new Text(formTable, SWT.NONE);
+			editor4.grabHorizontal = true;
+			editor4.setEditor(formPar[i][3], items[i], 4);
 			// 设置焦点变色--鼠标和焦点
-			form[i][0].addFocusListener(new FocusListener() {
+			formPar[i][0].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
 					setParTableBackgroundNormal(b);
@@ -1675,7 +1685,7 @@ public class MainWindow {
 					setParTableBackgroundSelection(b);
 				}
 			});
-			form[i][1].addFocusListener(new FocusListener() {
+			formPar[i][1].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
 					setParTableBackgroundNormal(b);
@@ -1686,7 +1696,18 @@ public class MainWindow {
 					setParTableBackgroundSelection(b);
 				}
 			});
-			form[i][2].addFocusListener(new FocusListener() {
+			formPar[i][2].addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					setParTableBackgroundNormal(b);
+				}
+
+				@Override
+				public void focusGained(FocusEvent e) {
+					setParTableBackgroundSelection(b);
+				}
+			});
+			formPar[i][3].addFocusListener(new FocusListener() {
 				@Override
 				public void focusLost(FocusEvent e) {
 					setParTableBackgroundNormal(b);
@@ -1698,7 +1719,23 @@ public class MainWindow {
 				}
 			});
 			// 鼠标监听
-			form[i][0].addMouseTrackListener(new MouseTrackListener() {
+			formPar[i][0].addMouseTrackListener(new MouseTrackListener() {
+
+				@Override
+				public void mouseHover(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					setParTableBackgroundNormal(b);
+				}
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					setParTableBackgroundSelection(b);
+				}
+			});
+			formPar[i][1].addMouseTrackListener(new MouseTrackListener() {
 
 				@Override
 				public void mouseHover(MouseEvent e) {
@@ -1715,7 +1752,7 @@ public class MainWindow {
 				}
 			});
 
-			form[i][1].addMouseTrackListener(new MouseTrackListener() {
+			formPar[i][2].addMouseTrackListener(new MouseTrackListener() {
 
 				@Override
 				public void mouseHover(MouseEvent e) {
@@ -1732,7 +1769,7 @@ public class MainWindow {
 				}
 			});
 
-			form[i][2].addMouseTrackListener(new MouseTrackListener() {
+			formPar[i][3].addMouseTrackListener(new MouseTrackListener() {
 
 				@Override
 				public void mouseHover(MouseEvent e) {
@@ -1948,9 +1985,10 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				// 遍历参数框,找到参数里多余的空格
 				for (int i = 0; i < parsSum; i++) {
-					form[i][0].setText(form[i][0].getText().trim());
-					form[i][1].setText(form[i][1].getText().trim());
-					form[i][2].setText(form[i][2].getText().trim());
+					formPar[i][0].setText(formPar[i][1].getText().trim());
+					formPar[i][1].setText(formPar[i][1].getText().trim());
+					formPar[i][2].setText(formPar[i][2].getText().trim());
+					formPar[i][3].setText(formPar[i][3].getText().trim());
 				}
 				logger.debug("寻找参数里的多余的空格完毕");
 			}
@@ -2022,12 +2060,12 @@ public class MainWindow {
 					queryMap = ParamUtils.queryToMap(queryString);
 					// 新的参数覆盖方案，遍历原参数，如果原参数存在则覆盖value值，否则添加新的参数
 					// 第一遍遍历，覆盖，将存在的参数值替换为参数串里的
-					for (int i = 0; i < form.length; i++) {
-						String value = queryMap.get(form[i][1].getText());
-						if (StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(form[i][1].getText())) {
-							form[i][2].setText(value);
+					for (int i = 0; i < formPar.length; i++) {
+						String value = queryMap.get(formPar[i][2].getText());
+						if (StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(formPar[i][2].getText())) {
+							formPar[i][3].setText(value);
 							// 将使用过的参数删除
-							queryMap.remove(form[i][1].getText());
+							queryMap.remove(formPar[i][2].getText());
 						}
 					}
 					// 第二次遍历，如果map里还有未使用的参数，则追加到原参数下面
@@ -2035,17 +2073,18 @@ public class MainWindow {
 						ArrayList<ApiPar> apiPars = covertHashMaptoApiPar(queryMap);
 						int index = 0;
 						// 寻找可以插入参数的空闲位置，逐个插入
-						for (int i = 0; i < form.length; i++) {
+						for (int i = 0; i < formPar.length; i++) {
 							if (index == apiPars.size()) {
 								// 如果所有参数都已经填充完毕则跳出循环
 								break;
 							}
-							if (StringUtils.isEmpty(form[i][0].getText()) && StringUtils.isEmpty(form[i][1].getText())
-									&& StringUtils.isEmpty(form[i][0].getText())) {
-								form[i][0].setText("");
-								form[i][0].setToolTipText("");
-								form[i][1].setText(apiPars.get(index).getName());
-								form[i][2].setText(apiPars.get(index).getValue());
+							if (StringUtils.isEmpty(formPar[i][1].getText())
+									&& StringUtils.isEmpty(formPar[i][2].getText())
+									&& StringUtils.isEmpty(formPar[i][1].getText())) {
+								formPar[i][1].setText("");
+								formPar[i][1].setToolTipText("");
+								formPar[i][2].setText(apiPars.get(index).getName());
+								formPar[i][3].setText(apiPars.get(index).getValue());
 								index++;
 							}
 						}
@@ -2278,11 +2317,11 @@ public class MainWindow {
 		item.setMethod(methodSelectCombo.getText());
 		item.setParameters(new ArrayList<ApiPar>());
 		// 从form框初始化
-		for (int i = 0; i < form.length; i++) {
+		for (int i = 0; i < formPar.length; i++) {
 			// 判断参数名和不判断备注,参数值
-			if (StringUtils.isNotEmpty(form[i][1].getText())) {
-				item.getParameters().add(
-						new ApiPar(form[i][1].getText() + "", form[i][0].getText() + "", form[i][2].getText() + ""));
+			if (StringUtils.isNotEmpty(formPar[i][2].getText())) {
+				item.getParameters().add(new ApiPar(formPar[i][2].getText() + "", formPar[i][1].getText() + "",
+						formPar[i][3].getText() + "", StringUtils.equals(formPar[i][2].getText(), "Y") ? false : true));
 			}
 		}
 		// 做个标识临时存起来
@@ -2562,9 +2601,15 @@ public class MainWindow {
 					break;
 				}
 				// 将参数初始化一下
-				form[i][0].setText(pars.get(i).getTip() + "");
-				form[i][1].setText(pars.get(i).getName() + "");
-				form[i][2].setText(pars.get(i).getValue() + "");
+				formPar[i][1].setText(pars.get(i).getTip() + "");
+				formPar[i][2].setText(pars.get(i).getName() + "");
+				formPar[i][3].setText(pars.get(i).getValue() + "");
+				// 非空标记
+				if (pars.get(i).isIsnull()) {
+					formPar[i][0].setText("N");
+				} else {
+					formPar[i][0].setText("Y");
+				}
 			}
 		}
 		// 初始化公共参数
@@ -2579,9 +2624,9 @@ public class MainWindow {
 				new LinkedHashMap<String, JSONObject>().getClass());
 		if (null != pars) {
 			for (int i = 0; i < parsSum; i++) {
-				String parname = form[i][1].getText();
+				String parname = formPar[i][2].getText();
 				if ((null != parname) && (null != pars.get(parname))) {
-					form[i][2].setText(pars.get(parname));
+					formPar[i][3].setText(pars.get(parname));
 					// 使用后移除
 					logger.debug("从临时变量里移除公共参数:" + parname);
 					pars.remove(parname);
@@ -2593,11 +2638,11 @@ public class MainWindow {
 				ArrayList<ApiPar> list = covertHashMaptoApiPar(pars);
 				int j = 0;
 				for (int i = 0; i < parsSum; i++) {
-					String parname = form[i][1].getText();
-					String parvalue = form[i][2].getText();
+					String parname = formPar[i][2].getText();
+					String parvalue = formPar[i][3].getText();
 					if (StringUtils.isEmpty(parname) && StringUtils.isEmpty(parvalue)) {
-						form[i][1].setText(list.get(j).getName());
-						form[i][2].setText(list.get(j).getValue());
+						formPar[i][2].setText(list.get(j).getName());
+						formPar[i][3].setText(list.get(j).getValue());
 						j++;
 						// 没有更多可用公共参数了
 						if (j > list.size() - 1) {
@@ -2655,13 +2700,13 @@ public class MainWindow {
 		return apiPars;
 	}
 
-	// 获取输入框中的参数-供发起请求的时候使用
+	// 获取输入框中的参数-供发起请求的时候使用--仅未冻结的参数
 	private HashMap<String, String> getParameters() {
 		HashMap<String, String> par = new HashMap<String, String>();
 		for (int i = 0; i < parsSum; i++) {
-			if (!(form[i][1].getText().isEmpty() || form[i][2].getText().isEmpty())
-					&& !(form[i][1].getForeground().equals(parFontsFrozenColor))) {
-				par.put(form[i][1].getText(), form[i][2].getText());
+			if (!(formPar[i][2].getText().isEmpty() || formPar[i][3].getText().isEmpty())
+					&& !(formPar[i][2].getForeground().equals(parFontsFrozenColor))) {
+				par.put(formPar[i][2].getText(), formPar[i][3].getText());
 			}
 		}
 		return par;
@@ -2682,12 +2727,14 @@ public class MainWindow {
 		for (int i = 0; i < parsSum; i++) {
 			label[i].setToolTipText("");
 			menuItem1SubFrozen[i].setText("冻结此参数");
-			form[i][0].setText("");
-			form[i][1].setText("");
-			form[i][2].setText("");
-			form[i][0].setForeground(parFontsnormalColor);
-			form[i][1].setForeground(parFontsnormalColor);
-			form[i][2].setForeground(parFontsnormalColor);
+			formPar[i][0].setText("");
+			formPar[i][1].setText("");
+			formPar[i][1].setToolTipText("");
+			formPar[i][2].setText("");
+			formPar[i][3].setText("");
+			formPar[i][1].setForeground(parFontsnormalColor);
+			formPar[i][2].setForeground(parFontsnormalColor);
+			formPar[i][3].setForeground(parFontsnormalColor);
 		}
 	}
 
@@ -2697,20 +2744,23 @@ public class MainWindow {
 		// 获取所有参数
 		ArrayList<ApiPar2> orderPars = new ArrayList<>();
 		for (int i = 0; i < parsSum; i++) {
-			if (!form[i][0].getText().trim().isEmpty() || !form[i][1].getText().trim().isEmpty()
-					|| !form[i][2].getText().trim().isEmpty()) {
-				ApiPar2 parInfo = new ApiPar2(form[i][1].getText(), form[i][0].getText(), form[i][2].getText(),
-						form[i][0].getForeground().equals(parFontsFrozenColor));
+			if (!formPar[i][1].getText().trim().isEmpty() || !formPar[i][2].getText().trim().isEmpty()
+					|| !formPar[i][3].getText().trim().isEmpty()) {
+				ApiPar2 parInfo = new ApiPar2(formPar[i][2].getText(), formPar[i][1].getText(), formPar[i][3].getText(),
+						(StringUtils.equals(formPar[i][0].getText(), "Y") ? false : true),
+						formPar[i][1].getForeground().equals(parFontsFrozenColor));
 				orderPars.add(parInfo);
 				// 获取参数后清除输入框内容
 				menuItem1SubFrozen[i].setText("冻结此参数");
 				label[i].setToolTipText("");
-				form[i][0].setText("");
-				form[i][1].setText("");
-				form[i][2].setText("");
-				form[i][0].setForeground(parFontsnormalColor);
-				form[i][1].setForeground(parFontsnormalColor);
-				form[i][2].setForeground(parFontsnormalColor);
+				formPar[i][0].setText("");
+				formPar[i][1].setText("");
+				formPar[i][1].setToolTipText("");
+				formPar[i][2].setText("");
+				formPar[i][3].setText("");
+				formPar[i][1].setForeground(parFontsnormalColor);
+				formPar[i][2].setForeground(parFontsnormalColor);
+				formPar[i][3].setForeground(parFontsnormalColor);
 			}
 		}
 		Collections.sort(orderPars);
@@ -2719,14 +2769,16 @@ public class MainWindow {
 			orderFlag = 1;
 			int size = orderPars.size();
 			for (int i = 0; i < size; i++) {
-				form[i][0].setText(orderPars.get(i).getTip());
-				form[i][0].setToolTipText(orderPars.get(i).getTip());
-				form[i][1].setText(orderPars.get(i).getName());
-				form[i][2].setText(orderPars.get(i).getValue());
+				formPar[i][0].setText(orderPars.get(i).isIsnull() ? "N" : "Y");
+				formPar[i][1].setText(orderPars.get(i).getTip());
+				formPar[i][1].setToolTipText(orderPars.get(i).getTip());
+				formPar[i][2].setText(orderPars.get(i).getName());
+				formPar[i][3].setText(orderPars.get(i).getValue());
 				if (orderPars.get(i).isFrozen()) {
-					form[i][0].setForeground(parFontsFrozenColor);
-					form[i][1].setForeground(parFontsFrozenColor);
-					form[i][2].setForeground(parFontsFrozenColor);
+					formPar[i][0].setForeground(parFontsFrozenColor);
+					formPar[i][1].setForeground(parFontsFrozenColor);
+					formPar[i][2].setForeground(parFontsFrozenColor);
+					formPar[i][3].setForeground(parFontsFrozenColor);
 					menuItem1SubFrozen[i].setText("解冻此参数");
 					label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 				}
@@ -2737,14 +2789,15 @@ public class MainWindow {
 			orderFlag = 2;
 			int size = orderPars.size();
 			for (int i = 0; i < size; i++) {
-				form[i][0].setText(orderPars.get(size - 1 - i).getTip());
-				form[i][0].setToolTipText(orderPars.get(size - 1 - i).getTip());
-				form[i][1].setText(orderPars.get(size - 1 - i).getName());
-				form[i][2].setText(orderPars.get(size - 1 - i).getValue());
+				formPar[i][0].setText(orderPars.get(size - 1 - i).isIsnull() ? "N" : "Y");
+				formPar[i][1].setText(orderPars.get(size - 1 - i).getTip());
+				formPar[i][1].setToolTipText(orderPars.get(size - 1 - i).getTip());
+				formPar[i][2].setText(orderPars.get(size - 1 - i).getName());
+				formPar[i][3].setText(orderPars.get(size - 1 - i).getValue());
 				if (orderPars.get(size - 1 - i).isFrozen()) {
-					form[i][0].setForeground(parFontsFrozenColor);
-					form[i][1].setForeground(parFontsFrozenColor);
-					form[i][2].setForeground(parFontsFrozenColor);
+					formPar[i][1].setForeground(parFontsFrozenColor);
+					formPar[i][2].setForeground(parFontsFrozenColor);
+					formPar[i][3].setForeground(parFontsFrozenColor);
 					menuItem1SubFrozen[i].setText("解冻此参数");
 					label[i].setToolTipText("此参数已冻结,冻结后不再发送此参数");
 				}
@@ -2994,17 +3047,19 @@ public class MainWindow {
 	// 焦点变色
 	private void setParTableBackgroundNormal(int b) {
 		label[b].setBackground(parBackgroundNormalColor);
-		form[b][0].setBackground(parBackgroundNormalColor);
-		form[b][1].setBackground(parBackgroundNormalColor);
-		form[b][2].setBackground(parBackgroundNormalColor);
+		formPar[b][0].setBackground(parBackgroundNormalColor);
+		formPar[b][1].setBackground(parBackgroundNormalColor);
+		formPar[b][2].setBackground(parBackgroundNormalColor);
+		formPar[b][3].setBackground(parBackgroundNormalColor);
 	}
 
 	// 还原焦点变色
 	private void setParTableBackgroundSelection(int b) {
 		label[b].setBackground(parBackgroundSelectedColor);
-		form[b][0].setBackground(parBackgroundSelectedColor);
-		form[b][1].setBackground(parBackgroundSelectedColor);
-		form[b][2].setBackground(parBackgroundSelectedColor);
+		formPar[b][0].setBackground(parBackgroundSelectedColor);
+		formPar[b][1].setBackground(parBackgroundSelectedColor);
+		formPar[b][2].setBackground(parBackgroundSelectedColor);
+		formPar[b][3].setBackground(parBackgroundSelectedColor);
 	}
 
 	// 开启一个新的窗口
