@@ -207,7 +207,7 @@ public class MainWindow {
 		this.parBackgroundSelectedColor = new Color(Display.getCurrent(), 227, 247, 255);
 		this.parFontsFrozenColor = SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY);
 		this.parFontsnormalColor = SWTResourceManager.getColor(SWT.COLOR_BLACK);
-		this.requestTimer = new Timer(true);
+		this.requestTimer = new Timer(false);
 	}
 
 	// 从这里开始,不是么？小桥流水人家~
@@ -954,36 +954,22 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				// 重置请求次数
 				count = 0;
+				timerUrl = urlText.getText();
 				if (!timerIsRun) {
 					timerIsRun = true;
-					timerUrl = urlText.getText();
-					requestTask = new TimerTask() {
-						@Override
-						public void run() {
-							mainWindowShell.getDisplay().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									String url = urlText.getText();
-									if (!StringUtils.equals(url, timerUrl)) {
-										requestTask.cancel();
-										statusBar.setText("接口地址发生变化,定时循环提交已终止");
-									} else if (timerSum > 0 && count >= timerSum) {
-										statusBar.setText("已完成" + count + "次请求,定时循环提交已终止");
-									} else {
-										count++;
-										sentRequest();
-									}
-								}
-							});
-						}
-					};
-					requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
 				} else {
 					logger.debug("任务已启动，先清除原任务后重新布置任务");
 					requestTask.cancel();
-					requestTask = new TimerTask() {
-						@Override
-						public void run() {
+				}
+				// 开始配置定时任务
+				requestTask = new TimerTask() {
+					@Override
+					public void run() {
+						if (mainWindowShell.isDisposed()) {
+							// 如果主窗口已经关闭，强制取消所有任务，避免残留后台进程
+							requestTimer.cancel();
+							requestTimer.purge();
+						} else {
 							mainWindowShell.getDisplay().asyncExec(new Runnable() {
 								@Override
 								public void run() {
@@ -1000,9 +986,11 @@ public class MainWindow {
 								}
 							});
 						}
-					};
-					requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
-				}
+					}
+				};
+				// 启动定时任务
+				statusBar.setText("定时任务已配置," +( delay<0?0:delay) + "毫秒后启动");
+				requestTimer.scheduleAtFixedRate(requestTask, delay, intevalPeriod);
 			}
 		});
 		menuTimerItem.setText("开启定时循环提交");
