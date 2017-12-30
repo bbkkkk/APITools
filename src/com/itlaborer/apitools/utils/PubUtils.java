@@ -159,7 +159,8 @@ public class PubUtils {
 				TextTransfer textTransfer = TextTransfer.getInstance();
 				// 获取剪切板上的文本
 				String cliptext = (clipboard.getContents(textTransfer) != null
-						? clipboard.getContents(textTransfer).toString() : "");
+						? clipboard.getContents(textTransfer).toString()
+						: "");
 				clipboard.dispose();
 				int caretOffset = styledText.getSelection().x;
 				styledText.setText(new StringBuffer(styledText.getText())
@@ -232,7 +233,7 @@ public class PubUtils {
 	public static RawResponse httpPost(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.post(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+		RawResponse resp = Requests.post(url).verify(false).headers(header).cookies(cookies).params(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
 	}
@@ -250,7 +251,7 @@ public class PubUtils {
 	public static RawResponse httpPut(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.put(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+		RawResponse resp = Requests.put(url).verify(false).headers(header).cookies(cookies).params(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
 	}
@@ -259,7 +260,7 @@ public class PubUtils {
 	public static RawResponse httpPatch(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.patch(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+		RawResponse resp = Requests.patch(url).verify(false).headers(header).cookies(cookies).params(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
 	}
@@ -268,7 +269,7 @@ public class PubUtils {
 	public static RawResponse httpDelete(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).forms(parameter)
+		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).params(parameter)
 				.requestCharset(requestCharset).send();
 		return resp;
 	}

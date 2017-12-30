@@ -77,6 +77,7 @@ import com.itlaborer.apitools.swt.SWTResourceManager;
 import com.itlaborer.apitools.utils.ParamUtils;
 import com.itlaborer.apitools.utils.PubUtils;
 
+import net.dongliu.requests.Parameter;
 import net.dongliu.requests.RawResponse;
 
 /**
@@ -2191,7 +2192,7 @@ public class MainWindow {
 					// 获取头部信息和编码
 					headerReturnStr = "";
 					autoCheckResCharSet = null;
-					List<Entry<String, String>> header = result.getHeaders();
+					List<Parameter<String>> header = result.getHeaders();
 					for (int i = 0; i < header.size(); i++) {
 						headerReturnStr += header.get(i).getKey() + ":" + header.get(i).getValue() + "\n";
 						// 自动检测编码
