@@ -42,6 +42,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
 import net.dongliu.requests.RawResponse;
+import net.dongliu.requests.RequestBuilder;
 import net.dongliu.requests.Requests;
 
 /**
@@ -220,7 +221,17 @@ public class PubUtils {
 		return DigestUtils.md5Hex(s).toUpperCase();
 	}
 
-	// HTTP GET 忽略证书安全
+	/**
+	 * HTTP GET 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpGet(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
@@ -229,16 +240,66 @@ public class PubUtils {
 		return resp;
 	}
 
-	// HTTP POST 忽略证书安全
+	/**
+	 * HTTP POST 忽略证书安全
+	 * 
+	 * 如果传入的ContentType不为空,则数据放到body
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpPost(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.post(url).verify(false).headers(header).cookies(cookies).params(parameter)
-				.requestCharset(requestCharset).send();
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		if (StringUtils.isEmpty(header.get("Content-Type"))) {
+			requestBuilder = requestBuilder.params(parameter);
+		} else {
+			requestBuilder = requestBuilder.body(parameter);
+		}
+		RawResponse resp = requestBuilder.send();
 		return resp;
 	}
 
-	// HTTP HEAD 忽略证书安全
+	/**
+	 * HTTP POST 忽略证书安全
+	 * 
+	 * 如果传入的ContentType不为空,则数据放到body
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
+	public static RawResponse httpPost(String url, String parameter, LinkedHashMap<String, String> header,
+			LinkedHashMap<String, String> cookies, Charset requestCharset) throws Exception {
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		requestBuilder = requestBuilder.body(parameter);
+		RawResponse resp = requestBuilder.send();
+		return resp;
+	}
+
+	/**
+	 * HTTP HEAD 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpHead(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
@@ -247,30 +308,138 @@ public class PubUtils {
 		return resp;
 	}
 
-	// HTTP PUT 忽略证书安全
+	/**
+	 * HTTP PUT 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpPut(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.put(url).verify(false).headers(header).cookies(cookies).params(parameter)
-				.requestCharset(requestCharset).send();
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		if (StringUtils.isEmpty(header.get("Content-Type"))) {
+			requestBuilder = requestBuilder.params(parameter);
+		} else {
+			requestBuilder = requestBuilder.body(parameter);
+		}
+		RawResponse resp = requestBuilder.send();
 		return resp;
 	}
 
-	// HTTP PATCH 忽略证书安全
+	/**
+	 * HTTP PUT 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
+	public static RawResponse httpPut(String url, String parameter, LinkedHashMap<String, String> header,
+			LinkedHashMap<String, String> cookies, Charset requestCharset) throws Exception {
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		requestBuilder = requestBuilder.body(parameter);
+		RawResponse resp = requestBuilder.send();
+		return resp;
+	}
+
+	/**
+	 * HTTP PATCH 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpPatch(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.patch(url).verify(false).headers(header).cookies(cookies).params(parameter)
-				.requestCharset(requestCharset).send();
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		if (StringUtils.isEmpty(header.get("Content-Type"))) {
+			requestBuilder = requestBuilder.params(parameter);
+		} else {
+			requestBuilder = requestBuilder.body(parameter);
+		}
+		RawResponse resp = requestBuilder.send();
 		return resp;
 	}
 
-	// HTTP DELETE 忽略证书安全
+	/**
+	 * HTTP PATCH 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
+	public static RawResponse httpPatch(String url, String parameter, LinkedHashMap<String, String> header,
+			LinkedHashMap<String, String> cookies, Charset requestCharset) throws Exception {
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		requestBuilder = requestBuilder.body(parameter);
+		RawResponse resp = requestBuilder.send();
+		return resp;
+	}
+
+	/**
+	 * HTTP DELETE 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
 	public static RawResponse httpDelete(String url, HashMap<String, String> parameter,
 			LinkedHashMap<String, String> header, LinkedHashMap<String, String> cookies, Charset requestCharset)
 			throws Exception {
-		RawResponse resp = Requests.delete(url).verify(false).headers(header).cookies(cookies).params(parameter)
-				.requestCharset(requestCharset).send();
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		if (StringUtils.isEmpty(header.get("Content-Type"))) {
+			requestBuilder = requestBuilder.params(parameter);
+		} else {
+			requestBuilder = requestBuilder.body(parameter);
+		}
+		RawResponse resp = requestBuilder.send();
+		return resp;
+	}
+
+	/**
+	 * HTTP DELETE 忽略证书安全
+	 * 
+	 * @param url
+	 * @param parameter
+	 * @param header
+	 * @param cookies
+	 * @param requestCharset
+	 * @return
+	 * @throws Exception
+	 */
+	public static RawResponse httpDelete(String url, String parameter, LinkedHashMap<String, String> header,
+			LinkedHashMap<String, String> cookies, Charset requestCharset) throws Exception {
+		RequestBuilder requestBuilder = Requests.post(url).verify(false).headers(header).cookies(cookies)
+				.requestCharset(requestCharset);
+		requestBuilder = requestBuilder.body(parameter);
+		RawResponse resp = requestBuilder.send();
 		return resp;
 	}
 

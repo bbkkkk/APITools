@@ -144,6 +144,7 @@ public class MainWindow {
 	private Button textClearButton;
 	private Button clearSpaceButton;
 	private Table formTable;
+	private StyledText reqStyledText;
 	private Text[][] formPar;
 	private Label[] label;
 	private MenuItem[] menuItem1SubFrozen;
@@ -173,6 +174,16 @@ public class MainWindow {
 	private long count = 0;
 	private boolean timerIsRun = false;
 	private String timerUrl;
+
+	// ContentType
+	private MenuItem contentTypeNull;
+	private MenuItem contentTypexwwwForm;
+	private MenuItem contentTypeJson;
+	private MenuItem contentTypeJavaScript;
+	private MenuItem contentTypeApplicationXml;
+	private MenuItem contentTypeTextPlain;
+	private MenuItem contentTypeTextXml;
+	private MenuItem contentTypeTextHtml;
 
 	// 主窗口
 	public MainWindow() {
@@ -966,6 +977,119 @@ public class MainWindow {
 		methodSelectCombo.add("PATCH", 4);
 		methodSelectCombo.add("DELETE", 5);
 
+		Menu menu_5 = new Menu(methodSelectCombo);
+		methodSelectCombo.setMenu(menu_5);
+
+		contentTypeNull = new MenuItem(menu_5, SWT.NONE);
+		contentTypeNull.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				statusBar.setText("切换Content-Type为:空");
+				header.remove("Content-Type");
+				reqStyledText.setVisible(false);
+				formTable.setVisible(true);
+			}
+		});
+		contentTypeNull.setText("禁用Content-Type");
+
+		contentTypexwwwForm = new MenuItem(menu_5, SWT.NONE);
+		contentTypexwwwForm.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypexwwwForm.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(false);
+				formTable.setVisible(true);
+			}
+		});
+		contentTypexwwwForm.setText("application/x-www-form-urlencoded");
+		contentTypexwwwForm.setEnabled(false);
+
+		contentTypeJson = new MenuItem(menu_5, SWT.NONE);
+		contentTypeJson.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeJson.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeJson.setText("application/json");
+		contentTypeJson.setEnabled(false);
+
+		contentTypeJavaScript = new MenuItem(menu_5, SWT.NONE);
+		contentTypeJavaScript.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeJavaScript.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeJavaScript.setText("application/javascript");
+		contentTypeJavaScript.setEnabled(false);
+
+		contentTypeApplicationXml = new MenuItem(menu_5, SWT.NONE);
+		contentTypeApplicationXml.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeApplicationXml.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeApplicationXml.setText("application/xml");
+		contentTypeApplicationXml.setEnabled(false);
+
+		contentTypeTextPlain = new MenuItem(menu_5, SWT.NONE);
+		contentTypeTextPlain.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeTextPlain.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeTextPlain.setText("text/plain");
+		contentTypeTextPlain.setEnabled(false);
+
+		contentTypeTextXml = new MenuItem(menu_5, SWT.NONE);
+		contentTypeTextXml.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeTextXml.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeTextXml.setText("text/xml");
+		contentTypeTextXml.setEnabled(false);
+
+		contentTypeTextHtml = new MenuItem(menu_5, SWT.NONE);
+		contentTypeTextHtml.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String contentType = contentTypeTextHtml.getText() + ", charset=" + settingReqCharSet;
+				header.put("Content-Type", contentType);
+				statusBar.setText("切换Content-Type为:" + contentType);
+				reqStyledText.setVisible(true);
+				formTable.setVisible(false);
+			}
+		});
+		contentTypeTextHtml.setText("text/html");
+		contentTypeTextHtml.setEnabled(false);
+
 		// 提交按钮
 		submitButton = new Button(mainWindowShell, SWT.NONE);
 		submitButton.setBounds(1040, 2, 97, 27);
@@ -1283,12 +1407,19 @@ public class MainWindow {
 		});
 		mntmcurl.setText("复制CURl指令到剪切板");
 
-		// 参数table
+		// fomr参数table
 		formTable = new Table(mainWindowShell, SWT.BORDER | SWT.HIDE_SELECTION | SWT.VIRTUAL);
 		formTable.setBounds(3, 86, 480, 506);
 		formTable.setItemCount(parsSum);
 		formTable.setHeaderVisible(true);
 		formTable.setLinesVisible(true);
+
+		// 文本参数框
+		reqStyledText = new StyledText(mainWindowShell, SWT.BORDER);
+		reqStyledText.setBounds(3, 86, 480, 506);
+		formToolkit.adapt(reqStyledText);
+		formToolkit.paintBordersFor(reqStyledText);
+		reqStyledText.setVisible(false);
 
 		// 表列
 		TableColumn numberColumn = new TableColumn(formTable, SWT.BORDER);
@@ -2031,6 +2162,47 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				logger.debug("切换表单发送方式为:" + methodSelectCombo.getText());
+				// 配置可选的ContentType
+				switch (methodSelectCombo.getSelectionIndex()) {
+				case 0:
+					contentTypeNull.setEnabled(true);
+					contentTypexwwwForm.setEnabled(false);
+					contentTypeJson.setEnabled(false);
+					contentTypeJavaScript.setEnabled(false);
+					contentTypeApplicationXml.setEnabled(false);
+					contentTypeTextPlain.setEnabled(false);
+					contentTypeTextXml.setEnabled(false);
+					contentTypeTextHtml.setEnabled(false);
+					header.remove("Content-Type");
+					reqStyledText.setVisible(false);
+					formTable.setVisible(true);
+					break;
+				case 2:
+					contentTypeNull.setEnabled(true);
+					contentTypexwwwForm.setEnabled(false);
+					contentTypeJson.setEnabled(false);
+					contentTypeJavaScript.setEnabled(false);
+					contentTypeApplicationXml.setEnabled(false);
+					contentTypeTextPlain.setEnabled(false);
+					contentTypeTextXml.setEnabled(false);
+					contentTypeTextHtml.setEnabled(false);
+					header.remove("Content-Type");
+					reqStyledText.setVisible(false);
+					formTable.setVisible(true);
+				default:
+					contentTypeNull.setEnabled(true);
+					contentTypexwwwForm.setEnabled(true);
+					contentTypeJson.setEnabled(true);
+					contentTypeJavaScript.setEnabled(true);
+					contentTypeApplicationXml.setEnabled(true);
+					contentTypeTextPlain.setEnabled(true);
+					contentTypeTextXml.setEnabled(true);
+					contentTypeTextHtml.setEnabled(true);
+					header.remove("Content-Type");
+					reqStyledText.setVisible(false);
+					formTable.setVisible(true);
+					break;
+				}
 			}
 		});
 
