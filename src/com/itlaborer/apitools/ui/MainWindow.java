@@ -986,6 +986,7 @@ public class MainWindow {
 			public void widgetSelected(SelectionEvent e) {
 				statusBar.setText("切换Content-Type为:空");
 				header.remove("Content-Type");
+				// 禁用ContentType默认使用url参数的形式提交参数
 				reqStyledText.setVisible(false);
 				formTable.setVisible(true);
 			}
@@ -996,9 +997,10 @@ public class MainWindow {
 		contentTypexwwwForm.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypexwwwForm.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypexwwwForm.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//表单
 				reqStyledText.setVisible(false);
 				formTable.setVisible(true);
 			}
@@ -1010,9 +1012,10 @@ public class MainWindow {
 		contentTypeJson.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeJson.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeJson.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1024,9 +1027,10 @@ public class MainWindow {
 		contentTypeJavaScript.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeJavaScript.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeJavaScript.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1038,9 +1042,10 @@ public class MainWindow {
 		contentTypeApplicationXml.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeApplicationXml.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeApplicationXml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1052,9 +1057,10 @@ public class MainWindow {
 		contentTypeTextPlain.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeTextPlain.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeTextPlain.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1066,9 +1072,10 @@ public class MainWindow {
 		contentTypeTextXml.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeTextXml.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeTextXml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1080,9 +1087,10 @@ public class MainWindow {
 		contentTypeTextHtml.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String contentType = contentTypeTextHtml.getText() + ", charset=" + settingReqCharSet;
+				String contentType = contentTypeTextHtml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
+				//RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1415,11 +1423,14 @@ public class MainWindow {
 		formTable.setLinesVisible(true);
 
 		// 文本参数框
-		reqStyledText = new StyledText(mainWindowShell, SWT.BORDER);
+		reqStyledText = new StyledText(mainWindowShell, SWT.BORDER| SWT.V_SCROLL | SWT.H_SCROLL);
 		reqStyledText.setBounds(3, 86, 480, 506);
+		reqStyledText.setAlwaysShowScrollBars(true);
+		formToolkit.adapt(reqStyledText);
 		formToolkit.adapt(reqStyledText);
 		formToolkit.paintBordersFor(reqStyledText);
 		reqStyledText.setVisible(false);
+		styledTextAddContextMenu(reqStyledText);
 
 		// 表列
 		TableColumn numberColumn = new TableColumn(formTable, SWT.BORDER);
@@ -2996,7 +3007,7 @@ public class MainWindow {
 	}
 
 	// 给主页面的返回区域添加右键菜单
-	public void styledTextAddContextMenu(final StyledText styledText) {
+	private void styledTextAddContextMenu(final StyledText styledText) {
 		Menu popupMenu = new Menu(styledText);
 		MenuItem cut = new MenuItem(popupMenu, SWT.NONE);
 		cut.setText("剪切");
@@ -3014,7 +3025,7 @@ public class MainWindow {
 		search.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				searchText(resultBodyStyledText);
+				searchText(styledText);
 			}
 		});
 		MenuItem compressJson = new MenuItem(popupMenu, SWT.NONE);
