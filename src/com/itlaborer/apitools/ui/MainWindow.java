@@ -1000,7 +1000,7 @@ public class MainWindow {
 				String contentType = contentTypexwwwForm.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//表单
+				// 表单
 				reqStyledText.setVisible(false);
 				formTable.setVisible(true);
 			}
@@ -1015,9 +1015,10 @@ public class MainWindow {
 				String contentType = contentTypeJson.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
+				reqStyledText.setText(PubUtils.jsonFormat(JSON.toJSONString(getParameters())));
 			}
 		});
 		contentTypeJson.setText("application/json");
@@ -1030,7 +1031,7 @@ public class MainWindow {
 				String contentType = contentTypeJavaScript.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1045,7 +1046,7 @@ public class MainWindow {
 				String contentType = contentTypeApplicationXml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1060,7 +1061,7 @@ public class MainWindow {
 				String contentType = contentTypeTextPlain.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1075,7 +1076,7 @@ public class MainWindow {
 				String contentType = contentTypeTextXml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1090,7 +1091,7 @@ public class MainWindow {
 				String contentType = contentTypeTextHtml.getText();
 				header.put("Content-Type", contentType);
 				statusBar.setText("切换Content-Type为:" + contentType);
-				//RAW
+				// RAW
 				reqStyledText.setVisible(true);
 				formTable.setVisible(false);
 			}
@@ -1423,7 +1424,7 @@ public class MainWindow {
 		formTable.setLinesVisible(true);
 
 		// 文本参数框
-		reqStyledText = new StyledText(mainWindowShell, SWT.BORDER| SWT.V_SCROLL | SWT.H_SCROLL);
+		reqStyledText = new StyledText(mainWindowShell, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		reqStyledText.setBounds(3, 86, 480, 506);
 		reqStyledText.setAlwaysShowScrollBars(true);
 		formToolkit.adapt(reqStyledText);

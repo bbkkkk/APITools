@@ -25,7 +25,11 @@ public class ApiItem {
 	@JSONField(ordinal = 5)
 	private String method;
 	@JSONField(ordinal = 6)
+	private String contenttype;
+	@JSONField(ordinal = 7)
 	private ArrayList<ApiPar> parameters;
+	@JSONField(ordinal = 8)
+	private String rawparameters;
 
 	public ApiItem() {
 
@@ -71,6 +75,14 @@ public class ApiItem {
 		this.method = method;
 	}
 
+	public String getContenttype() {
+		return contenttype;
+	}
+
+	public void setContenttype(String contenttype) {
+		this.contenttype = contenttype;
+	}
+
 	public ArrayList<ApiPar> getParameters() {
 		return parameters;
 	}
@@ -79,4 +91,11 @@ public class ApiItem {
 		this.parameters = parameters;
 	}
 
+	public String getRawparameters() {
+		return rawparameters;
+	}
+
+	public void setRawparameters(String rawparameters) {
+		this.rawparameters = rawparameters;
+	}
 }

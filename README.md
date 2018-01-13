@@ -1,7 +1,7 @@
 # APITools
 
 ### 程序说明
-* 一个HTTP请求工具，类似于Postman
+* 一个HTTP请求工具，类似于Postman，支持常用的HTTP方法
 * 可以记录接口信息，方便选择接口 支持常见的HTTP请求方法
 * 拥有中文提示,方便填写接口参数
 * 规范的Json格式文档定义，方便导出接口信息到其他格式
@@ -9,7 +9,7 @@
 
 ### 构建说明
 * 1:执行代码克隆 [使用码云]git clone https://git.oschina.net/zzunet/APITools.git,  [使用GitHub]https://github.com/cnldw/APITools.git
-* 2:根据系统类别修改pom.xml(程序使用SWT开发，需要根据系统和jvm版本修改pom.xml)
+* 2:根据系统类别修改pom.xml(程序使用SWT开发，需要根据系统和jvm版本修改pom.xml，默认打包windows系统可用的程序包)
 * 3:执行build.bat构建程序，构建完成后程序包将生成在target目录，譬如APITools-1.8-jar-with-dependencies.jar
 * 4:切换到target目录，执行java -Dfile.encoding=UTF-8 -jar APITools-1.8-jar-with-dependencies.jar启动程序（建议使用作为文件默认编码方式）
 
